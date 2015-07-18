@@ -39,11 +39,35 @@
             });
         }
 
+        [Fact]
+        public void GetData_Int()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 0 },
+                new object[] { 1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_Int_35()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 3 },
+                new object[] { 5 },
+            });
+        }
+
         private static void Suppose_NoArguments() { }
 
         private static void Suppose_Bool(bool p1) { }
 
         private static void Suppose_BoolBool(bool p1, bool p2) { }
+
+        private static void Suppose_Int(int p1) { }
+
+        private static void Suppose_Int_35([CombinatorialValues(3, 5)] int p1) { }
 
         private static void AssertData(IEnumerable<object[]> expected, [CallerMemberName] string testMethodName = null)
         {

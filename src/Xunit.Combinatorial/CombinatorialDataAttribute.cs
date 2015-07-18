@@ -87,6 +87,12 @@
         {
             Requires.NotNull(parameter, nameof(parameter));
 
+            var valuesAttribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
+            if (valuesAttribute != null)
+            {
+                return valuesAttribute.Values;
+            }
+
             return this.GetValuesFor(parameter.ParameterType);
         }
 
@@ -103,6 +109,11 @@
             {
                 yield return true;
                 yield return false;
+            }
+            else if (dataType == typeof(int))
+            {
+                yield return 0;
+                yield return 1;
             }
         }
     }
