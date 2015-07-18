@@ -115,6 +115,13 @@
                 yield return 0;
                 yield return 1;
             }
+            else if (dataType.GetTypeInfo().IsEnum)
+            {
+                foreach (string name in Enum.GetNames(dataType))
+                {
+                    yield return Enum.Parse(dataType, name);
+                }
+            }
         }
     }
 }

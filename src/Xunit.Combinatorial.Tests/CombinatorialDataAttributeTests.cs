@@ -79,6 +79,17 @@
             });
         }
 
+        [Fact]
+        public void GetData_DateTimeKind()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { DateTimeKind.Unspecified },
+                new object[] { DateTimeKind.Utc },
+                new object[] { DateTimeKind.Local },
+            });
+        }
+
         private static void Suppose_NoArguments() { }
 
         private static void Suppose_Bool(bool p1) { }
@@ -90,6 +101,8 @@
         private static void Suppose_Int_35([CombinatorialValues(3, 5)] int p1) { }
 
         private static void Suppose_string_int_bool_Values([CombinatorialValues("a", "b")]string p1, [CombinatorialValues(2, 4, 6)]int p2, bool p3) { }
+
+        private static void Suppose_DateTimeKind(DateTimeKind p1) { }
 
         private static void AssertData(IEnumerable<object[]> expected, [CallerMemberName] string testMethodName = null)
         {
