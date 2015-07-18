@@ -7,9 +7,7 @@ for your test method.
 
 ## Installation
 
-This project is available as a [NuGet package][NuPkg]:
-
-    Install-Package Xunit.Combinatorial
+This project is available as a [NuGet package][NuPkg]
 
 ## Example
 
