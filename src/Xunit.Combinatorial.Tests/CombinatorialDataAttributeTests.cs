@@ -59,6 +59,26 @@
             });
         }
 
+        [Fact]
+        public void GetData_string_int_bool_Values()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { "a", 2, true },
+                new object[] { "a", 2, false },
+                new object[] { "a", 4, true },
+                new object[] { "a", 4, false },
+                new object[] { "a", 6, true },
+                new object[] { "a", 6, false },
+                new object[] { "b", 2, true },
+                new object[] { "b", 2, false },
+                new object[] { "b", 4, true },
+                new object[] { "b", 4, false },
+                new object[] { "b", 6, true },
+                new object[] { "b", 6, false },
+            });
+        }
+
         private static void Suppose_NoArguments() { }
 
         private static void Suppose_Bool(bool p1) { }
@@ -68,6 +88,8 @@
         private static void Suppose_Int(int p1) { }
 
         private static void Suppose_Int_35([CombinatorialValues(3, 5)] int p1) { }
+
+        private static void Suppose_string_int_bool_Values([CombinatorialValues("a", "b")]string p1, [CombinatorialValues(2, 4, 6)]int p2, bool p3) { }
 
         private static void AssertData(IEnumerable<object[]> expected, [CallerMemberName] string testMethodName = null)
         {
