@@ -57,6 +57,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0-alpha-g4e621dfd0d\tools\analyzers\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\Packages\Nerdbank.GitVersioning.1.0.15178-beta\build\NerdBank.GitVersioning.targets" Condition="Exists('..\..\Packages\Nerdbank.GitVersioning.1.0.15178-beta\build\NerdBank.GitVersioning.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
