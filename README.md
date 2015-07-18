@@ -5,6 +5,8 @@ This project allows for parameterizing your Xunit test methods such that
 they run multiple times, once for each combination of possible arguments
 for your test method.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/7w8sae8tfn0gf4g6?svg=true)](https://ci.appveyor.com/project/AArnott/xunit-combinatorial)
+
 ## Installation
 
 This project is available as a [NuGet package][NuPkg]
