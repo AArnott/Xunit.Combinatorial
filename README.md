@@ -34,4 +34,15 @@ The `CombinatorialDataAttribute` will supply Xunit with both `true` and `false`
 arguments to run the test method with, resulting in two invocations of your 
 test method with individual results reported for each invocation.
 
+To supply your own values to pass in for each parameter, use the
+`CombinatorialValuesAttribute`:
+
+    [Theory, CombinatorialData]
+    public void CheckValidAge([CombinatorialValues(5, 18, 21, 25)] int age)
+    {
+        // verifications here
+    }
+
+This will run your test method four times with each of the prescribed values.
+
  [NuPkg]: https://www.nuget.org/packages/Xunit.Combinatorial
