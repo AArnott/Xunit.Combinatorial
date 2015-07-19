@@ -1,4 +1,4 @@
-﻿//#define TestPairwise
+﻿#define TestPairwise
 namespace Xunit.Combinatorial.Tests
 {
     using System;

@@ -26,7 +26,15 @@
                 return Enumerable.Empty<object[]>();
             }
 
-            return Enumerable.Empty<object[]>();
+            var values = new List<object>[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
+            }
+
+            var testCaseInfo = new PairwiseStrategy.PairwiseTestCaseGenerator().GetTestCases(values.Select(v => v.Count).ToArray());
+            return from testCase in testCaseInfo
+                   select testCase.Features.Select((j, i) => values[i][j]).ToArray();
         }
     }
 }
