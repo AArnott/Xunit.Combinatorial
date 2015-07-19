@@ -122,6 +122,10 @@
                     yield return Enum.Parse(dataType, name);
                 }
             }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }
