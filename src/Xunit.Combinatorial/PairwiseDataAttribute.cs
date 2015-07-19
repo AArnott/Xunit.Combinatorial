@@ -32,9 +32,9 @@
                 values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
             }
 
-            var testCaseInfo = new PairwiseStrategy.PairwiseTestCaseGenerator().GetTestCases(values.Select(v => v.Count).ToArray());
+            var testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray());
             return from testCase in testCaseInfo
-                   select testCase.Features.Select((j, i) => values[i][j]).ToArray();
+                   select testCase.Select((j, i) => values[i][j]).ToArray();
         }
     }
 }

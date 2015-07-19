@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -49,7 +50,7 @@ namespace Xunit
     /// http://burtleburtle.net/bob/math/jenny.html
     /// </para>
     /// </remarks>
-    internal class PairwiseStrategy
+    internal static class PairwiseStrategy
     {
         // NOTE: Terminology in this class is based on the literature
         // relating to strategies for combining variable features when
@@ -58,10 +59,39 @@ namespace Xunit
         // comments in the code for further explanations.
 
         /// <summary>
+        /// Creates a set of test cases for specified dimensions.
+        /// </summary>
+        /// <param name="dimensions">
+        /// An array which contains information about dimensions. Each element of
+        /// this array represents a number of features in the specific dimension.
+        /// </param>
+        /// <returns>
+        /// A set of test cases.
+        /// </returns>
+        public static List<int[]> GetTestCases(int[] dimensions)
+        {
+            return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions)
+                    select testCase.Features).ToList();
+        }
+
+        private static bool IsTupleCovered(this TestCaseInfo testCaseInfo, FeatureTuple tuple)
+        {
+            for (int i = 0; i < tuple.Length; i++)
+            {
+                if (testCaseInfo.Features[tuple[i].Dimension] != tuple[i].Feature)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// FleaRand is a pseudo-random number generator developed by Bob Jenkins:
         /// http://burtleburtle.net/bob/rand/talksmall.html#flea
         /// </summary>
-        internal class FleaRand
+        private class FleaRand
         {
             private uint b;
             private uint c;
@@ -142,7 +172,7 @@ namespace Xunit
         /// Feature is the index of the supplied value in that parameter's list of
         /// sources.
         /// </summary>
-        internal class FeatureInfo
+        private class FeatureInfo
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="FeatureInfo"/> class.
@@ -167,7 +197,7 @@ namespace Xunit
         /// tuples actually may contain only single feature or pair of features, but
         /// the algorithm itself works with triplets, quadruples and so on.
         /// </summary>
-        internal class FeatureTuple
+        private class FeatureTuple
         {
             private readonly FeatureInfo[] features;
 
@@ -212,7 +242,7 @@ namespace Xunit
         /// <summary>
         /// TestCase represents a single test case covering a list of features.
         /// </summary>
-        internal class TestCaseInfo
+        private class TestCaseInfo
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="TestCaseInfo"/> class.
@@ -224,19 +254,6 @@ namespace Xunit
             }
 
             public int[] Features { get; }
-
-            public bool IsTupleCovered(FeatureTuple tuple)
-            {
-                for (int i = 0; i < tuple.Length; i++)
-                {
-                    if (this.Features[tuple[i].Dimension] != tuple[i].Feature)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
         }
 
         /// <summary>
@@ -302,7 +319,7 @@ namespace Xunit
         /// probes in a different order.
         /// </para>
         /// </remarks>
-        internal class PairwiseTestCaseGenerator
+        private class PairwiseTestCaseGenerator
         {
             private FleaRand prng;
 
