@@ -37,6 +37,12 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>Xunit.Combinatorial.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>opensourcekey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="CombinatorialDataAttribute.cs" />
     <Compile Include="CombinatorialValuesAttribute.cs" />
@@ -57,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="opensourcekey.snk" />
     <None Include="packages.config" />
     <None Include="Xunit.Combinatorial.ruleset" />
   </ItemGroup>
