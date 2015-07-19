@@ -1,5 +1,4 @@
-﻿#define TestPairwise
-namespace Xunit.Combinatorial.Tests
+﻿namespace Xunit.Combinatorial.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -97,9 +96,7 @@ namespace Xunit.Combinatorial.Tests
         public void GetData_UnsupportedType()
         {
             Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
-#if TestPairwise
             Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
-#endif
         }
 
         private static void Suppose_NoArguments() { }
@@ -115,10 +112,53 @@ namespace Xunit.Combinatorial.Tests
         {
             IEnumerable<object[]> actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
             IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
+
+            // Verify that the combinatorial result is as expected.
             Assert.Equal(expectedCombinatorial, actualCombinatorial);
-#if TestPairwise
-            // TODO: add verifications here
-#endif
+
+            if (expectedCombinatorial.Any())
+            {
+                // Verify that the pairwise result covers every pair.
+                HashSet<object>[] possibleValues = ExtractPossibleValues(expectedCombinatorial);
+
+                for (int i = 0; i < possibleValues.Length - 1; i++)
+                {
+                    for (int j = i + 1; j < possibleValues.Length; j++)
+                    {
+                        foreach (object iValue in possibleValues[i])
+                        {
+                            foreach (object jValue in possibleValues[j])
+                            {
+                                Assert.True(actualPairwise.Any(
+                                    testCase => 
+                                        EqualityComparer<object>.Default.Equals(testCase[i], iValue) &&
+                                        EqualityComparer<object>.Default.Equals(testCase[j], jValue)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static HashSet<object>[] ExtractPossibleValues(IEnumerable<object[]> combinatorialTestCases)
+        {
+            Requires.NotNull(combinatorialTestCases, nameof(combinatorialTestCases));
+
+            HashSet<object>[] possibleValues = new HashSet<object>[combinatorialTestCases.First().Length];
+            for (int i = 0; i < possibleValues.Length; i++)
+            {
+                possibleValues[i] = new HashSet<object>();
+            }
+
+            foreach (object[] combination in combinatorialTestCases)
+            {
+                for (int i = 0; i < combination.Length; i++)
+                {
+                    possibleValues[i].Add(combination[i]);
+                }
+            }
+
+            return possibleValues;
         }
 
         private static IEnumerable<object[]> GetData(DataAttribute dataAttribute, [CallerMemberName] string testMethodName = null)

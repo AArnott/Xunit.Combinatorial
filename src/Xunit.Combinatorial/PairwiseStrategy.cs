@@ -343,10 +343,6 @@ namespace Xunit
                     testCases.Add(testCase);
                 }
 
-#if DEBUG
-                SelfTest(testCases);
-#endif
-
                 return testCases;
             }
 
@@ -578,43 +574,6 @@ namespace Xunit
                     }
                 }
             }
-
-#if DEBUG
-            private void SelfTest(List<TestCaseInfo> testCases)
-            {
-                for (int d1 = 0; d1 < _dimensions.Length - 1; d1++)
-                {
-                    for (int d2 = d1 + 1; d2 < _dimensions.Length; d2++)
-                    {
-                        for (int f1 = 0; f1 < _dimensions[d1]; f1++)
-                        {
-                            for (int f2 = 0; f2 < _dimensions[d2]; f2++)
-                            {
-                                FeatureTuple tuple = new FeatureTuple(new FeatureInfo(d1, f1), new FeatureInfo(d2, f2));
-
-                                if (!IsTupleCovered(testCases, tuple))
-                                {
-                                    throw new InvalidOperationException(string.Format("PairwiseStrategy : Not all pairs are covered : {0}", tuple.ToString()));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            private bool IsTupleCovered(List<TestCaseInfo> testCases, FeatureTuple tuple)
-            {
-                foreach (TestCaseInfo testCase in testCases)
-                {
-                    if (testCase.IsTupleCovered(tuple))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-#endif
         }
     }
 }
