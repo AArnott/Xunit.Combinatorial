@@ -23,15 +23,16 @@
     <Title>Combinatorial testing with Xunit</Title>
     <Authors>Andrew Arnott</Authors>
     <Owners>andarno</Owners>
-    <Summary>Xunit.Combinatorial.NuGet</Summary>
-    <Description>Xunit.Combinatorial.NuGet</Description>
+    <Summary>Adds pairwise and combinatorial testing to Xunit</Summary>
+    <Description>When combined with Xunit's [Theory] attribute, generates test cases that run a test under many conditions that you control via test method parameters.</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>https://github.com/AArnott/Xunit.Combinatorial</ProjectUrl>
     <LicenseUrl>https://raw.githubusercontent.com/AArnott/Xunit.Combinatorial/master/LICENSE.txt</LicenseUrl>
     <Copyright>Copyright © Andrew Arnott</Copyright>
-    <Tags>Xunit.Combinatorial.NuGet</Tags>
+    <Tags>xunit combinatorial pairwise testing</Tags>
     <GenerateSymbolPackage>true</GenerateSymbolPackage>
+    <EmbedSourceFiles>true</EmbedSourceFiles>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xunit.Combinatorial\Xunit.Combinatorial.csproj" />
