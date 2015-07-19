@@ -24,7 +24,7 @@
     <Authors>Andrew Arnott</Authors>
     <Owners>andarno</Owners>
     <Summary>Adds pairwise and combinatorial testing to Xunit</Summary>
-    <Description>When combined with Xunit's [Theory] attribute, generates test cases that run a test under many conditions that you control via test method parameters.</Description>
+    <Description>Adds pairwise and combinatorial testing to Xunit. When combined with Xunit's [Theory] attribute, generates test cases that run a test under many conditions that you control via test method parameters.</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>https://github.com/AArnott/Xunit.Combinatorial</ProjectUrl>
