@@ -1,4 +1,4 @@
-﻿namespace Xunit.Combinatorial
+﻿namespace Xunit
 {
     using System;
     using System.Collections.Generic;

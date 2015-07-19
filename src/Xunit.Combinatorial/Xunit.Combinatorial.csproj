@@ -8,7 +8,7 @@
     <ProjectGuid>{EA6330CC-B135-405D-AF9B-BD802B508985}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Xunit.Combinatorial</RootNamespace>
+    <RootNamespace>Xunit</RootNamespace>
     <AssemblyName>Xunit.Combinatorial</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
