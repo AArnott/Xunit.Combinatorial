@@ -63,75 +63,75 @@ namespace Xunit
         /// </summary>
         internal class FleaRand
         {
-            private uint _b;
-            private uint _c;
-            private uint _d;
-            private uint _z;
-            private uint[] _m;
-            private uint[] _r;
-            private uint _q;
+            private uint b;
+            private uint c;
+            private uint d;
+            private uint z;
+            private uint[] m;
+            private uint[] r;
+            private uint q;
 
             /// <summary>
-            /// Initializes a new instance of the FleaRand class.
+            /// Initializes a new instance of the <see cref="FleaRand"/> class.
             /// </summary>
             /// <param name="seed">The seed.</param>
             public FleaRand(uint seed)
             {
-                _b = seed;
-                _c = seed;
-                _d = seed;
-                _z = seed;
-                _m = new uint[256];
-                _r = new uint[256];
+                this.b = seed;
+                this.c = seed;
+                this.d = seed;
+                this.z = seed;
+                this.m = new uint[256];
+                this.r = new uint[256];
 
-                for (int i = 0; i < _m.Length; i++)
+                for (int i = 0; i < this.m.Length; i++)
                 {
-                    _m[i] = seed;
+                    this.m[i] = seed;
                 }
 
                 for (int i = 0; i < 10; i++)
                 {
-                    Batch();
+                    this.Batch();
                 }
 
-                _q = 0;
+                this.q = 0;
             }
 
             public uint Next()
             {
-                if (_q == 0)
+                if (this.q == 0)
                 {
-                    Batch();
-                    _q = (uint)_r.Length - 1;
+                    this.Batch();
+                    this.q = (uint)this.r.Length - 1;
                 }
                 else
                 {
-                    _q--;
+                    this.q--;
                 }
 
-                return _r[_q];
+                return this.r[this.q];
             }
 
             private void Batch()
             {
                 uint a;
-                uint b = _b;
-                uint c = _c + (++_z);
-                uint d = _d;
+                uint b = this.b;
+                uint c = this.c + (++this.z);
+                uint d = this.d;
 
-                for (int i = 0; i < _r.Length; i++)
+                for (int i = 0; i < this.r.Length; i++)
                 {
-                    a = _m[b % _m.Length];
-                    _m[b % _m.Length] = d;
+                    a = this.m[b % this.m.Length];
+                    this.m[b % this.m.Length] = d;
                     d = (c << 19) + (c >> 13) + b;
-                    c = b ^ _m[i];
+                    c = b ^ this.m[i];
                     b = a + d;
-                    _r[i] = c;
+                    this.r[i] = c;
                 }
 
-                _b = b;
-                _c = c;
-                _d = d;
+                this.b = b;
+                this.c = c;
+                this.d = d;
             }
         }
 
@@ -144,20 +144,20 @@ namespace Xunit
         /// </summary>
         internal class FeatureInfo
         {
-            public readonly int Dimension;
-
-            public readonly int Feature;
-
             /// <summary>
-            /// Initializes a new instance of FeatureInfo class.
+            /// Initializes a new instance of the <see cref="FeatureInfo"/> class.
             /// </summary>
             /// <param name="dimension">Index of a dimension.</param>
             /// <param name="feature">Index of a feature.</param>
             public FeatureInfo(int dimension, int feature)
             {
-                Dimension = dimension;
-                Feature = feature;
+                this.Dimension = dimension;
+                this.Feature = feature;
             }
+
+            public int Dimension { get; }
+
+            public int Feature { get; }
         }
 
         /// <summary>
@@ -169,32 +169,34 @@ namespace Xunit
         /// </summary>
         internal class FeatureTuple
         {
-            private readonly FeatureInfo[] _features;
+            private readonly FeatureInfo[] features;
 
             /// <summary>
-            /// Initializes a new instance of FeatureTuple class for a single feature.
+            /// Initializes a new instance of the <see cref="FeatureTuple"/> class
+            /// for a single feature.
             /// </summary>
             /// <param name="feature1">Single feature.</param>
             public FeatureTuple(FeatureInfo feature1)
             {
-                _features = new FeatureInfo[] { feature1 };
+                this.features = new FeatureInfo[] { feature1 };
             }
 
             /// <summary>
-            /// Initializes a new instance of FeatureTuple class for a pair of features.
+            /// Initializes a new instance of the <see cref="FeatureTuple"/> class
+            /// for a pair of features.
             /// </summary>
             /// <param name="feature1">First feature.</param>
             /// <param name="feature2">Second feature.</param>
             public FeatureTuple(FeatureInfo feature1, FeatureInfo feature2)
             {
-                _features = new FeatureInfo[] { feature1, feature2 };
+                this.features = new FeatureInfo[] { feature1, feature2 };
             }
 
             public int Length
             {
                 get
                 {
-                    return _features.Length;
+                    return this.features.Length;
                 }
             }
 
@@ -202,7 +204,7 @@ namespace Xunit
             {
                 get
                 {
-                    return _features[index];
+                    return this.features[index];
                 }
             }
         }
@@ -212,22 +214,22 @@ namespace Xunit
         /// </summary>
         internal class TestCaseInfo
         {
-            public readonly int[] Features;
-
             /// <summary>
-            /// Initializes a new instance of TestCaseInfo class.
+            /// Initializes a new instance of the <see cref="TestCaseInfo"/> class.
             /// </summary>
             /// <param name="length">A number of features in the test case.</param>
             public TestCaseInfo(int length)
             {
-                Features = new int[length];
+                this.Features = new int[length];
             }
+
+            public int[] Features { get; }
 
             public bool IsTupleCovered(FeatureTuple tuple)
             {
                 for (int i = 0; i < tuple.Length; i++)
                 {
-                    if (Features[tuple[i].Dimension] != tuple[i].Feature)
+                    if (this.Features[tuple[i].Dimension] != tuple[i].Feature)
                     {
                         return false;
                     }
@@ -302,11 +304,11 @@ namespace Xunit
         /// </remarks>
         internal class PairwiseTestCaseGenerator
         {
-            private FleaRand _prng;
+            private FleaRand prng;
 
-            private int[] _dimensions;
+            private int[] dimensions;
 
-            private List<FeatureTuple>[][] _uncoveredTuples;
+            private List<FeatureTuple>[][] uncoveredTuples;
 
             /// <summary>
             /// Creates a set of test cases for specified dimensions.
@@ -320,25 +322,25 @@ namespace Xunit
             /// </returns>
             public List<TestCaseInfo> GetTestCases(int[] dimensions)
             {
-                _prng = new FleaRand(15485863);
-                _dimensions = dimensions;
+                this.prng = new FleaRand(15485863);
+                this.dimensions = dimensions;
 
-                CreateAllTuples();
+                this.CreateAllTuples();
 
                 List<TestCaseInfo> testCases = new List<TestCaseInfo>();
 
                 while (true)
                 {
-                    FeatureTuple tuple = GetNextTuple();
+                    FeatureTuple tuple = this.GetNextTuple();
 
                     if (tuple == null)
                     {
                         break;
                     }
 
-                    TestCaseInfo testCase = CreateTestCase(tuple);
+                    TestCaseInfo testCase = this.CreateTestCase(tuple);
 
-                    RemoveTuplesCoveredByTest(testCase);
+                    this.RemoveTuplesCoveredByTest(testCase);
 
                     testCases.Add(testCase);
                 }
@@ -348,20 +350,20 @@ namespace Xunit
 
             private int GetNextRandomNumber()
             {
-                return (int)(_prng.Next() >> 1);
+                return (int)(this.prng.Next() >> 1);
             }
 
             private void CreateAllTuples()
             {
-                _uncoveredTuples = new List<FeatureTuple>[_dimensions.Length][];
+                this.uncoveredTuples = new List<FeatureTuple>[this.dimensions.Length][];
 
-                for (int d = 0; d < _dimensions.Length; d++)
+                for (int d = 0; d < this.dimensions.Length; d++)
                 {
-                    _uncoveredTuples[d] = new List<FeatureTuple>[_dimensions[d]];
+                    this.uncoveredTuples[d] = new List<FeatureTuple>[this.dimensions[d]];
 
-                    for (int f = 0; f < _dimensions[d]; f++)
+                    for (int f = 0; f < this.dimensions[d]; f++)
                     {
-                        _uncoveredTuples[d][f] = CreateTuples(d, f);
+                        this.uncoveredTuples[d][f] = this.CreateTuples(d, f);
                     }
                 }
             }
@@ -372,11 +374,11 @@ namespace Xunit
 
                 result.Add(new FeatureTuple(new FeatureInfo(dimension, feature)));
 
-                for (int d = 0; d < _dimensions.Length; d++)
+                for (int d = 0; d < this.dimensions.Length; d++)
                 {
                     if (d != dimension)
                     {
-                        for (int f = 0; f < _dimensions[d]; f++)
+                        for (int f = 0; f < this.dimensions[d]; f++)
                         {
                             result.Add(new FeatureTuple(new FeatureInfo(dimension, feature), new FeatureInfo(d, f)));
                         }
@@ -388,11 +390,11 @@ namespace Xunit
 
             private FeatureTuple GetNextTuple()
             {
-                for (int d = 0; d < _uncoveredTuples.Length; d++)
+                for (int d = 0; d < this.uncoveredTuples.Length; d++)
                 {
-                    for (int f = 0; f < _uncoveredTuples[d].Length; f++)
+                    for (int f = 0; f < this.uncoveredTuples[d].Length; f++)
                     {
-                        List<FeatureTuple> tuples = _uncoveredTuples[d][f];
+                        List<FeatureTuple> tuples = this.uncoveredTuples[d][f];
 
                         if (tuples.Count > 0)
                         {
@@ -413,9 +415,9 @@ namespace Xunit
 
                 for (int i = 0; i < 7; i++)
                 {
-                    TestCaseInfo testCase = CreateRandomTestCase(tuple);
+                    TestCaseInfo testCase = this.CreateRandomTestCase(tuple);
 
-                    int coverage = MaximizeCoverage(testCase, tuple);
+                    int coverage = this.MaximizeCoverage(testCase, tuple);
 
                     if (coverage > bestCoverage)
                     {
@@ -429,11 +431,11 @@ namespace Xunit
 
             private TestCaseInfo CreateRandomTestCase(FeatureTuple tuple)
             {
-                TestCaseInfo result = new TestCaseInfo(_dimensions.Length);
+                TestCaseInfo result = new TestCaseInfo(this.dimensions.Length);
 
-                for (int d = 0; d < _dimensions.Length; d++)
+                for (int d = 0; d < this.dimensions.Length; d++)
                 {
-                    result.Features[d] = GetNextRandomNumber() % _dimensions[d];
+                    result.Features[d] = this.GetNextRandomNumber() % this.dimensions[d];
                 }
 
                 for (int i = 0; i < tuple.Length; i++)
@@ -448,21 +450,21 @@ namespace Xunit
             {
                 // It starts with one because we always have one tuple which is covered by the test.
                 int totalCoverage = 1;
-                int[] mutableDimensions = GetMutableDimensions(tuple);
+                int[] mutableDimensions = this.GetMutableDimensions(tuple);
 
                 while (true)
                 {
                     bool progress = false;
 
-                    ScrambleDimensions(mutableDimensions);
+                    this.ScrambleDimensions(mutableDimensions);
 
                     for (int i = 0; i < mutableDimensions.Length; i++)
                     {
                         int d = mutableDimensions[i];
 
-                        int bestCoverage = CountTuplesCoveredByTest(testCase, d, testCase.Features[d]);
+                        int bestCoverage = this.CountTuplesCoveredByTest(testCase, d, testCase.Features[d]);
 
-                        int newCoverage = MaximizeCoverageForDimension(testCase, d, bestCoverage);
+                        int newCoverage = this.MaximizeCoverageForDimension(testCase, d, bestCoverage);
 
                         totalCoverage += newCoverage;
 
@@ -483,14 +485,14 @@ namespace Xunit
             {
                 List<int> result = new List<int>();
 
-                bool[] immutableDimensions = new bool[_dimensions.Length];
+                bool[] immutableDimensions = new bool[this.dimensions.Length];
 
                 for (int i = 0; i < tuple.Length; i++)
                 {
                     immutableDimensions[tuple[i].Dimension] = true;
                 }
 
-                for (int d = 0; d < _dimensions.Length; d++)
+                for (int d = 0; d < this.dimensions.Length; d++)
                 {
                     if (!immutableDimensions[d])
                     {
@@ -505,7 +507,7 @@ namespace Xunit
             {
                 for (int i = 0; i < dimensions.Length; i++)
                 {
-                    int j = GetNextRandomNumber() % dimensions.Length;
+                    int j = this.GetNextRandomNumber() % dimensions.Length;
                     int t = dimensions[i];
                     dimensions[i] = dimensions[j];
                     dimensions[j] = t;
@@ -514,13 +516,13 @@ namespace Xunit
 
             private int MaximizeCoverageForDimension(TestCaseInfo testCase, int dimension, int bestCoverage)
             {
-                List<int> bestFeatures = new List<int>(_dimensions[dimension]);
+                List<int> bestFeatures = new List<int>(this.dimensions[dimension]);
 
-                for (int f = 0; f < _dimensions[dimension]; f++)
+                for (int f = 0; f < this.dimensions[dimension]; f++)
                 {
                     testCase.Features[dimension] = f;
 
-                    int coverage = CountTuplesCoveredByTest(testCase, dimension, f);
+                    int coverage = this.CountTuplesCoveredByTest(testCase, dimension, f);
 
                     if (coverage >= bestCoverage)
                     {
@@ -534,7 +536,7 @@ namespace Xunit
                     }
                 }
 
-                testCase.Features[dimension] = bestFeatures[GetNextRandomNumber() % bestFeatures.Count];
+                testCase.Features[dimension] = bestFeatures[this.GetNextRandomNumber() % bestFeatures.Count];
 
                 return bestCoverage;
             }
@@ -543,7 +545,7 @@ namespace Xunit
             {
                 int result = 0;
 
-                List<FeatureTuple> tuples = _uncoveredTuples[dimension][feature];
+                List<FeatureTuple> tuples = this.uncoveredTuples[dimension][feature];
 
                 for (int i = 0; i < tuples.Count; i++)
                 {
@@ -558,11 +560,11 @@ namespace Xunit
 
             private void RemoveTuplesCoveredByTest(TestCaseInfo testCase)
             {
-                for (int d = 0; d < _uncoveredTuples.Length; d++)
+                for (int d = 0; d < this.uncoveredTuples.Length; d++)
                 {
-                    for (int f = 0; f < _uncoveredTuples[d].Length; f++)
+                    for (int f = 0; f < this.uncoveredTuples[d].Length; f++)
                     {
-                        List<FeatureTuple> tuples = _uncoveredTuples[d][f];
+                        List<FeatureTuple> tuples = this.uncoveredTuples[d][f];
 
                         for (int i = tuples.Count - 1; i >= 0; i--)
                         {
