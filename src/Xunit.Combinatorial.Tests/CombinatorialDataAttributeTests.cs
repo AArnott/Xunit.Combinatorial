@@ -1,4 +1,5 @@
-﻿namespace Xunit.Combinatorial.Tests
+﻿//#define TestPairwise
+namespace Xunit.Combinatorial.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -7,14 +8,16 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using Validation;
+    using Sdk;
 
     public class CombinatorialDataAttributeTests
     {
         [Fact]
         public void GetData_NoArguments()
         {
-            var actual = GetData();
-            Assert.Empty(actual);
+            AssertData(new object[][]
+            {
+            });
         }
 
         [Fact]
@@ -93,7 +96,10 @@
         [Fact]
         public void GetData_UnsupportedType()
         {
-            Assert.Throws<NotSupportedException>(() => GetData());
+            Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
+#if TestPairwise
+            Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
+#endif
         }
 
         private static void Suppose_NoArguments() { }
@@ -105,21 +111,25 @@
         private static void Suppose_DateTimeKind(DateTimeKind p1) { }
         private static void Suppose_UnsupportedType(System.AggregateException p1) { }
 
-        private static void AssertData(IEnumerable<object[]> expected, [CallerMemberName] string testMethodName = null)
+        private static void AssertData(IEnumerable<object[]> expectedCombinatorial, [CallerMemberName] string testMethodName = null)
         {
-            IEnumerable<object[]> actual = GetData(testMethodName).ToArray();
-            Assert.Equal(expected, actual);
+            IEnumerable<object[]> actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
+            IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
+            Assert.Equal(expectedCombinatorial, actualCombinatorial);
+#if TestPairwise
+            // TODO: add verifications here
+#endif
         }
 
-        private static IEnumerable<object[]> GetData([CallerMemberName] string testMethodName = null)
+        private static IEnumerable<object[]> GetData(DataAttribute dataAttribute, [CallerMemberName] string testMethodName = null)
         {
+            Requires.NotNull(dataAttribute, nameof(dataAttribute));
             Requires.NotNullOrEmpty(testMethodName, nameof(testMethodName));
 
             string supposeMethodName = testMethodName.Replace("GetData_", "Suppose_");
             var methodInfo = typeof(CombinatorialDataAttributeTests).GetTypeInfo()
                 .DeclaredMethods.First(m => m.Name == supposeMethodName);
-            var attribute = new CombinatorialDataAttribute();
-            return attribute.GetData(methodInfo);
+            return dataAttribute.GetData(methodInfo);
         }
     }
 }
