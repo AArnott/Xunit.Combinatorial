@@ -7,14 +7,16 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using Validation;
+    using Sdk;
 
     public class CombinatorialDataAttributeTests
     {
         [Fact]
         public void GetData_NoArguments()
         {
-            var actual = GetData();
-            Assert.Empty(actual);
+            AssertData(new object[][]
+            {
+            });
         }
 
         [Fact]
@@ -93,7 +95,8 @@
         [Fact]
         public void GetData_UnsupportedType()
         {
-            Assert.Throws<NotSupportedException>(() => GetData());
+            Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
+            Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
         }
 
         private static void Suppose_NoArguments() { }
@@ -105,21 +108,68 @@
         private static void Suppose_DateTimeKind(DateTimeKind p1) { }
         private static void Suppose_UnsupportedType(System.AggregateException p1) { }
 
-        private static void AssertData(IEnumerable<object[]> expected, [CallerMemberName] string testMethodName = null)
+        private static void AssertData(IEnumerable<object[]> expectedCombinatorial, [CallerMemberName] string testMethodName = null)
         {
-            IEnumerable<object[]> actual = GetData(testMethodName).ToArray();
-            Assert.Equal(expected, actual);
+            IEnumerable<object[]> actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
+            IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
+
+            // Verify that the combinatorial result is as expected.
+            Assert.Equal(expectedCombinatorial, actualCombinatorial);
+
+            if (expectedCombinatorial.Any())
+            {
+                // Verify that the pairwise result covers every pair.
+                HashSet<object>[] possibleValues = ExtractPossibleValues(expectedCombinatorial);
+
+                for (int i = 0; i < possibleValues.Length - 1; i++)
+                {
+                    for (int j = i + 1; j < possibleValues.Length; j++)
+                    {
+                        foreach (object iValue in possibleValues[i])
+                        {
+                            foreach (object jValue in possibleValues[j])
+                            {
+                                Assert.True(actualPairwise.Any(
+                                    testCase => 
+                                        EqualityComparer<object>.Default.Equals(testCase[i], iValue) &&
+                                        EqualityComparer<object>.Default.Equals(testCase[j], jValue)));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        private static IEnumerable<object[]> GetData([CallerMemberName] string testMethodName = null)
+        private static HashSet<object>[] ExtractPossibleValues(IEnumerable<object[]> combinatorialTestCases)
         {
+            Requires.NotNull(combinatorialTestCases, nameof(combinatorialTestCases));
+
+            HashSet<object>[] possibleValues = new HashSet<object>[combinatorialTestCases.First().Length];
+            for (int i = 0; i < possibleValues.Length; i++)
+            {
+                possibleValues[i] = new HashSet<object>();
+            }
+
+            foreach (object[] combination in combinatorialTestCases)
+            {
+                for (int i = 0; i < combination.Length; i++)
+                {
+                    possibleValues[i].Add(combination[i]);
+                }
+            }
+
+            return possibleValues;
+        }
+
+        private static IEnumerable<object[]> GetData(DataAttribute dataAttribute, [CallerMemberName] string testMethodName = null)
+        {
+            Requires.NotNull(dataAttribute, nameof(dataAttribute));
             Requires.NotNullOrEmpty(testMethodName, nameof(testMethodName));
 
             string supposeMethodName = testMethodName.Replace("GetData_", "Suppose_");
             var methodInfo = typeof(CombinatorialDataAttributeTests).GetTypeInfo()
                 .DeclaredMethods.First(m => m.Name == supposeMethodName);
-            var attribute = new CombinatorialDataAttribute();
-            return attribute.GetData(methodInfo);
+            return dataAttribute.GetData(methodInfo);
         }
     }
 }
