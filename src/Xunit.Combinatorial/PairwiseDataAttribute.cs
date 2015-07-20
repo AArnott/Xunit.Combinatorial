@@ -1,4 +1,7 @@
-﻿namespace Xunit
+﻿// Copyright (c) 2015 Andrew Arnott
+// Licensed under the Ms-PL
+
+namespace Xunit
 {
     using System;
     using System.Collections.Generic;
