@@ -19,6 +19,7 @@ namespace Xunit
     /// </summary>
     public class PairwiseDataAttribute : DataAttribute
     {
+        /// <inheritdoc />
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
             Requires.NotNull(testMethod, nameof(testMethod));
