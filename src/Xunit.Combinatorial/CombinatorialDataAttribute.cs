@@ -18,6 +18,7 @@ namespace Xunit
     /// with arguments to run every possible combination of values for the
     /// parameters taken by the test method.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class CombinatorialDataAttribute : DataAttribute
     {
         /// <summary>
