@@ -51,6 +51,7 @@
     <Compile Include="PairwiseDataAttribute.cs" />
     <Compile Include="PairwiseStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sdk\CombinatorialDataDiscoverer.cs" />
     <Compile Include="ValuesUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

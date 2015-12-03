@@ -19,6 +19,7 @@ namespace Xunit
     /// parameters taken by the test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    [DataDiscoverer("Xunit.Sdk.CombinatorialDataDiscoverer", "Xunit.Combinatorial")]
     public class CombinatorialDataAttribute : DataAttribute
     {
         /// <summary>
