@@ -48,6 +48,7 @@
     <Compile Include="CombinatorialDataAttributeTests.cs" />
     <Compile Include="CombinatorialValuesAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleUses.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Validation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=2fc06f0d701809a7, processorArchitecture=MSIL">
