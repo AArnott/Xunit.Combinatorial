@@ -9,6 +9,7 @@ but significantly reduces the test case explosion you might have when
 you have more than two parameters.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/7w8sae8tfn0gf4g6?svg=true)](https://ci.appveyor.com/project/AArnott/xunit-combinatorial)
+[![NuGet package](https://img.shields.io/nuget/v/xunit.combinatorial.svg)](https://nuget.org/packages/xunit.combinatorial)
 
 ## Installation
 
