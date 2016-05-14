@@ -3,7 +3,6 @@
 namespace Xunit
 {
     using System;
-    using Validation;
 
     /// <summary>
     /// Specifies which values for this parameter should be used for running the test method.

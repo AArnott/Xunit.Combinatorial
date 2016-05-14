@@ -13,7 +13,6 @@
       "version": "1.0.0",
       "suppressParent": "all"
     },
-    "Validation": "2.0.6.15003",
     "xunit.abstractions": "2.0.0",
     "xunit.extensibility.core": "2.1.0"
   },

@@ -5,7 +5,6 @@ namespace Xunit
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Validation;
 
     /// <summary>
     /// Utility methods for generating values for test parameters.

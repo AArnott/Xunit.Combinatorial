@@ -9,7 +9,6 @@ namespace Xunit
     using System.Text;
     using System.Threading.Tasks;
     using Sdk;
-    using Validation;
 
     /// <summary>
     /// Provides a test method decorated with a <see cref="TheoryAttribute"/>

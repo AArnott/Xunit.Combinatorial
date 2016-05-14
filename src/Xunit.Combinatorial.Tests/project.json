@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "Validation": "2.2.8",
     "xunit": "2.1.0",
     "xunit.runner.visualstudio": "2.1.0"
   },
