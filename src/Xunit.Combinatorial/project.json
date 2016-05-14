@@ -10,7 +10,7 @@
       "suppressParent": "none"
     },
     "StyleCop.Analyzers": {
-      "version": "1.0.0-alpha-g4e621dfd0d",
+      "version": "1.0.0",
       "suppressParent": "all"
     },
     "Validation": "2.0.6.15003",
