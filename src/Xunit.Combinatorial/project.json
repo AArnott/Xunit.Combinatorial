@@ -1,0 +1,23 @@
+﻿{
+  "dependencies": {
+    "Nerdbank.GitVersioning": {
+      "version": "1.4.19",
+      "suppressParent": "none"
+    },
+    "NuProj.Common": "0.10.48-beta-gea4a31bbc5",
+    "ReadOnlySourceTree": {
+      "version": "0.1.37-beta",
+      "suppressParent": "none"
+    },
+    "StyleCop.Analyzers": {
+      "version": "1.0.0-alpha-g4e621dfd0d",
+      "suppressParent": "all"
+    },
+    "Validation": "2.0.6.15003",
+    "xunit.abstractions": "2.0.0",
+    "xunit.extensibility.core": "2.1.0"
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile259": { }
+  }
+}
