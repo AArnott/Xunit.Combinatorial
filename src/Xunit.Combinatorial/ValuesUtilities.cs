@@ -1,12 +1,10 @@
-﻿// Copyright (c) 2015 Andrew Arnott
-// Licensed under the Ms-PL
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
 namespace Xunit
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Validation;
 
     /// <summary>
     /// Utility methods for generating values for test parameters.

@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2015 Andrew Arnott
-// Licensed under the Ms-PL
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
 namespace Xunit
 {
@@ -10,7 +9,6 @@ namespace Xunit
     using System.Text;
     using System.Threading.Tasks;
     using Sdk;
-    using Validation;
 
     /// <summary>
     /// Provides a test method decorated with a <see cref="TheoryAttribute"/>

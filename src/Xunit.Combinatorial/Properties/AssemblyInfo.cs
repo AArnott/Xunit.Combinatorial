@@ -1,9 +1,9 @@
-﻿using System.Resources;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
-// General Information about an assembly is controlled through the following 
+using System.Reflection;
+using System.Resources;
+
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Xunit.Combinatorial")]

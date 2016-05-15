@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "companyName": "Andrew Arnott",
+      "copyrightText": "Copyright (c) {companyName}. All rights reserved. Licensed under the {licenseName}.",
+      "variables": {
+        "licenseName": "Ms-PL"
+      },
+      "xmlHeader": false
+    }
+  }
+}

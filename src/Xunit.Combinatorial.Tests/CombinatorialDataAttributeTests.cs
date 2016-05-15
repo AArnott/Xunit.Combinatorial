@@ -6,9 +6,8 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Text;
-    using Validation;
     using Sdk;
-
+    using Validation;
     public class CombinatorialDataAttributeTests
     {
         [Fact]

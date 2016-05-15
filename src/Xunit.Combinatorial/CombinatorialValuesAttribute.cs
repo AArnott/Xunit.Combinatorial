@@ -1,10 +1,8 @@
-﻿// Copyright (c) 2015 Andrew Arnott
-// Licensed under the Ms-PL
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
 namespace Xunit
 {
     using System;
-    using Validation;
 
     /// <summary>
     /// Specifies which values for this parameter should be used for running the test method.
