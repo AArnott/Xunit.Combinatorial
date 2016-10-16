@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CombinatorialDataAttributeTests.cs" />
+    <Compile Include="CombinatorialMemberDataTests.cs" />
     <Compile Include="CombinatorialValuesAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleUses.cs" />

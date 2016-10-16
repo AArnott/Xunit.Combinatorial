@@ -32,5 +32,14 @@
             // true  false true
             // true  true  false
         }
+
+        public static object[] _boolValues =  new object[] { 1, 2, 4, 7 };
+
+        [Theory]
+        [CombinatorialData]
+        public void MemberData([CombinatorialMemberData(nameof(_boolValues))]int i)
+        {
+            // it should generate 4 testcases from _boolValues
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Xunit
 {
+    using Combinatorial.Internal;
     using System;
     using System.Collections.Generic;
     using System.Linq;

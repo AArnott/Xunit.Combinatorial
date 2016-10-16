@@ -47,7 +47,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CombinatorialDataAttribute.cs" />
+    <Compile Include="CombinatorialMemberData.cs" />
     <Compile Include="CombinatorialValuesAttribute.cs" />
+    <Compile Include="ICombinatorialValuesProvider.cs" />
     <Compile Include="PairwiseDataAttribute.cs" />
     <Compile Include="PairwiseStrategy.cs" />
     <Compile Include="PrivateErrorHelpers.cs" />

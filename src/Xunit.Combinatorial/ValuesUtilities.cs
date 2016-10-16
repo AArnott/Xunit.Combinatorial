@@ -1,29 +1,31 @@
 ﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
-namespace Xunit
+namespace Xunit.Combinatorial.Internal
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
     /// Utility methods for generating values for test parameters.
     /// </summary>
-    internal static class ValuesUtilities
+    public static class ValuesUtilities
     {
         /// <summary>
         /// Gets a sequence of values that should be tested for the specified parameter.
         /// </summary>
         /// <param name="parameter">The parameter to get possible values for.</param>
         /// <returns>A sequence of values for the parameter.</returns>
-        internal static IEnumerable<object> GetValuesFor(ParameterInfo parameter)
+        public static IEnumerable<object> GetValuesFor(ParameterInfo parameter)
         {
             Requires.NotNull(parameter, nameof(parameter));
 
-            var valuesAttribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
-            if (valuesAttribute != null)
+            var providers = parameter.GetCustomAttributes().OfType<ICombinatorialValuesProvider>().ToArray();
+
+            if (providers.Any())
             {
-                return valuesAttribute.Values;
+                return providers.SelectMany(p => p.GetValues(parameter)).ToArray();
             }
 
             return GetValuesFor(parameter.ParameterType);
@@ -34,7 +36,7 @@ namespace Xunit
         /// </summary>
         /// <param name="dataType">The type to get possible values for.</param>
         /// <returns>A sequence of values for the <paramref name="dataType"/>.</returns>
-        internal static IEnumerable<object> GetValuesFor(Type dataType)
+        public static IEnumerable<object> GetValuesFor(Type dataType)
         {
             Requires.NotNull(dataType, nameof(dataType));
 

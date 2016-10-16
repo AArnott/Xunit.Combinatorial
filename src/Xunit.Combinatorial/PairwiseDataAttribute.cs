@@ -9,6 +9,7 @@ namespace Xunit
     using System.Text;
     using System.Threading.Tasks;
     using Sdk;
+    using Combinatorial.Internal;
 
     /// <summary>
     /// Provides a test method decorated with a <see cref="TheoryAttribute"/>
