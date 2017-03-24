@@ -1,26 +1,13 @@
-version: 1.0.{build}
-os: Visual Studio 2015
+version: '{build}'
+os: Visual Studio 2017
 configuration: Release
 environment:
-  NuGetApiKey:
-    secure: Ql19CstT9GvFNeSIAjXvgHXZg+/pNaYJ2jVkzde4LT2vwSyjiQgQ+M332wVYtu+r
-install:
-- ps: >-
-    iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/install-nuget-3-3-0.ps1'))
+  VisualStudioVersion: 15.0
 before_build:
-- ps: nuget restore src -Verbosity quiet
-build:
-  parallel: true
-  verbosity: minimal
+- ps: msbuild src\Xunit.Combinatorial.sln /nologo /m /v:quiet /t:restore
+build_script:
+- ps: msbuild src\Xunit.Combinatorial.sln /nologo /m /fl /v:quiet /t:build,pack
 test:
-  assemblies: '**\bin\**\*tests.dll'
+  assemblies: 'bin\**\*tests.dll'
 artifacts:
 - path: bin\**\*.nupkg
-on_success:
-- ps: >-
-    if ($env:NuGetApiKey -and $env:APPVEYOR_REPO_TAG_NAME -match "^v\d\.\d") {
-        Write-Output "Publishing release packages to nuget.org due to pushed tag $env:APPVEYOR_REPO_TAG_NAME"
-        Get-ChildItem -rec bin\Release\*.nupkg -exclude *.symbols.nupkg |% {
-            nuget push $_ -ApiKey $env:NuGetApiKey
-        }
-    }
