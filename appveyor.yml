@@ -4,10 +4,13 @@ configuration: Release
 environment:
   VisualStudioVersion: 15.0
 before_build:
-- ps: msbuild src\Xunit.Combinatorial.sln /nologo /m /v:quiet /t:restore
+- ps: dotnet restore src
 build_script:
-- ps: msbuild src\Xunit.Combinatorial.sln /nologo /m /fl /v:quiet /t:build,pack
-test:
-  assemblies: 'bin\**\*tests.dll'
+- ps: >-
+    dotnet build src /nologo
+
+    dotnet pack src --no-build /nologo
+test_script:
+- ps: dotnet test .\src\Xunit.Combinatorial.Tests\Xunit.Combinatorial.Tests.csproj --no-build
 artifacts:
 - path: bin\**\*.nupkg
