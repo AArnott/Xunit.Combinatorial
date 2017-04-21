@@ -19,13 +19,6 @@ namespace Xunit
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class CombinatorialDataAttribute : DataAttribute
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CombinatorialDataAttribute"/> class.
-        /// </summary>
-        public CombinatorialDataAttribute()
-        {
-        }
-
         /// <inheritdoc />
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {

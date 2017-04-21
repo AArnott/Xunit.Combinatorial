@@ -19,11 +19,11 @@ namespace Xunit
         /// </summary>
         /// <param name="parameter">The parameter to get possible values for.</param>
         /// <returns>A sequence of values for the parameter.</returns>
-        internal static IEnumerable<object> GetValuesFor(ParameterInfo parameter)
+        internal static object[] GetValuesFor(ParameterInfo parameter)
         {
             Requires.NotNull(parameter, nameof(parameter));
 
-            var valuesAttributes = parameter.GetCustomAttributes<CombinatorialValuesAttribute>()?.ToArray();
+            var valuesAttributes = parameter.GetCustomAttributes<ParameterValuesAttribute>()?.ToArray();
             if (valuesAttributes == null || valuesAttributes.Length == 0)
             {
                 var configuration = GetDefaultConfiguration(parameter.Member.DeclaringType);
@@ -32,11 +32,12 @@ namespace Xunit
             }
             else if (valuesAttributes.Length == 1)
             {
-                return valuesAttributes.Single().Values;
+                var values = valuesAttributes.Single().GetValues(parameter);
+                return values as object[] ?? values.ToArray();
             }
             else
             {
-                return valuesAttributes.SelectMany(va => va.Values).ToArray();
+                return valuesAttributes.SelectMany(va => va.GetValues(parameter)).ToArray();
             }
         }
 

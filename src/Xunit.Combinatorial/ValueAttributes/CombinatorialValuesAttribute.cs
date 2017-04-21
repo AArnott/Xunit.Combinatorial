@@ -3,12 +3,14 @@
 namespace Xunit
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
 
     /// <summary>
     /// Specifies which values for this parameter should be used for running the test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class CombinatorialValuesAttribute : Attribute
+    public class CombinatorialValuesAttribute : ParameterValuesAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CombinatorialValuesAttribute"/> class.
@@ -26,5 +28,8 @@ namespace Xunit
         /// </summary>
         /// <value>An array of values.</value>
         public object[] Values { get; }
+
+        /// <inheritdoc />
+        public override IEnumerable<object> GetValues(ParameterInfo parameter) => Values;
     }
 }
