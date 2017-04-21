@@ -4,6 +4,7 @@ namespace Xunit
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -11,6 +12,8 @@ namespace Xunit
     /// </summary>
     internal static class ValuesUtilities
     {
+        private static Dictionary<Type, DefaultCombinatorialValues> TypeDefaultValues { get; } = new Dictionary<Type, DefaultCombinatorialValues>();
+
         /// <summary>
         /// Gets a sequence of values that should be tested for the specified parameter.
         /// </summary>
@@ -20,44 +23,69 @@ namespace Xunit
         {
             Requires.NotNull(parameter, nameof(parameter));
 
-            var valuesAttribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
-            if (valuesAttribute != null)
+            var valuesAttributes = parameter.GetCustomAttributes<CombinatorialValuesAttribute>()?.ToArray();
+            if (valuesAttributes == null || valuesAttributes.Length == 0)
             {
-                return valuesAttribute.Values;
+                var configuration = GetDefaultConfiguration(parameter.Member.DeclaringType);
+                var values = configuration.GenerateValues(parameter.ParameterType);
+                return values as object[] ?? values.ToArray();
             }
-
-            return GetValuesFor(parameter.ParameterType);
-        }
-
-        /// <summary>
-        /// Gets a sequence of values that should be tested for the specified type.
-        /// </summary>
-        /// <param name="dataType">The type to get possible values for.</param>
-        /// <returns>A sequence of values for the <paramref name="dataType"/>.</returns>
-        internal static IEnumerable<object> GetValuesFor(Type dataType)
-        {
-            Requires.NotNull(dataType, nameof(dataType));
-
-            if (dataType == typeof(bool))
+            else if (valuesAttributes.Length == 1)
             {
-                yield return true;
-                yield return false;
-            }
-            else if (dataType == typeof(int))
-            {
-                yield return 0;
-                yield return 1;
-            }
-            else if (dataType.GetTypeInfo().IsEnum)
-            {
-                foreach (string name in Enum.GetNames(dataType))
-                {
-                    yield return Enum.Parse(dataType, name);
-                }
+                return valuesAttributes.Single().Values;
             }
             else
             {
-                throw new NotSupportedException();
+                return valuesAttributes.SelectMany(va => va.Values).ToArray();
+            }
+        }
+
+        private static DefaultCombinatorialValues GetDefaultConfiguration(Type testClass)
+        {
+            lock (TypeDefaultValues)
+            {
+                DefaultCombinatorialValues values;
+                if (TypeDefaultValues.TryGetValue(testClass, out values))
+                {
+                    return values;
+                }
+                else
+                {
+                    values = DiscoverConfiguration(testClass);
+                    TypeDefaultValues[testClass] = values;
+                    return values;
+                }
+            }
+        }
+
+        private static DefaultCombinatorialValues DiscoverConfiguration(Type type)
+        {
+            var configMember = type.GetTypeInfo().DeclaredMethods
+                        .Where(m => m.GetCustomAttributes<CombinatorialDefaultsAttribute>()?.Any() == true)
+                        .ToList();
+
+            if (configMember.Count == 0)
+            {
+                return DefaultCombinatorialValues.Default;
+            }
+            else if (configMember.Count > 1)
+            {
+                throw new InvalidOperationException(string.Format(Strings.DefaultsAttributeSingleMethod, nameof(CombinatorialDefaultsAttribute)));
+            }
+            else if (configMember[0].ReturnType != typeof(void) || configMember[0].GetParameters().Length != 1 || configMember[0].GetParameters()[0].ParameterType != typeof(DefaultCombinatorialValues))
+            {
+                throw new InvalidOperationException(string.Format(Strings.DefaultsMethodSignature, nameof(CombinatorialDefaultsAttribute), nameof(DefaultCombinatorialValues)));
+            }
+            else if (!configMember[0].IsStatic)
+            {
+                throw new InvalidOperationException(string.Format(Strings.DefaultsMethodNonStatic, nameof(CombinatorialDefaultsAttribute)));
+            }
+            else
+            {
+                var dlgt = (Action<DefaultCombinatorialValues>)configMember[0].CreateDelegate(typeof(Action<DefaultCombinatorialValues>));
+                var values = new DefaultCombinatorialValues();
+                dlgt(values);
+                return values;
             }
         }
     }

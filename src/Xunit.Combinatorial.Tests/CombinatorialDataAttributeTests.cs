@@ -41,6 +41,46 @@
         }
 
         [Fact]
+        public void GetData_Byte()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (byte)0 },
+                new object[] { (byte)1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_SByte()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (sbyte)0 },
+                new object[] { (sbyte)1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_Short()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (short)0 },
+                new object[] { (short)1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_UShort()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (ushort)0 },
+                new object[] { (ushort)1 },
+            });
+        }
+
+        [Fact]
         public void GetData_Int()
         {
             AssertData(new object[][]
@@ -50,6 +90,66 @@
             });
         }
 
+        [Fact]
+        public void GetData_UInt()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (uint)0 },
+                new object[] { (uint)1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_Long()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 0l },
+                new object[] { 1l },
+            });
+        }
+
+        [Fact]
+        public void GetData_ULong()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (ulong)0 },
+                new object[] { (ulong)1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_Float()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 0f },
+                new object[] { 1f },
+            });
+        }
+
+        [Fact]
+        public void GetData_Double()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 0d },
+                new object[] { 1d },
+            });
+        }
+
+        [Fact]
+        public void GetData_Decimal()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { 0m },
+                new object[] { 1m },
+            });
+        }
+        
         [Fact]
         public void GetData_Int_35()
         {
@@ -81,6 +181,26 @@
         }
 
         [Fact]
+        public void GetData_DateTime()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { DateTime.MinValue },
+                new object[] { new DateTime(1970, 01, 01, 00, 00, 00) }
+            });
+        }
+
+        [Fact]
+        public void GetData_TimeSpan()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { TimeSpan.Zero },
+                new object[] { TimeSpan.FromSeconds(1) }
+            });
+        }
+
+        [Fact]
         public void GetData_DateTimeKind()
         {
             AssertData(new object[][]
@@ -89,6 +209,13 @@
                 new object[] { DateTimeKind.Utc },
                 new object[] { DateTimeKind.Local },
             });
+        }
+
+        [Fact]
+        public void GetData_RejectsFlagsEnum()
+        {
+            Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
+            Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
         }
 
         [Fact]
@@ -101,10 +228,23 @@
         private static void Suppose_NoArguments() { }
         private static void Suppose_Bool(bool p1) { }
         private static void Suppose_BoolBool(bool p1, bool p2) { }
+        private static void Suppose_Byte(byte b) { }
+        private static void Suppose_SByte(sbyte sb) { }
+        private static void Suppose_Short(short s) { }
+        private static void Suppose_UShort(ushort us) { }
         private static void Suppose_Int(int p1) { }
+        private static void Suppose_UInt(uint ui) { }
+        private static void Suppose_Long(long l) { }
+        private static void Suppose_ULong(ulong ul) { }
+        private static void Suppose_Float(float f) { }
+        private static void Suppose_Double(double d) { }
+        private static void Suppose_Decimal(decimal d) { }
         private static void Suppose_Int_35([CombinatorialValues(3, 5)] int p1) { }
         private static void Suppose_string_int_bool_Values([CombinatorialValues("a", "b")]string p1, [CombinatorialValues(2, 4, 6)]int p2, bool p3) { }
+        private static void Suppose_DateTime(DateTime dt) { }
+        private static void Suppose_TimeSpan(TimeSpan ts) { }
         private static void Suppose_DateTimeKind(DateTimeKind p1) { }
+        private static void Suppose_RejectsFlagsEnum(BindingFlags bf) { }
         private static void Suppose_UnsupportedType(System.AggregateException p1) { }
 
         private static void AssertData(IEnumerable<object[]> expectedCombinatorial, [CallerMemberName] string testMethodName = null)

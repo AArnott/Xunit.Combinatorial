@@ -98,6 +98,51 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot generate values for type {0}.
+        /// </summary>
+        internal static string CannotGenerateValues {
+            get {
+                return ResourceManager.GetString("CannotGenerateValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only one method in a test class may be decorated with {0}.
+        /// </summary>
+        internal static string DefaultsAttributeSingleMethod {
+            get {
+                return ResourceManager.GetString("DefaultsAttributeSingleMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The method decorated with {0} must be static..
+        /// </summary>
+        internal static string DefaultsMethodNonStatic {
+            get {
+                return ResourceManager.GetString("DefaultsMethodNonStatic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The method decorated with {0} does not have the correct signature of &lt; void MethodName({1} arg) &gt;.
+        /// </summary>
+        internal static string DefaultsMethodSignature {
+            get {
+                return ResourceManager.GetString("DefaultsMethodSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot auto-generate values for a flag enum - it is too likely to result in an explosion of combinations.
+        /// </summary>
+        internal static string FlagEnumAutoGen {
+            get {
+                return ResourceManager.GetString("FlagEnumAutoGen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error occurred. Please contact customer support..
         /// </summary>
         internal static string InternalExceptionMessage {

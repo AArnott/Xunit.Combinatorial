@@ -129,6 +129,21 @@
   <data name="Argument_Whitespace" xml:space="preserve">
     <value>The parameter "{0}" cannot consist entirely of white space characters.</value>
   </data>
+  <data name="CannotGenerateValues" xml:space="preserve">
+    <value>Cannot generate values for type {0}</value>
+  </data>
+  <data name="DefaultsAttributeSingleMethod" xml:space="preserve">
+    <value>Only one method in a test class may be decorated with {0}</value>
+  </data>
+  <data name="DefaultsMethodNonStatic" xml:space="preserve">
+    <value>The method decorated with {0} must be static.</value>
+  </data>
+  <data name="DefaultsMethodSignature" xml:space="preserve">
+    <value>The method decorated with {0} does not have the correct signature of &lt; void MethodName({1} arg) &gt;</value>
+  </data>
+  <data name="FlagEnumAutoGen" xml:space="preserve">
+    <value>Cannot auto-generate values for a flag enum - it is too likely to result in an explosion of combinations</value>
+  </data>
   <data name="InternalExceptionMessage" xml:space="preserve">
     <value>An internal error occurred. Please contact customer support.</value>
   </data>
