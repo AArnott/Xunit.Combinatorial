@@ -410,7 +410,7 @@ namespace Xunit
         /// <returns>The formatted string.</returns>
         private static string Format(string format, params object[] arguments)
         {
-            return PrivateErrorHelpers.Format(format, arguments);
+            return string.Format(CultureInfo.CurrentCulture, format, new[] { arguments });
         }
     }
 }
