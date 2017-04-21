@@ -219,6 +219,28 @@
         }
 
         [Fact]
+        public void GetData_AllFlags()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { (AllFlagTestEnum) 0 },
+                new object[] { AllFlagTestEnum.A },
+                new object[] { AllFlagTestEnum.B },
+                new object[] { AllFlagTestEnum.C },
+                new object[] { AllFlagTestEnum.A | AllFlagTestEnum.B },
+                new object[] { AllFlagTestEnum.A | AllFlagTestEnum.C },
+                new object[] { AllFlagTestEnum.B | AllFlagTestEnum.C },
+                new object[] { AllFlagTestEnum.A | AllFlagTestEnum.B | AllFlagTestEnum.C }
+            });
+        }
+
+        [Flags]
+        public enum AllFlagTestEnum
+        {
+            A = 1, B = 2, C = 4
+        }
+
+        [Fact]
         public void GetData_UnsupportedType()
         {
             Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
@@ -245,15 +267,16 @@
         private static void Suppose_TimeSpan(TimeSpan ts) { }
         private static void Suppose_DateTimeKind(DateTimeKind p1) { }
         private static void Suppose_RejectsFlagsEnum(BindingFlags bf) { }
+        private static void Suppose_AllFlags([AllFlags] AllFlagTestEnum afte) { }
         private static void Suppose_UnsupportedType(System.AggregateException p1) { }
 
-        private static void AssertData(IEnumerable<object[]> expectedCombinatorial, [CallerMemberName] string testMethodName = null)
+        private static void AssertData(object[][] expectedCombinatorial, [CallerMemberName] string testMethodName = null)
         {
-            IEnumerable<object[]> actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
-            IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
+            object[][] actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
+            object[][] actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
 
             // Verify that the combinatorial result is as expected.
-            Assert.Equal(expectedCombinatorial, actualCombinatorial);
+            AssertSetofSetsEqual(expectedCombinatorial, actualCombinatorial);
 
             if (expectedCombinatorial.Any())
             {
@@ -277,6 +300,67 @@
                     }
                 }
             }
+        }
+
+        private static void AssertSetofSetsEqual(object[][] expected, object[][] actual)
+        {
+            Assert.Equal(expected.Length, actual.Length);
+            var matchedItems = new HashSet<int>();
+            for(int i = 0; i < expected.Length; i++)
+            {
+                bool matched = false;
+                for (int j = 0; j < actual.Length; j++)
+                {
+                    if (matchedItems.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    if (SetsEqual(expected[i], actual[j]))
+                    {
+                        matchedItems.Add(j);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                Assert.True(matched);
+            }
+        }
+
+        private static bool SetsEqual(object[] expected, object[] actual)
+        {
+            if (expected.Length != actual.Length)
+            {
+                return false;
+            }
+
+            var matchedItems = new HashSet<int>();
+            for (int i = 0; i < expected.Length; i++)
+            {
+                bool matched = false;
+                for (int j = 0; j < actual.Length; j++)
+                {
+                    if (matchedItems.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    if (i.Equals(j))
+                    {
+                        matchedItems.Add(j);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static HashSet<object>[] ExtractPossibleValues(IEnumerable<object[]> combinatorialTestCases)

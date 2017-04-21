@@ -62,6 +62,24 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} can only be applied to enum-typed parameters.
+        /// </summary>
+        internal static string AllFlagsOnlyOnEnums {
+            get {
+                return ResourceManager.GetString("AllFlagsOnlyOnEnums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} can only be applied to flags enums.
+        /// </summary>
+        internal static string AllFlagsOnlyOnFlagsEnums {
+            get {
+                return ResourceManager.GetString("AllFlagsOnlyOnFlagsEnums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; must contain at least one element..
         /// </summary>
         internal static string Argument_EmptyArray {

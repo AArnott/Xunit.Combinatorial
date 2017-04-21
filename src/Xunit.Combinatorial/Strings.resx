@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllFlagsOnlyOnEnums" xml:space="preserve">
+    <value>{0} can only be applied to enum-typed parameters</value>
+  </data>
+  <data name="AllFlagsOnlyOnFlagsEnums" xml:space="preserve">
+    <value>{0} can only be applied to flags enums</value>
+  </data>
   <data name="Argument_EmptyArray" xml:space="preserve">
     <value>'{0}' must contain at least one element.</value>
   </data>
