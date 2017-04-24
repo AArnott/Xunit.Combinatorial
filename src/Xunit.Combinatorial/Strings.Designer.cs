@@ -170,6 +170,78 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Double values cannot be applied to float/Single parameters as there may be a loss of precision.
+        /// </summary>
+        internal static string RangeDoubleNotApplicableToSingle {
+            get {
+                return ResourceManager.GetString("RangeDoubleNotApplicableToSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Floating point values cannot be applied to a parameter taking an integer type due to rounding. Use the long or ulong overload instead..
+        /// </summary>
+        internal static string RangeFloatingNotApplicableToInteger {
+            get {
+                return ResourceManager.GetString("RangeFloatingNotApplicableToInteger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Floating point values cannot be applied to a parameter taking a decimal as there may be precision loss since single/double do not represent the same set as decimal.
+        /// </summary>
+        internal static string RangeFloatingPointNotApplicableToDecimal {
+            get {
+                return ResourceManager.GetString("RangeFloatingPointNotApplicableToDecimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The lower bound specified is out of the range of the {0} type..
+        /// </summary>
+        internal static string RangeLowerBoundOutOfRange {
+            get {
+                return ResourceManager.GetString("RangeLowerBoundOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be used on a parameter that is not a built-in numeric type.
+        /// </summary>
+        internal static string RangeNotNumericType {
+            get {
+                return ResourceManager.GetString("RangeNotNumericType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be strictly positive.
+        /// </summary>
+        internal static string RangeStepMustBePositive {
+            get {
+                return ResourceManager.GetString("RangeStepMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The step size specified is out of the range of the {0} type..
+        /// </summary>
+        internal static string RangeStepOutOfRange {
+            get {
+                return ResourceManager.GetString("RangeStepOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The upper bound specified is out of the range of the {0} type..
+        /// </summary>
+        internal static string RangeUpperBoundOutOfRange {
+            get {
+                return ResourceManager.GetString("RangeUpperBoundOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find an instance of the {0} service..
         /// </summary>
         internal static string ServiceMissing {
