@@ -153,6 +153,12 @@
   <data name="InternalExceptionMessage" xml:space="preserve">
     <value>An internal error occurred. Please contact customer support.</value>
   </data>
+  <data name="MemberMoreThanOne" xml:space="preserve">
+    <value>Found more than one static method or property called {0} on the class {1} that satisfies the signature required.</value>
+  </data>
+  <data name="MemberNoMethodOrProp" xml:space="preserve">
+    <value>Could not find a static method or property called {0} on the class {1} that satisfies the signature required.</value>
+  </data>
   <data name="RangeDoubleNotApplicableToSingle" xml:space="preserve">
     <value>Double values cannot be applied to float/Single parameters as there may be a loss of precision</value>
   </data>

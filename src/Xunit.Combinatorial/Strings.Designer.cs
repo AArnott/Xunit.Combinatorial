@@ -170,6 +170,24 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Found more than one static method or property called {0} on the class {1} that satisfies the signature required..
+        /// </summary>
+        internal static string MemberMoreThanOne {
+            get {
+                return ResourceManager.GetString("MemberMoreThanOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find a static method or property called {0} on the class {1} that satisfies the signature required..
+        /// </summary>
+        internal static string MemberNoMethodOrProp {
+            get {
+                return ResourceManager.GetString("MemberNoMethodOrProp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double values cannot be applied to float/Single parameters as there may be a loss of precision.
         /// </summary>
         internal static string RangeDoubleNotApplicableToSingle {
