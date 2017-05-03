@@ -188,6 +188,33 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must be less than {1}.
+        /// </summary>
+        internal static string RandomExtensionsLowerBoundLessThanUpperBound {
+            get {
+                return ResourceManager.GetString("RandomExtensionsLowerBoundLessThanUpperBound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be used on a parameter that is not a built-in integer type.
+        /// </summary>
+        internal static string RandomNotIntegerType {
+            get {
+                return ResourceManager.GetString("RandomNotIntegerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be strictly positive.
+        /// </summary>
+        internal static string RandomNumberOfValuesMustBePositive {
+            get {
+                return ResourceManager.GetString("RandomNumberOfValuesMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double values cannot be applied to float/Single parameters as there may be a loss of precision.
         /// </summary>
         internal static string RangeDoubleNotApplicableToSingle {

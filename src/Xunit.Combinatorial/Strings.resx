@@ -159,6 +159,15 @@
   <data name="MemberNoMethodOrProp" xml:space="preserve">
     <value>Could not find a static method or property called {0} on the class {1} that satisfies the signature required.</value>
   </data>
+  <data name="RandomExtensionsLowerBoundLessThanUpperBound" xml:space="preserve">
+    <value>{0} must be less than {1}</value>
+  </data>
+  <data name="RandomNotIntegerType" xml:space="preserve">
+    <value>{0} cannot be used on a parameter that is not a built-in integer type</value>
+  </data>
+  <data name="RandomNumberOfValuesMustBePositive" xml:space="preserve">
+    <value>{0} must be strictly positive</value>
+  </data>
   <data name="RangeDoubleNotApplicableToSingle" xml:space="preserve">
     <value>Double values cannot be applied to float/Single parameters as there may be a loss of precision</value>
   </data>
