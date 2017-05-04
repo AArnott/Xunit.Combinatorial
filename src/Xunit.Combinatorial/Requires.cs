@@ -1,4 +1,4 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) parts Andrew Arnott, parts Matthew Wilkinson. All rights reserved. Licensed under the Ms-PL.
 
 #pragma warning disable SA1611 // Element parameters must be documented
 

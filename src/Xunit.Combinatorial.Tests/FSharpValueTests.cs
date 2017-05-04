@@ -1,4 +1,6 @@
-﻿namespace Xunit.Combinatorial.Tests
+﻿// Copyright (c) parts Andrew Arnott, parts Matthew Wilkinson. All rights reserved. Licensed under the Ms-PL.
+
+namespace Xunit.Combinatorial.Tests
 {
     using Microsoft.FSharp.Core;
     using FSharpTestTypes;

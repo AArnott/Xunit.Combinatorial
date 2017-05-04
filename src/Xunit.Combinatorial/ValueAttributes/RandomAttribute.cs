@@ -1,4 +1,6 @@
-﻿namespace Xunit.ValueAttributes
+﻿// Copyright (c) parts Andrew Arnott, parts Matthew Wilkinson. All rights reserved. Licensed under the Ms-PL.
+
+namespace Xunit.ValueAttributes
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,6 @@
-﻿namespace Xunit.Combinatorial.Tests.Utils
+﻿// Copyright (c) parts Andrew Arnott, parts Matthew Wilkinson. All rights reserved. Licensed under the Ms-PL.
+
+namespace Xunit.Combinatorial.Tests.Utils
 {
     using System;
     using System.Linq;
