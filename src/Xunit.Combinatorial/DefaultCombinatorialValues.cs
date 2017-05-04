@@ -90,6 +90,11 @@
                     {
                         ValueGenerators[type] = generator = GetEnumValuesGenerator(type);
                     }
+                    else if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        var enumerable = GetNullableValuesGenerator(typeInfo.GenericTypeArguments.Single());
+                        ValueGenerators[type] = generator = () => enumerable;
+                    }
                     else if (FSharpValueProvider.IsUnionType(type))
                     {
                         ValueGenerators[type] = generator = () => FSharpValueProvider.GetUnionCaseValues(typeInfo, t =>
@@ -130,6 +135,15 @@
             }
 
             return () => copy;
+        }
+
+        private IEnumerable<object> GetNullableValuesGenerator(Type innerType)
+        {
+            yield return null;
+            foreach (var value in GenerateValues(innerType))
+            {
+                yield return value;
+            }
         }
     }
 }
