@@ -85,9 +85,19 @@
             {
                 if (!ValueGenerators.TryGetValue(type, out generator))
                 {
-                    if (type.GetTypeInfo().IsEnum)
+                    var typeInfo = type.GetTypeInfo();
+                    if (typeInfo.IsEnum)
                     {
                         ValueGenerators[type] = generator = GetEnumValuesGenerator(type);
+                    }
+                    else if (FSharpValueProvider.IsUnionType(type))
+                    {
+                        ValueGenerators[type] = generator = () => FSharpValueProvider.GetUnionCaseValues(typeInfo, t =>
+                        {
+                            var values = GenerateValues(t);
+                            var valuesArray = values as object[];
+                            return valuesArray ?? values.ToArray();
+                        });
                     }
                 }
             }

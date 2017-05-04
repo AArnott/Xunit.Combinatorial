@@ -6,7 +6,7 @@
     using Xunit.Combinatorial.Tests.Utils;
     using Xunit.Sdk;
 
-    public sealed class DefaultCombinatorialValuesTests
+    public sealed partial class DefaultCombinatorialValuesTests
     {
         public static IEnumerable<object[]> DataAttributes()
         {

@@ -10,13 +10,27 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xunit.Combinatorial\Xunit.Combinatorial.csproj" />
+    <ProjectReference Include="..\FSharpTestTypes\FSharpTestTypes.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Validation" Version="2.4.15" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="FSharp.Core" Version="4.1.*" />
   </ItemGroup>
+
+  <!--This group is only in place to allow relatively smooth development in Visual Studio,
+      as even the latest VS15 does not support .NET core F# projects yet
+      (the SDK isn't baked into VS yet, but dotnet restore/dotnet build know how to do it.)
+      When VS15 is updated to include full support of the new FSharp SDK, this should be removed.  
+  -->
+  <ItemGroup Condition="'$(BuildingInsideVisualStudio)'=='true'">
+    <Compile Remove="FSharpValueTests.cs" />
+    <PackageReference Remove="FSharp.Core" />
+    <ProjectReference Remove="..\FSharpTestTypes\FSharpTestTypes.fsproj" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
