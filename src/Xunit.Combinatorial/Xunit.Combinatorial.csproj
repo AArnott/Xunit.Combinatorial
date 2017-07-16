@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFrameworks>net45;net452;netstandard1.1</TargetFrameworks>
     <RootNamespace>Xunit</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>Xunit.Combinatorial.ruleset</CodeAnalysisRuleSet>
@@ -23,7 +23,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="xunit.extensibility.core" Version="2.2.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.2.0" Condition=" '$(TargetFramework)' != 'net45' " />
+    <PackageReference Include="xunit.extensibility.core" Version="2.1.0" Condition=" '$(TargetFramework)' == 'net45' " />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
