@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>net45;net461;netcoreapp1.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="xunit.runner.json">
@@ -13,7 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Validation" Version="2.4.15" />
-    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.1.0" Condition=" '$(TargetFramework)' == 'net45' " />
+    <PackageReference Include="xunit" Version="2.2.0" Condition=" '$(TargetFramework)' != 'net45' " />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
   </ItemGroup>
