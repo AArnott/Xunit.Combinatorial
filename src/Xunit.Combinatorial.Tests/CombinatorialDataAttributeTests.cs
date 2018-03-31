@@ -8,6 +8,7 @@
     using System.Text;
     using Sdk;
     using Validation;
+
     public class CombinatorialDataAttributeTests
     {
         [Fact]
@@ -128,7 +129,7 @@
                         {
                             foreach (object jValue in possibleValues[j])
                             {
-                                Assert.True(actualPairwise.Any(
+                                Assert.NotEmpty(actualPairwise.Where(
                                     testCase => 
                                         EqualityComparer<object>.Default.Equals(testCase[i], iValue) &&
                                         EqualityComparer<object>.Default.Equals(testCase[j], jValue)));

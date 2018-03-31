@@ -7,6 +7,8 @@
     using System.Threading.Tasks;
     using Xunit;
 
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+
     public class SampleUses
     {
         [Theory, CombinatorialData]
