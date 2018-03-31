@@ -7,6 +7,8 @@
     using System.Threading.Tasks;
     using Xunit;
 
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+
     public class SampleUses
     {
         [Theory, CombinatorialData]
@@ -31,6 +33,30 @@
             // false true  true
             // true  false true
             // true  true  false
+        }
+
+        [Theory, CombinatorialData]
+        public void CombinatorialCustomData([CustomValues] int v1, [CustomValues] int v2)
+        {
+            // Combinatorial generates these test cases:
+            // 5 5
+            // 5 10
+            // 5 15
+            // 10 5
+            // 10 10
+            // 10 15
+            // 15 5
+            // 15 10
+            // 15 15
+        }
+
+        [AttributeUsage(AttributeTargets.Parameter)]
+        private class CustomValuesAttribute : CombinatorialValuesAttribute
+        {
+            public CustomValuesAttribute()
+                : base(new object[] { 5, 10, 15 })
+            {
+            }
         }
     }
 }
