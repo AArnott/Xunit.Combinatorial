@@ -99,6 +99,23 @@
             Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
         }
 
+        [Fact]
+        public void GetData_CustomDataFromDerivedAttriute()
+        {
+            var att = new CombinatorialDataAttribute();
+            MethodInfo testhelperMethodInfo = this.GetType().GetMethod(nameof(SomeTestWithCustomValues), BindingFlags.Instance | BindingFlags.NonPublic);
+            IEnumerable<object[]> actual = att.GetData(testhelperMethodInfo);
+            Assert.Equal(
+                new[] {
+                    new object[] { 5 },
+                    new object[] { 10 },
+                    new object[] { 15 },
+                },
+                actual);
+        }
+
+        private void SomeTestWithCustomValues([CustomValues] int a) { }
+
         private static void Suppose_NoArguments() { }
         private static void Suppose_Bool(bool p1) { }
         private static void Suppose_BoolBool(bool p1, bool p2) { }
@@ -130,7 +147,7 @@
                             foreach (object jValue in possibleValues[j])
                             {
                                 Assert.NotEmpty(actualPairwise.Where(
-                                    testCase => 
+                                    testCase =>
                                         EqualityComparer<object>.Default.Equals(testCase[i], iValue) &&
                                         EqualityComparer<object>.Default.Equals(testCase[j], jValue)));
                             }
@@ -170,6 +187,15 @@
             var methodInfo = typeof(CombinatorialDataAttributeTests).GetTypeInfo()
                 .DeclaredMethods.First(m => m.Name == supposeMethodName);
             return dataAttribute.GetData(methodInfo);
+        }
+
+        [AttributeUsage(AttributeTargets.Parameter)]
+        private class CustomValuesAttribute : CombinatorialValuesAttribute
+        {
+            public CustomValuesAttribute()
+                : base(new object[] { 5, 10, 15 })
+            {
+            }
         }
     }
 }
