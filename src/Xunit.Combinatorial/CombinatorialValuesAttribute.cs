@@ -16,9 +16,9 @@ namespace Xunit
         /// <param name="values">The values to pass to this parameter.</param>
         public CombinatorialValuesAttribute(params object[] values)
         {
-            Requires.NotNull(values, nameof(values));
-
-            this.Values = values;
+            // When values is `null`, it's because the user passed in `null` as the only value and C# interpreted it as a null array.
+            // Re-interpret that.
+            this.Values = values ?? new object[] { null };
         }
 
         /// <summary>
