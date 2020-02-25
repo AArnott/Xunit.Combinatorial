@@ -51,37 +51,7 @@ namespace Xunit
                 throw new ArgumentOutOfRangeException(nameof(step));
             }
 
-            int count = (to - from) / step;
-            object[] values = new object[count];
-            for (int i = 0; i < count; i += step)
-            {
-                values[i] = from + i;
-            }
-
-            this.Values = values;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CombinatorialRangeAttribute"/> class.
-        /// </summary>
-        /// <param name="from">The value at the beginning of the range.</param>
-        /// <param name="to">The value at the end of the range.</param>
-        /// <param name="step">The amount to skip for each value in result.</param>
-        public CombinatorialRangeAttribute(double from, double to, double step)
-        {
-            if (to < from)
-            {
-                throw new ArgumentOutOfRangeException(nameof(to));
-            }
-
-            if (step <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(step));
-            }
-
-            // Explicit cast truncates
-            int count = (int)((to - from) / step);
-            
+            int count = ((to - from) / step) + 1;
             object[] values = new object[count];
             for (int i = 0; i < count; i++)
             {
