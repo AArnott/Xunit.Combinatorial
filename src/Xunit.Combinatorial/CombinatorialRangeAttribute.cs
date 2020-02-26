@@ -14,7 +14,10 @@ namespace Xunit
         /// Initializes a new instance of the <see cref="CombinatorialRangeAttribute"/> class.
         /// </summary>
         /// <param name="from">The value at the beginning of the range.</param>
-        /// <param name="count">The quantity of consecutive integer values to include.</param>
+        /// <param name="count">
+        /// The quantity of consecutive integer values to include.
+        /// Cannot be less than 1, which would conceptually result in zero test cases.
+        /// </param>
         public CombinatorialRangeAttribute(int from, int count)
         {
             if (count < 1)
@@ -35,17 +38,23 @@ namespace Xunit
         /// Initializes a new instance of the <see cref="CombinatorialRangeAttribute"/> class.
         /// </summary>
         /// <param name="from">The value at the beginning of the range.</param>
-        /// <param name="to">The value at the end of the range.</param>
-        /// <param name="step">The number of integers to step for each value in result.</param>
+        /// <param name="to">
+        /// The value at the end of the range.
+        /// Cannot be less than "from" parameter.
+        /// When "to" and "from" are equal, CombinatorialValues is more appropriate.
+        /// </param>
+        /// <param name="step">
+        /// The number of integers to step for each value in result.
+        /// Cannot be less than one. Stepping zero or backwards is not useful.
+        /// Stepping over "to" does not add another value to the range.
+        /// </param>
         public CombinatorialRangeAttribute(int from, int to, int step)
         {
-            // to cannot be less than from
-            if (to < from)
+            if (to <= from)
             {
                 throw new ArgumentOutOfRangeException(nameof(to));
             }
 
-            // step must be a positive integer
             if (step < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(step));

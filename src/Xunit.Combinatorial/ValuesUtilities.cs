@@ -21,6 +21,13 @@ namespace Xunit
             Requires.NotNull(parameter, nameof(parameter));
 
             var valuesAttribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
+            var rangeAttribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
+
+            if (rangeAttribute != null)
+            {
+                return rangeAttribute.Values;
+            }
+
             if (valuesAttribute != null)
             {
                 return valuesAttribute.Values;
