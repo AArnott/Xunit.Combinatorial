@@ -64,6 +64,8 @@
             // 2 2
             // 3 2
             // 4 2
+            Assert.True(p1 == 0 || p1 == 1 || p1 == 2 || p1 == 3 || p1 == 4);
+            Assert.True(p2 == 0 || p2 == 2);
         }
 
         [AttributeUsage(AttributeTargets.Parameter)]
