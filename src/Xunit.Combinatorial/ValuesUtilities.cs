@@ -26,6 +26,12 @@ namespace Xunit
                 return valuesAttribute.Values;
             }
 
+            var rangeAttribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
+            if (rangeAttribute != null)
+            {
+                return rangeAttribute.Values;
+            }
+
             return GetValuesFor(parameter.ParameterType);
         }
 

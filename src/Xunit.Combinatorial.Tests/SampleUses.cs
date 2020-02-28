@@ -50,6 +50,24 @@
             // 15 15
         }
 
+        [Theory, CombinatorialData]
+        public void CombinatorialCustomRange([CombinatorialRange(0, 5)] int p1, [CombinatorialRange(0, 3, 2)] int p2)
+        {
+            // Combinatorial generates these test cases:
+            // 0 0
+            // 1 0
+            // 2 0
+            // 3 0
+            // 4 0
+            // 0 2
+            // 1 2
+            // 2 2
+            // 3 2
+            // 4 2
+            Assert.True(p1 == 0 || p1 == 1 || p1 == 2 || p1 == 3 || p1 == 4);
+            Assert.True(p2 == 0 || p2 == 2);
+        }
+
         [AttributeUsage(AttributeTargets.Parameter)]
         private class CustomValuesAttribute : CombinatorialValuesAttribute
         {

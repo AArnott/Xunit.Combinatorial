@@ -123,4 +123,36 @@ combinatorial. In many cases the test reduction can be much greater.
 Notice that although the test cases are fewer, you can still find a test
 case that covers any *two* parameter values (thus *pair*wise).
 
+To run a test with a parameter over a range of values, we have
+`CombinatorialRangeAttribute` to generate tests over intervals of integers.
+```csharp
+[Theory, CombinatorialData]
+public void CombinatorialCustomRange([CombinatorialRange(0, 5)] int p1, [CombinatorialRange(0, 3, 2)] int p2)
+{
+    // Combinatorial generates these test cases:
+    // 0 0
+    // 1 0
+    // 2 0
+    // 3 0
+    // 4 0
+    // 0 2
+    // 1 2
+    // 2 2
+    // 3 2
+    // 4 2
+}
+```
+
+`CombinatorialRangeAttribute` has two distinct constructors.
+When supplied with two integers `from` and `count`, Xunit
+will create a test case where the parameter equals `from`, and
+it will increment the parameter by 1 for `count` number of cases.
+
+In the second constructor, `CombinatorialRangeAttribute` 
+accepts three integer parameters. In the generated cases, the
+parameter value will step up from the first integer to the
+second integer, and the third integer specifies the interval of
+which to increment.
+
+
  [NuPkg]: https://www.nuget.org/packages/Xunit.Combinatorial
