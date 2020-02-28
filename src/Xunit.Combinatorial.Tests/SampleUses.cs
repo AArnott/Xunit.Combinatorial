@@ -51,7 +51,7 @@
         }
 
         [Theory, CombinatorialData]
-        public void CombinatorialCustomRange([CustomCountRange] int p1, [CustomStepRange] int p2)
+        public void CombinatorialCustomRange([CombinatorialRange(0, 5)] int p1, [CombinatorialRange(0, 3, 2)] int p2)
         {
             // Combinatorial generates these test cases:
             // 0 0
@@ -73,24 +73,6 @@
         {
             public CustomValuesAttribute()
                 : base(new object[] { 5, 10, 15 })
-            {
-            }
-        }
-
-        [AttributeUsage(AttributeTargets.Parameter)]
-        private class CustomCountRangeAttribute : CombinatorialRangeAttribute
-        {
-            public CustomCountRangeAttribute()
-                : base(0, 5)
-            {
-            }
-        }
-
-        [AttributeUsage(AttributeTargets.Parameter)]
-        private class CustomStepRangeAttribute : CombinatorialRangeAttribute
-        {
-            public CustomStepRangeAttribute()
-                : base(0, 3, 2)
             {
             }
         }
