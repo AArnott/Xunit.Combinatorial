@@ -61,10 +61,52 @@ namespace Xunit
                     yield return Enum.Parse(dataType, name);
                 }
             }
+            else if (IsNullable(dataType, out Type innerDataType))
+            {
+                yield return null;
+                foreach (object value in GetValuesFor(innerDataType))
+                {
+                    yield return value;
+                }
+            }
             else
             {
                 throw new NotSupportedException();
             }
+        }
+
+        /// <summary>
+        /// Determines whether <paramref name="dataType"/> is <see cref="Nullable{T}"/>
+        /// and extracts the inner type, if any.
+        /// </summary>
+        /// <param name="dataType">
+        /// The type to test whether it is <see cref="Nullable{T}"/>
+        /// </param>
+        /// <param name="innerDataType">
+        /// When this method returns, contains the inner type of the Nullable, if the
+        /// type is Nullable is found; otherwise, null.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the type is a Nullable type; otherwise <see langword="false"/>.
+        /// </returns>
+        private static bool IsNullable(Type dataType, out Type innerDataType)
+        {
+            innerDataType = null;
+
+            var ti = dataType.GetTypeInfo();
+
+            if (!ti.IsGenericType)
+            {
+                return false;
+            }
+
+            if (ti.GetGenericTypeDefinition() != typeof(Nullable<>))
+            {
+                return false;
+            }
+
+            innerDataType = ti.GenericTypeArguments[0];
+            return true;
         }
     }
 }

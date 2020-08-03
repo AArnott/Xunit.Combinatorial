@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Text;
     using Sdk;
     using Validation;
 
@@ -46,6 +45,17 @@
         {
             AssertData(new object[][]
             {
+                new object[] { 0 },
+                new object[] { 1 },
+            });
+        }
+
+        [Fact]
+        public void GetData_NullableInt()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { null },
                 new object[] { 0 },
                 new object[] { 1 },
             });
@@ -93,7 +103,26 @@
         }
 
         [Fact]
+        public void GetData_NullableDateTimeKind()
+        {
+            AssertData(new object[][]
+            {
+                new object[] { null },
+                new object[] { DateTimeKind.Unspecified },
+                new object[] { DateTimeKind.Utc },
+                new object[] { DateTimeKind.Local },
+            });
+        }
+
+        [Fact]
         public void GetData_UnsupportedType()
+        {
+            Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
+            Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
+        }
+
+        [Fact]
+        public void GetData_UnsupportedNullableType()
         {
             Assert.Throws<NotSupportedException>(() => GetData(new CombinatorialDataAttribute()));
             Assert.Throws<NotSupportedException>(() => GetData(new PairwiseDataAttribute()));
@@ -120,10 +149,13 @@
         private static void Suppose_Bool(bool p1) { }
         private static void Suppose_BoolBool(bool p1, bool p2) { }
         private static void Suppose_Int(int p1) { }
+        private static void Suppose_NullableInt(int? p1) { }
         private static void Suppose_Int_35([CombinatorialValues(3, 5)] int p1) { }
         private static void Suppose_string_int_bool_Values([CombinatorialValues("a", "b")]string p1, [CombinatorialValues(2, 4, 6)]int p2, bool p3) { }
         private static void Suppose_DateTimeKind(DateTimeKind p1) { }
+        private static void Suppose_NullableDateTimeKind(DateTimeKind? p1) { }
         private static void Suppose_UnsupportedType(System.AggregateException p1) { }
+        private static void Suppose_UnsupportedNullableType(Guid? p1) { }
 
         private static void AssertData(IEnumerable<object[]> expectedCombinatorial, [CallerMemberName] string testMethodName = null)
         {
