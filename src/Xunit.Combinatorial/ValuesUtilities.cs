@@ -32,6 +32,12 @@ namespace Xunit
                 return rangeAttribute.Values;
             }
 
+            var memberDataValuesAttribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
+            if (memberDataValuesAttribute != null)
+            {
+                return memberDataValuesAttribute.GetValues(parameter);
+            }
+
             return GetValuesFor(parameter.ParameterType);
         }
 
