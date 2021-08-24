@@ -26,10 +26,15 @@ namespace Xunit
         public const int DefaultMaxValue = int.MaxValue;
 
         /// <summary>
+        /// Special seed value to create System.Random class without seed.
+        /// </summary>
+        public const int NoSeed = int.MinValue;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CombinatorialRandomAttribute"/> class.
         /// </summary>
         public CombinatorialRandomAttribute()
-            : this(DefaultCount, DefaultMinValue, DefaultMaxValue, null)
+            : this(DefaultCount, DefaultMinValue, DefaultMaxValue, NoSeed)
         {
         }
 
@@ -41,7 +46,7 @@ namespace Xunit
         /// Cannot be less than 1, which would conceptually result in zero test cases.
         /// </param>
         public CombinatorialRandomAttribute(int count)
-            : this(count, DefaultMinValue, DefaultMaxValue, null)
+            : this(count, DefaultMinValue, DefaultMaxValue, NoSeed)
         {
         }
 
@@ -56,7 +61,7 @@ namespace Xunit
         /// maxValue for System.Random.Next method.
         /// </param>
         public CombinatorialRandomAttribute(int count, int maxValue)
-            : this(count, DefaultMinValue, maxValue, null)
+            : this(count, DefaultMinValue, maxValue, NoSeed)
         {
         }
 
@@ -74,7 +79,7 @@ namespace Xunit
         /// maxValue for System.Random.Next method.
         /// </param>
         public CombinatorialRandomAttribute(int count, int minValue, int maxValue)
-            : this(count, minValue, maxValue, null)
+            : this(count, minValue, maxValue, NoSeed)
         {
         }
 
@@ -92,16 +97,16 @@ namespace Xunit
         /// maxValue for System.Random.Next method.
         /// </param>
         /// <param name="seed">
-        /// seed for System.Random constructor.
+        /// Seed for System.Random constructor. If Seed equal to NoSeed value then System.Random constructor whithout seed used.
         /// </param>
-        public CombinatorialRandomAttribute(int count, int minValue, int maxValue, int? seed)
+        public CombinatorialRandomAttribute(int count, int minValue, int maxValue, int seed)
         {
             if (count < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            var random = seed.HasValue ? new Random(seed.Value) : new Random();
+            var random = seed == NoSeed ? new Random() : new Random(seed);
 
             object[] values = new object[count];
             for (int i = 0; i < count; i++)

@@ -35,6 +35,7 @@ namespace Xunit.Combinatorial.Tests
         [InlineData(1, 25, 35, 234)]
         [InlineData(3, 100, 200, 1343)]
         [InlineData(24, 1000, 3000, 56732)]
+        [InlineData(12, 576, 765, CombinatorialRandomAttribute.NoSeed)]
         public void ConstructorCountMinMaxValuesSeed(int count, int minValue, int maxValue, int seed)
             => Check(new CombinatorialRandomAttribute(count, minValue, maxValue, seed), count, minValue, maxValue, seed);
 
@@ -42,13 +43,13 @@ namespace Xunit.Combinatorial.Tests
         [InlineData(0)]
         [InlineData(-1)]
         [InlineData(int.MinValue)]
-        public void ConstructorNegativeCount(int count)
+        public void ConstructorOutOfRangeCount(int count)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count));
             Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count, 100));
             Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count, 0, 100));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count, 0, 100, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count, 0, 100, 325));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRandomAttribute(count, 0, 100, CombinatorialRandomAttribute.NoSeed));
         }
 
         internal void Check(
@@ -56,7 +57,7 @@ namespace Xunit.Combinatorial.Tests
             int count = CombinatorialRandomAttribute.DefaultCount,
             int minValue = CombinatorialRandomAttribute.DefaultMinValue,
             int maxValue = CombinatorialRandomAttribute.DefaultMaxValue,
-            int? seed = null)
+            int seed = CombinatorialRandomAttribute.NoSeed)
         {
             Assert.NotNull(attribute.Values);
             Assert.Equal(count, attribute.Values.Length);
@@ -68,9 +69,9 @@ namespace Xunit.Combinatorial.Tests
                 Assert.InRange(intValue, minValue, maxValue - 1);
             });
 
-            if (seed.HasValue)
+            if (seed != CombinatorialRandomAttribute.NoSeed)
             {
-                Assert.Equal(RandomIterator(count, new Random(seed.Value), minValue, maxValue), attribute.Values.Cast<int>());
+                Assert.Equal(RandomIterator(count, new Random(seed), minValue, maxValue), attribute.Values.Cast<int>());
             }
         }
 

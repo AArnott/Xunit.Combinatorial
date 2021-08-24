@@ -68,6 +68,36 @@
             Assert.True(p2 == 0 || p2 == 2);
         }
 
+        [Theory, CombinatorialData]
+        public void CombinatorialRandomValuesDefault([CombinatorialRandom()] int p1)
+        {
+            Assert.InRange(p1, 0, int.MaxValue - 1);
+        }
+
+        [Theory, CombinatorialData]
+        public void CombinatorialRandomValuesCount([CombinatorialRandom(10)] int p1)
+        {
+            Assert.InRange(p1, 0, int.MaxValue - 1);
+        }
+
+        [Theory, CombinatorialData]
+        public void CombinatorialRandomValuesCountMaxValue([CombinatorialRandom(10, 35)] int p1)
+        {
+            Assert.InRange(p1, 0, 35 - 1);
+        }
+
+        [Theory, CombinatorialData]
+        public void CombinatorialRandomValuesCountMinMaxValues([CombinatorialRandom(10, -20, -5)] int p1)
+        {
+            Assert.InRange(p1, -20, -5 - 1);
+        }
+
+        [Theory, CombinatorialData]
+        public void CombinatorialRandomValuesCountMinMaxValuesSeed([CombinatorialRandom(10, -5, 6, 567)] int p1)
+        {
+            Assert.InRange(p1, -5, 6 - 1);
+        }
+
         [AttributeUsage(AttributeTargets.Parameter)]
         private class CustomValuesAttribute : CombinatorialValuesAttribute
         {
