@@ -50,12 +50,21 @@ namespace Xunit
         /// </param>
         public CombinatorialRangeAttribute(int from, int to, int step)
         {
-            if (to <= from)
+            if (step > 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(to));
+                if (to < from)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(to));
+                }
             }
-
-            if (step < 1)
+            else if (step < 0)
+            {
+                if (to > from)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(to));
+                }
+            }
+            else
             {
                 throw new ArgumentOutOfRangeException(nameof(step));
             }

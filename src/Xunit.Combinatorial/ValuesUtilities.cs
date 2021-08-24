@@ -19,23 +19,36 @@ namespace Xunit
         internal static IEnumerable<object> GetValuesFor(ParameterInfo parameter)
         {
             Requires.NotNull(parameter, nameof(parameter));
-
-            var valuesAttribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
-            if (valuesAttribute != null)
             {
-                return valuesAttribute.Values;
+                var attribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
+                if (attribute != null)
+                {
+                    return attribute.Values;
+                }
             }
 
-            var rangeAttribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
-            if (rangeAttribute != null)
             {
-                return rangeAttribute.Values;
+                var attribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
+                if (attribute != null)
+                {
+                    return attribute.Values;
+                }
             }
 
-            var memberDataValuesAttribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
-            if (memberDataValuesAttribute != null)
             {
-                return memberDataValuesAttribute.GetValues(parameter);
+                var attribute = parameter.GetCustomAttribute<CombinatorialRandomAttribute>();
+                if (attribute != null)
+                {
+                    return attribute.Values;
+                }
+            }
+
+            {
+                var attribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
+                if (attribute != null)
+                {
+                    return attribute.GetValues(parameter);
+                }
             }
 
             return GetValuesFor(parameter.ParameterType);
