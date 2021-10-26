@@ -71,31 +71,31 @@
         [Theory, CombinatorialData]
         public void CombinatorialRandomValuesDefault([CombinatorialRandom()] int p1)
         {
-            Assert.InRange(p1, 0, int.MaxValue - 1);
+            Assert.InRange(p1, 0, int.MaxValue);
         }
 
         [Theory, CombinatorialData]
-        public void CombinatorialRandomValuesCount([CombinatorialRandom(10)] int p1)
+        public void CombinatorialRandomValuesCount([CombinatorialRandom(Count = 10)] int p1)
         {
-            Assert.InRange(p1, 0, int.MaxValue - 1);
+            Assert.InRange(p1, 0, int.MaxValue);
         }
 
         [Theory, CombinatorialData]
-        public void CombinatorialRandomValuesCountMaxValue([CombinatorialRandom(10, 35)] int p1)
+        public void CombinatorialRandomValuesCountMaxValue([CombinatorialRandom(Count = 10, Maximum = 35)] int p1)
         {
-            Assert.InRange(p1, 0, 35 - 1);
+            Assert.InRange(p1, 0, 35);
         }
 
         [Theory, CombinatorialData]
-        public void CombinatorialRandomValuesCountMinMaxValues([CombinatorialRandom(10, -20, -5)] int p1)
+        public void CombinatorialRandomValuesCountMinMaxValues([CombinatorialRandom(Count = 10, Minimum = -20, Maximum = -5)] int p1)
         {
-            Assert.InRange(p1, -20, -5 - 1);
+            Assert.InRange(p1, -20, -5);
         }
 
         [Theory, CombinatorialData]
-        public void CombinatorialRandomValuesCountMinMaxValuesSeed([CombinatorialRandom(10, -5, 6, 567)] int p1)
+        public void CombinatorialRandomValuesCountMinMaxValuesSeed([CombinatorialRandom(Count = 10, Minimum = -5, Maximum = 6, Seed = 567)] int p1)
         {
-            Assert.InRange(p1, -5, 6 - 1);
+            Assert.InRange(p1, -5, 6);
         }
 
         [AttributeUsage(AttributeTargets.Parameter)]

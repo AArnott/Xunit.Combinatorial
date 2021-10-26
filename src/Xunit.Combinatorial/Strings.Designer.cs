@@ -107,11 +107,47 @@ namespace Xunit {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must not exceed the length of the range from {1} to {2}..
+        /// </summary>
+        internal static string MoreRandomValuesRequestedThanPossibleOnes {
+            get {
+                return ResourceManager.GetString("MoreRandomValuesRequestedThanPossibleOnes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find an instance of the {0} service..
         /// </summary>
         internal static string ServiceMissing {
             get {
                 return ResourceManager.GetString("ServiceMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We are unable to generate the desired number of unique random values because too many non-unique random numbers are coming from the random number generator. Try reducing your target count or expanding your allowed range..
+        /// </summary>
+        internal static string TooManyRandomCollisions {
+            get {
+                return ResourceManager.GetString("TooManyRandomCollisions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value for {0} must be positive..
+        /// </summary>
+        internal static string ValueMustBePositive {
+            get {
+                return ResourceManager.GetString("ValueMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} must not be greater than the value of {1}..
+        /// </summary>
+        internal static string XMustNotBeGreaterThanY {
+            get {
+                return ResourceManager.GetString("XMustNotBeGreaterThanY", resourceCulture);
             }
         }
     }

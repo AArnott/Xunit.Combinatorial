@@ -3,6 +3,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <LangVersion>8</LangVersion>
     <DebugType Condition=" '$(Configuration)' == 'Debug' ">full</DebugType>
     <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
   </PropertyGroup>
