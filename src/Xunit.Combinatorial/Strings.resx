@@ -132,7 +132,19 @@
   <data name="InternalExceptionMessage" xml:space="preserve">
     <value>An internal error occurred. Please contact customer support.</value>
   </data>
+  <data name="MoreRandomValuesRequestedThanPossibleOnes" xml:space="preserve">
+    <value>{0} must not exceed the length of the range from {1} to {2}.</value>
+  </data>
   <data name="ServiceMissing" xml:space="preserve">
     <value>Cannot find an instance of the {0} service.</value>
+  </data>
+  <data name="TooManyRandomCollisions" xml:space="preserve">
+    <value>We are unable to generate the desired number of unique random values because too many non-unique random numbers are coming from the random number generator. Try reducing your target count or expanding your allowed range.</value>
+  </data>
+  <data name="ValueMustBePositive" xml:space="preserve">
+    <value>The value for {0} must be positive.</value>
+  </data>
+  <data name="XMustNotBeGreaterThanY" xml:space="preserve">
+    <value>The value of {0} must not be greater than the value of {1}.</value>
   </data>
 </root>

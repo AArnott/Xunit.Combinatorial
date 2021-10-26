@@ -1,4 +1,6 @@
-﻿namespace Xunit
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+
+namespace Xunit
 {
     using System;
     using System.Collections;
@@ -35,7 +37,7 @@
         public Type MemberType { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameters passed to the member. Only supported for static methods.
+        /// Gets the parameters passed to the member. Only supported for static methods.
         /// </summary>
         public object[] Parameters { get; }
 

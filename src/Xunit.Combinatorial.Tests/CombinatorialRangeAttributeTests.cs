@@ -12,7 +12,7 @@ namespace Xunit.Combinatorial.Tests
         [InlineData(0, 5)]
         public void CountOfIntegers_HappyPath_SetsAttributeWithRange(int from, int count)
         {
-            object[] values = { 0, 1, 2, 3, 4 };
+            object[] values = Enumerable.Range(from, count).Cast<object>().ToArray();
             var attribute = new CombinatorialRangeAttribute(from, count);
             Assert.Equal(values, attribute.Values);
         }
@@ -25,11 +25,13 @@ namespace Xunit.Combinatorial.Tests
         }
 
         [Theory]
-        [InlineData(0, 7, 2, true)]
-        [InlineData(0, 8, 2, false)]
-        public void IntegerStep_HappyPath_SetsAttributeWithRange(int from, int to, int step, bool unevenInterval)
+        [InlineData(0, 7, 2)]
+        [InlineData(0, 8, 2)]
+        [InlineData(7, 0, -2)]
+        [InlineData(0, -8, -2)]
+        public void IntegerStep_HappyPath_SetsAttributeWithRange(int from, int to, int step)
         {
-            object[] expectedValues = unevenInterval ? new object[]{ 0, 2, 4, 6 } : new object[]{ 0, 2, 4, 6, 8 };
+            object[] expectedValues = Sequence(from, to, step).Cast<object>().ToArray();
 
             var attribute = new CombinatorialRangeAttribute(from, to, step);
             Assert.Equal(expectedValues, attribute.Values);
@@ -41,6 +43,35 @@ namespace Xunit.Combinatorial.Tests
         public void IntegerStep_InvalidIntervalAndStep_ArgOutOfRange(int from, int to, int step)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRangeAttribute(from, to, step));
+        }
+
+        internal static IEnumerable<int> Sequence(int from, int to, int step)
+            => step >= 0 ? SequenceIterator(from, to, step) : SequenceReverseIterator(from, to, step);
+
+        private static IEnumerable<int> SequenceIterator(int from, int to, int step)
+        {
+            var value = from;
+            while (value <= to)
+            {
+                yield return value;
+                unchecked
+                {
+                    value += step;
+                }
+            }
+        }
+
+        private static IEnumerable<int> SequenceReverseIterator(int from, int to, int step)
+        {
+            var value = from;
+            while (value >= to)
+            {
+                yield return value;
+                unchecked
+                {
+                    value += step;
+                }
+            }
         }
     }
 }
