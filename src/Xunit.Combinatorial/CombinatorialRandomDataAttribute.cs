@@ -10,7 +10,7 @@ namespace Xunit
     /// Specifies which range of values for this parameter should be used for running the test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class CombinatorialRandomAttribute : Attribute
+    public class CombinatorialRandomDataAttribute : Attribute
     {
         /// <summary>
         /// Special seed value to create System.Random class without seed.

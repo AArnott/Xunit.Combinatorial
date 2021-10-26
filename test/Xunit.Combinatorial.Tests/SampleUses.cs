@@ -65,31 +65,31 @@ public class SampleUses
     }
 
     [Theory, CombinatorialData]
-    public void CombinatorialRandomValuesDefault([CombinatorialRandom] int p1)
+    public void CombinatorialRandomValuesDefault([CombinatorialRandomData] int p1)
     {
         Assert.InRange(p1, 0, int.MaxValue);
     }
 
     [Theory, CombinatorialData]
-    public void CombinatorialRandomValuesCount([CombinatorialRandom(Count = 10)] int p1)
+    public void CombinatorialRandomValuesCount([CombinatorialRandomData(Count = 10)] int p1)
     {
         Assert.InRange(p1, 0, int.MaxValue);
     }
 
     [Theory, CombinatorialData]
-    public void CombinatorialRandomValuesCountMaxValue([CombinatorialRandom(Count = 10, Maximum = 35)] int p1)
+    public void CombinatorialRandomValuesCountMaxValue([CombinatorialRandomData(Count = 10, Maximum = 35)] int p1)
     {
         Assert.InRange(p1, 0, 35);
     }
 
     [Theory, CombinatorialData]
-    public void CombinatorialRandomValuesCountMinMaxValues([CombinatorialRandom(Count = 10, Minimum = -20, Maximum = -5)] int p1)
+    public void CombinatorialRandomValuesCountMinMaxValues([CombinatorialRandomData(Count = 10, Minimum = -20, Maximum = -5)] int p1)
     {
         Assert.InRange(p1, -20, -5);
     }
 
     [Theory, CombinatorialData]
-    public void CombinatorialRandomValuesCountMinMaxValuesSeed([CombinatorialRandom(Count = 10, Minimum = -5, Maximum = 6, Seed = 567)] int p1)
+    public void CombinatorialRandomValuesCountMinMaxValuesSeed([CombinatorialRandomData(Count = 10, Minimum = -5, Maximum = 6, Seed = 567)] int p1)
     {
         Assert.InRange(p1, -5, 6);
     }

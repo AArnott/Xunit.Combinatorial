@@ -37,7 +37,7 @@ namespace Xunit
             }
 
             {
-                CombinatorialRandomAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRandomAttribute>();
+                CombinatorialRandomDataAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRandomDataAttribute>();
                 if (attribute is not null)
                 {
                     return attribute.Values;
