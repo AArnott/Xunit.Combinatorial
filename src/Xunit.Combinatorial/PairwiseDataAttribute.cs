@@ -2,13 +2,10 @@
 
 namespace Xunit
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Sdk;
+    using Xunit.Sdk;
 
     /// <summary>
     /// Provides a test method decorated with a <see cref="TheoryAttribute"/>
@@ -22,19 +19,19 @@ namespace Xunit
         {
             Requires.NotNull(testMethod, nameof(testMethod));
 
-            var parameters = testMethod.GetParameters();
+            ParameterInfo[]? parameters = testMethod.GetParameters();
             if (parameters.Length == 0)
             {
                 return Enumerable.Empty<object[]>();
             }
 
-            var values = new List<object>[parameters.Length];
+            var values = new List<object?>[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
             {
                 values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
             }
 
-            var testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray());
+            List<int[]>? testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray());
             return from testCase in testCaseInfo
                    select testCase.Select((j, i) => values[i][j]).ToArray();
         }

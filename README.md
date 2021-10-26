@@ -8,7 +8,7 @@ a pairwise strategy, which generally provides good coverage for testing
 but significantly reduces the test case explosion you might have when
 you have more than two parameters.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7w8sae8tfn0gf4g6?svg=true)](https://ci.appveyor.com/project/AArnott/xunit-combinatorial)
+[![Build Status](https://dev.azure.com/andrewarnott/OSS/_apis/build/status/AArnott.Xunit.Combinatorial?branchName=main)](https://dev.azure.com/andrewarnott/OSS/_build/latest?definitionId=58&branchName=main)
 [![NuGet package](https://img.shields.io/nuget/v/xunit.combinatorial.svg)](https://nuget.org/packages/xunit.combinatorial)
 
 ## Installation
@@ -28,7 +28,7 @@ public void CheckFileSystem(bool recursive)
 ```
 
 To arrange for your test method to be invoked twice, once for each value
-of its bool parameter, change the attributes to 
+of its bool parameter, change the attributes to
 
 ```csharp
 [Theory, CombinatorialData]
@@ -39,7 +39,7 @@ public void CheckFileSystem(bool recursive)
 ```
 
 The `CombinatorialDataAttribute` will supply Xunit with both `true` and `false`
-arguments to run the test method with, resulting in two invocations of your 
+arguments to run the test method with, resulting in two invocations of your
 test method with individual results reported for each invocation.
 
 To supply your own values to pass in for each parameter, use the
@@ -148,7 +148,7 @@ When supplied with two integers `from` and `count`, Xunit
 will create a test case where the parameter equals `from`, and
 it will increment the parameter by 1 for `count` number of cases.
 
-In the second constructor, `CombinatorialRangeAttribute` 
+In the second constructor, `CombinatorialRangeAttribute`
 accepts three integer parameters. In the generated cases, the
 parameter value will step up from the first integer to the
 second integer, and the third integer specifies the interval of

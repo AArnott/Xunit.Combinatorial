@@ -17,12 +17,12 @@ namespace Xunit
         /// <summary>
         /// Initializes a new instance of the <see cref="CombinatorialMemberDataAttribute"/> class.
         /// </summary>
-        /// <param name="memberName">The name of the public static member on the test class that will provide the test data</param>
-        /// <param name="parameters">The parameters for the member (only supported for methods; ignored for everything else)</param>
-        public CombinatorialMemberDataAttribute(string memberName, params object[] parameters)
+        /// <param name="memberName">The name of the public static member on the test class that will provide the test data.</param>
+        /// <param name="arguments">The arguments for the member (only supported for methods; ignored for everything else).</param>
+        public CombinatorialMemberDataAttribute(string memberName, params object?[]? arguments)
         {
             this.MemberName = memberName ?? throw new ArgumentNullException(nameof(memberName));
-            this.Parameters = parameters;
+            this.Arguments = arguments;
         }
 
         /// <summary>
@@ -34,53 +34,82 @@ namespace Xunit
         /// Gets or sets the type to retrieve the member from. If not set, then the property will be
         /// retrieved from the unit test class.
         /// </summary>
-        public Type MemberType { get; set; }
+        public Type? MemberType { get; set; }
 
         /// <summary>
-        /// Gets the parameters passed to the member. Only supported for static methods.
+        /// Gets the arguments passed to the member. Only supported for static methods.
         /// </summary>
-        public object[] Parameters { get; }
+        public object?[]? Arguments { get; }
 
         /// <summary>
         /// Gets the values that should be passed to this parameter on the test method.
         /// </summary>
-        /// <param name="parameterInfo">The parameter for which the data should be provided</param>
+        /// <param name="parameterInfo">The parameter for which the data should be provided.</param>
         /// <returns>An array of values.</returns>
-        public object[] GetValues(ParameterInfo parameterInfo)
+        public object?[] GetValues(ParameterInfo parameterInfo)
         {
-            var testMethod = parameterInfo.Member;
+            MemberInfo? testMethod = parameterInfo.Member;
 
-            var type = this.MemberType ?? testMethod?.DeclaringType;
+            Type? type = this.MemberType ?? testMethod?.DeclaringType;
 
-            if (type == null)
+            if (type is null)
             {
+#if NETSTANDARD
+                return Array.Empty<object?>();
+#else
                 return new object[0];
+#endif
             }
 
-            var accessor = this.GetPropertyAccessor(type, parameterInfo) ?? this.GetMethodAccessor(type, parameterInfo) ?? this.GetFieldAccessor(type, parameterInfo);
-            if (accessor == null)
+            Func<object>? accessor = this.GetPropertyAccessor(type, parameterInfo) ?? this.GetMethodAccessor(type, parameterInfo) ?? this.GetFieldAccessor(type, parameterInfo);
+            if (accessor is null)
             {
-                var parameterText = this.Parameters?.Length > 0 ? $" with parameter types: {string.Join(", ", this.Parameters.Select(p => p?.GetType().FullName ?? "(null)"))}" : string.Empty;
-                throw new ArgumentException($"Could not find public static member (property, field, or method) named '{this.MemberName}' on {type.FullName}{parameterText}");
+                string? parameterText = this.Arguments?.Length > 0 ? $" with parameter types: {string.Join(", ", this.Arguments.Select(p => p?.GetType().FullName ?? "(null)"))}" : string.Empty;
+                throw new ArgumentException($"Could not find public static member (property, field, or method) named '{this.MemberName}' on {type.FullName}{parameterText}.");
             }
 
             var obj = (IEnumerable)accessor();
             return obj.Cast<object>().ToArray();
         }
 
-        private Func<object> GetPropertyAccessor(Type type, ParameterInfo parameterInfo)
+        /// <summary>
+        /// Gets the type of the value enumerated by a given type that is or implements <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <param name="enumerableType">An <see cref="IEnumerable{T}"/> type or a type that implements <see cref="IEnumerable{T}"/>.</param>
+        /// <returns>The generic type argument for (one of) the <see cref="IEnumerable{T}"/> interface)s) implemented by the <paramref name="enumerableType"/>.</returns>
+        private static TypeInfo? GetEnumeratedType(Type enumerableType)
         {
-            PropertyInfo propInfo = null;
-            for (var reflectionType = type; reflectionType != null; reflectionType = reflectionType.GetTypeInfo().BaseType)
+            if (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
+                return enumerableGenericTypeArgs[0].GetTypeInfo();
+            }
+
+            foreach (Type implementedInterface in enumerableType.GetTypeInfo().ImplementedInterfaces)
+            {
+                TypeInfo interfaceTypeInfo = implementedInterface.GetTypeInfo();
+                if (interfaceTypeInfo.IsGenericType && interfaceTypeInfo.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                {
+                    return interfaceTypeInfo.GetGenericArguments()[0].GetTypeInfo();
+                }
+            }
+
+            return null;
+        }
+
+        private Func<object>? GetPropertyAccessor(Type type, ParameterInfo parameterInfo)
+        {
+            PropertyInfo? propInfo = null;
+            for (Type? reflectionType = type; reflectionType is not null; reflectionType = reflectionType.GetTypeInfo().BaseType)
             {
                 propInfo = reflectionType.GetRuntimeProperty(this.MemberName);
-                if (propInfo != null)
+                if (propInfo is not null)
                 {
                     break;
                 }
             }
 
-            if (propInfo?.GetMethod == null || !propInfo.GetMethod.IsStatic)
+            if (propInfo?.GetMethod is null || !propInfo.GetMethod.IsStatic)
             {
                 return null;
             }
@@ -90,65 +119,75 @@ namespace Xunit
             return () => propInfo.GetValue(null, null);
         }
 
-        private Func<object> GetMethodAccessor(Type type, ParameterInfo parameterInfo)
+        private Func<object>? GetMethodAccessor(Type type, ParameterInfo parameterInfo)
         {
-            MethodInfo methodInfo = null;
-            var parameterTypes = this.Parameters == null
-                ? new Type[0]
-                : this.Parameters.Select(p => p.GetType()).ToArray();
-            for (var reflectionType = type; reflectionType != null; reflectionType = reflectionType.GetTypeInfo().BaseType)
+            MethodInfo? methodInfo = null;
+            for (Type? reflectionType = type; reflectionType is not null; reflectionType = reflectionType.GetTypeInfo().BaseType)
             {
-                methodInfo = reflectionType.GetRuntimeMethods().FirstOrDefault(m => m.Name == this.MemberName && this.ParameterTypesCompatible(m.GetParameters(), parameterTypes));
-
-                if (methodInfo != null)
+                methodInfo = reflectionType.GetRuntimeMethods().FirstOrDefault(m => m.Name == this.MemberName && this.ParameterTypesCompatible(m.GetParameters(), this.Arguments));
+                if (methodInfo is not null)
                 {
                     break;
                 }
             }
 
-            if (methodInfo == null || !methodInfo.IsStatic)
+            if (methodInfo is null || !methodInfo.IsStatic)
             {
                 return null;
             }
 
             this.EnsureValidMemberDataType(methodInfo.ReturnType, methodInfo.DeclaringType, parameterInfo);
 
-            return () => methodInfo.Invoke(null, this.Parameters);
+            return () => methodInfo.Invoke(null, this.Arguments);
         }
 
-        private bool ParameterTypesCompatible(ParameterInfo[] parameters, Type[] parameterTypes)
+        private bool ParameterTypesCompatible(ParameterInfo[] parameters, object?[]? arguments)
         {
-            if (parameters.Length != parameterTypes.Length)
+            if (arguments is null)
+            {
+                return parameters.Length == 0;
+            }
+            else if (parameters.Length != arguments.Length)
             {
                 return false;
             }
 
-            for (var i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < parameters.Length; i++)
             {
-                if (parameterTypes[i] != null && !parameters[i].ParameterType.GetTypeInfo()
-                    .IsAssignableFrom(parameterTypes[i].GetTypeInfo()))
+                if (arguments[i] is object arg)
                 {
-                    return false;
+                    if (!parameters[i].ParameterType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (parameters[i].ParameterType.IsValueType)
+                    {
+                        // Cannot assign null to a value type parameter.
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        private Func<object> GetFieldAccessor(Type type, ParameterInfo parameterInfo)
+        private Func<object>? GetFieldAccessor(Type type, ParameterInfo parameterInfo)
         {
-            FieldInfo fieldInfo = null;
-            for (var reflectionType = type; reflectionType != null; reflectionType = reflectionType.GetTypeInfo().BaseType)
+            FieldInfo? fieldInfo = null;
+            for (Type? reflectionType = type; reflectionType is not null; reflectionType = reflectionType.GetTypeInfo().BaseType)
             {
                 fieldInfo = reflectionType.GetRuntimeField(this.MemberName);
 
-                if (fieldInfo != null)
+                if (fieldInfo is not null)
                 {
                     break;
                 }
             }
 
-            if (fieldInfo == null || !fieldInfo.IsStatic)
+            if (fieldInfo is null || !fieldInfo.IsStatic)
             {
                 return null;
             }
@@ -158,47 +197,38 @@ namespace Xunit
             return () => fieldInfo.GetValue(null);
         }
 
-        private void EnsureValidMemberDataType(Type type, Type declaringType, ParameterInfo parameterType)
+        /// <summary>
+        /// Throws if a given type will not generate values that are compatible with a given parameter.
+        /// </summary>
+        /// <param name="enumerableType">The type of value stored by the field or property.</param>
+        /// <param name="declaringType">The type on which the member is declared.</param>
+        /// <param name="parameterInfo">The parameter that must receive the values generated by <paramref name="enumerableType"/>.</param>
+        /// <exception cref="ArgumentException">Throw when <paramref name="enumerableType"/> does not conform to requirements or does not produce values assignable to <paramref name="parameterInfo"/>.</exception>
+        private void EnsureValidMemberDataType(Type enumerableType, Type declaringType, ParameterInfo parameterInfo)
         {
-            var enumerableTypeInfo = typeof(IEnumerable).GetTypeInfo();
-
-            if (!enumerableTypeInfo.IsAssignableFrom(type.GetTypeInfo()))
+            TypeInfo enumerableTypeInfo = typeof(IEnumerable).GetTypeInfo();
+            if (!enumerableTypeInfo.IsAssignableFrom(enumerableType.GetTypeInfo()))
             {
-                throw new ArgumentException($"Member {this.MemberName} on {type.FullName} did not return IEnumerable");
+                throw new ArgumentException($"Member {this.MemberName} on {declaringType.FullName} must return a type that implements {typeof(IEnumerable)}.");
             }
 
-            var enumerableGenericType = this.GetEnumerableType(type);
-            if (enumerableTypeInfo.IsAssignableFrom(enumerableGenericType))
+            TypeInfo? enumeratedType = GetEnumeratedType(enumerableType);
+            if (enumeratedType is null)
+            {
+                throw new ArgumentException($"Member {this.MemberName} on {declaringType.FullName} must return a type that implements IEnumerable<T>.");
+            }
+
+            if (enumerableTypeInfo.IsAssignableFrom(enumeratedType))
             {
                 throw new ArgumentException(
-                    $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<object[]>, which is not supported");
+                    $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<object[]>, which is not supported.");
             }
 
-            if (!enumerableGenericType.IsAssignableFrom(parameterType.ParameterType.GetTypeInfo()))
+            if (!enumeratedType.IsAssignableFrom(parameterInfo.ParameterType.GetTypeInfo()))
             {
                 throw new ArgumentException(
-                    $"Parameter type {parameterType.ParameterType.FullName} is not compatible with returned member type {enumerableGenericType.FullName}");
+                    $"Parameter type {parameterInfo.ParameterType.FullName} is not compatible with returned member type {enumeratedType.FullName}.");
             }
-        }
-
-        private TypeInfo GetEnumerableType(Type enumerableType)
-        {
-            var enumerableGenericTypeDefinition = enumerableType.GetTypeInfo().GetGenericArguments();
-            if (enumerableGenericTypeDefinition != null)
-            {
-                return enumerableGenericTypeDefinition[0].GetTypeInfo();
-            }
-
-            foreach (var implementedInterface in enumerableType.GetTypeInfo().ImplementedInterfaces)
-            {
-                var interfaceTypeInfo = implementedInterface.GetTypeInfo();
-                if (interfaceTypeInfo.IsGenericType && interfaceTypeInfo.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    return interfaceTypeInfo.GetGenericArguments()[0].GetTypeInfo();
-                }
-            }
-
-            return null;
         }
     }
 }

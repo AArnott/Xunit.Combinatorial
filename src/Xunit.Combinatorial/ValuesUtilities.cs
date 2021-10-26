@@ -4,6 +4,7 @@ namespace Xunit
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
     /// <summary>
@@ -16,36 +17,36 @@ namespace Xunit
         /// </summary>
         /// <param name="parameter">The parameter to get possible values for.</param>
         /// <returns>A sequence of values for the parameter.</returns>
-        internal static IEnumerable<object> GetValuesFor(ParameterInfo parameter)
+        internal static IEnumerable<object?> GetValuesFor(ParameterInfo parameter)
         {
             Requires.NotNull(parameter, nameof(parameter));
             {
-                var attribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
-                if (attribute != null)
+                CombinatorialValuesAttribute? attribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
+                if (attribute is not null)
                 {
                     return attribute.Values;
                 }
             }
 
             {
-                var attribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
-                if (attribute != null)
+                CombinatorialRangeAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
+                if (attribute is not null)
                 {
                     return attribute.Values;
                 }
             }
 
             {
-                var attribute = parameter.GetCustomAttribute<CombinatorialRandomAttribute>();
-                if (attribute != null)
+                CombinatorialRandomAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRandomAttribute>();
+                if (attribute is not null)
                 {
                     return attribute.Values;
                 }
             }
 
             {
-                var attribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
-                if (attribute != null)
+                CombinatorialMemberDataAttribute? attribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
+                if (attribute is not null)
                 {
                     return attribute.GetValues(parameter);
                 }
@@ -59,7 +60,7 @@ namespace Xunit
         /// </summary>
         /// <param name="dataType">The type to get possible values for.</param>
         /// <returns>A sequence of values for the <paramref name="dataType"/>.</returns>
-        internal static IEnumerable<object> GetValuesFor(Type dataType)
+        internal static IEnumerable<object?> GetValuesFor(Type dataType)
         {
             Requires.NotNull(dataType, nameof(dataType));
 
@@ -80,10 +81,10 @@ namespace Xunit
                     yield return Enum.Parse(dataType, name);
                 }
             }
-            else if (IsNullable(dataType, out Type innerDataType))
+            else if (IsNullable(dataType, out Type? innerDataType))
             {
                 yield return null;
-                foreach (object value in GetValuesFor(innerDataType))
+                foreach (object? value in GetValuesFor(innerDataType))
                 {
                     yield return value;
                 }
@@ -99,7 +100,7 @@ namespace Xunit
         /// and extracts the inner type, if any.
         /// </summary>
         /// <param name="dataType">
-        /// The type to test whether it is <see cref="Nullable{T}"/>
+        /// The type to test whether it is <see cref="Nullable{T}"/>.
         /// </param>
         /// <param name="innerDataType">
         /// When this method returns, contains the inner type of the Nullable, if the
@@ -108,11 +109,11 @@ namespace Xunit
         /// <returns>
         /// <see langword="true"/> if the type is a Nullable type; otherwise <see langword="false"/>.
         /// </returns>
-        private static bool IsNullable(Type dataType, out Type innerDataType)
+        private static bool IsNullable(Type dataType, [NotNullWhen(true)] out Type? innerDataType)
         {
             innerDataType = null;
 
-            var ti = dataType.GetTypeInfo();
+            TypeInfo? ti = dataType.GetTypeInfo();
 
             if (!ti.IsGenericType)
             {

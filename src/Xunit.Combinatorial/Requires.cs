@@ -22,12 +22,12 @@ namespace Xunit
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
         /// <returns>The value of the parameter.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
         [DebuggerStepThrough]
         public static T NotNull<T>(T value, string parameterName)
             where T : class // ensures value-types aren't passed to a null checking method
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -41,7 +41,7 @@ namespace Xunit
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
         /// <returns>The value of the parameter.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is IntPtr.Zero</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is IntPtr.Zero.</exception>
         [DebuggerStepThrough]
         public static IntPtr NotNull(IntPtr value, string parameterName)
         {
@@ -59,7 +59,7 @@ namespace Xunit
         /// </summary>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
         /// <remarks>
         /// This method allows async methods to use Requires.NotNull without having to assign the result
         /// to local variables to avoid C# warnings.
@@ -67,7 +67,7 @@ namespace Xunit
         [DebuggerStepThrough]
         public static void NotNull(System.Threading.Tasks.Task value, string parameterName)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -79,7 +79,7 @@ namespace Xunit
         /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
         /// <remarks>
         /// This method allows async methods to use Requires.NotNull without having to assign the result
         /// to local variables to avoid C# warnings.
@@ -87,7 +87,7 @@ namespace Xunit
         [DebuggerStepThrough]
         public static void NotNull<T>(System.Threading.Tasks.Task<T> value, string parameterName)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -101,7 +101,7 @@ namespace Xunit
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
         /// <returns>The value of the parameter.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
         /// <remarks>
         /// This method exists for callers who themselves only know the type as a generic parameter which
         /// may or may not be a class, but certainly cannot be null.
@@ -109,7 +109,7 @@ namespace Xunit
         [DebuggerStepThrough]
         public static T NotNullAllowStructs<T>(T value, string parameterName)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -129,7 +129,7 @@ namespace Xunit
             // To the guy that is doing random code cleaning:
             // Consider the perfomance when changing the code to delegate to NotNull.
             // In general do not chain call to another function, check first and return as earlier as possible.
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -153,7 +153,7 @@ namespace Xunit
             // To the guy that is doing random code cleaning:
             // Consider the perfomance when changing the code to delegate to NotNull.
             // In general do not chain call to another function, check first and return as earlier as possible.
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
@@ -183,14 +183,14 @@ namespace Xunit
             // To the guy that is doing random code cleaning:
             // Consider the perfomance when changing the code to delegate to NotNull.
             // In general do not chain call to another function, check first and return as earlier as possible.
-            if (values == null)
+            if (values is null)
             {
                 throw new ArgumentNullException(parameterName);
             }
 
-            ICollection collection = values as ICollection;
+            ICollection? collection = values as ICollection;
 
-            if (collection != null)
+            if (collection is not null)
             {
                 if (collection.Count > 0)
                 {
@@ -232,7 +232,7 @@ namespace Xunit
             {
                 hasElements = true;
 
-                if (value == null)
+                if (value is null)
                 {
                     throw new ArgumentException(Format(Strings.Argument_NullElement, parameterName), parameterName);
                 }
@@ -255,11 +255,11 @@ namespace Xunit
         [DebuggerStepThrough]
         public static void NullOrNotNullElements<T>(IEnumerable<T> values, string parameterName)
         {
-            if (values != null)
+            if (values is not null)
             {
                 foreach (T value in values)
                 {
-                    if (value == null)
+                    if (value is null)
                     {
                         throw new ArgumentException(Format(Strings.Argument_NullElement, parameterName), parameterName);
                     }
@@ -271,7 +271,7 @@ namespace Xunit
         /// Throws an <see cref="ArgumentOutOfRangeException"/> if a condition does not evaluate to true.
         /// </summary>
         [DebuggerStepThrough]
-        public static void Range(bool condition, string parameterName, string message = null)
+        public static void Range(bool condition, string parameterName, string? message = null)
         {
             if (!condition)
             {
@@ -284,7 +284,7 @@ namespace Xunit
         /// </summary>
         /// <returns>Nothing.  This method always throws.</returns>
         [DebuggerStepThrough]
-        public static Exception FailRange(string parameterName, string message = null)
+        public static Exception FailRange(string parameterName, string? message = null)
         {
             if (string.IsNullOrEmpty(message))
             {

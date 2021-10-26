@@ -25,7 +25,7 @@ namespace Xunit
     /// </para>
     /// <para>
     /// The PairwiseStrategy code is based on "jenny" tool by Bob Jenkins:
-    /// http://burtleburtle.net/bob/math/jenny.html
+    /// <see href="http://burtleburtle.net/bob/math/jenny.html"/>.
     /// </para>
     /// </remarks>
     internal static class PairwiseStrategy
@@ -67,7 +67,7 @@ namespace Xunit
 
         /// <summary>
         /// FleaRand is a pseudo-random number generator developed by Bob Jenkins:
-        /// http://burtleburtle.net/bob/rand/talksmall.html#flea
+        /// <see href="http://burtleburtle.net/bob/rand/talksmall.html#flea" />.
         /// </summary>
         private class FleaRand
         {
@@ -259,14 +259,14 @@ namespace Xunit
         /// tuples.
         /// </para>
         /// <para>
-        /// Picking a tuple to cover
+        /// Picking a tuple to cover.
         /// </para>
         /// <para>
         /// There are no any special rules defined for picking tuples to cover. We
         /// just pick them one by one, in the order they were generated.
         /// </para>
         /// <para>
-        /// Test generation
+        /// Test generation.
         /// </para>
         /// <para>
         /// Test generation starts from creating a completely random test case which
@@ -278,7 +278,7 @@ namespace Xunit
         /// selected tuple and then the algorithm picks the best test case ("seven"
         /// is a magic number which provides good results in acceptable time).
         /// </para>
-        /// <para>Maximizing test coverage</para>
+        /// <para>Maximizing test coverage.</para>
         /// <para>
         /// To maximize tests coverage, the algorithm walks thru the list of mutable
         /// dimensions (mutable dimension is a dimension that are not included in
@@ -299,11 +299,11 @@ namespace Xunit
         /// </remarks>
         private class PairwiseTestCaseGenerator
         {
-            private FleaRand prng;
+            private FleaRand? prng;
 
-            private int[] dimensions;
+            private int[]? dimensions;
 
-            private List<FeatureTuple>[][] uncoveredTuples;
+            private List<FeatureTuple>[][]? uncoveredTuples;
 
             /// <summary>
             /// Creates a set of test cases for specified dimensions.
@@ -326,14 +326,14 @@ namespace Xunit
 
                 while (true)
                 {
-                    FeatureTuple tuple = this.GetNextTuple();
+                    FeatureTuple? tuple = this.GetNextTuple();
 
-                    if (tuple == null)
+                    if (tuple is null)
                     {
                         break;
                     }
 
-                    TestCaseInfo testCase = this.CreateTestCase(tuple);
+                    TestCaseInfo? testCase = this.CreateTestCase(tuple);
 
                     this.RemoveTuplesCoveredByTest(testCase);
 
@@ -345,12 +345,12 @@ namespace Xunit
 
             private int GetNextRandomNumber()
             {
-                return (int)(this.prng.Next() >> 1);
+                return (int)(this.prng!.Next() >> 1);
             }
 
             private void CreateAllTuples()
             {
-                this.uncoveredTuples = new List<FeatureTuple>[this.dimensions.Length][];
+                this.uncoveredTuples = new List<FeatureTuple>[this.dimensions!.Length][];
 
                 for (int d = 0; d < this.dimensions.Length; d++)
                 {
@@ -369,7 +369,7 @@ namespace Xunit
 
                 result.Add(new FeatureTuple(new FeatureInfo(dimension, feature)));
 
-                for (int d = 0; d < this.dimensions.Length; d++)
+                for (int d = 0; d < this.dimensions!.Length; d++)
                 {
                     if (d != dimension)
                     {
@@ -383,9 +383,9 @@ namespace Xunit
                 return result;
             }
 
-            private FeatureTuple GetNextTuple()
+            private FeatureTuple? GetNextTuple()
             {
-                for (int d = 0; d < this.uncoveredTuples.Length; d++)
+                for (int d = 0; d < this.uncoveredTuples!.Length; d++)
                 {
                     for (int f = 0; f < this.uncoveredTuples[d].Length; f++)
                     {
@@ -405,7 +405,7 @@ namespace Xunit
 
             private TestCaseInfo CreateTestCase(FeatureTuple tuple)
             {
-                TestCaseInfo bestTestCase = null;
+                TestCaseInfo? bestTestCase = null;
                 int bestCoverage = -1;
 
                 for (int i = 0; i < 7; i++)
@@ -421,12 +421,12 @@ namespace Xunit
                     }
                 }
 
-                return bestTestCase;
+                return bestTestCase!;
             }
 
             private TestCaseInfo CreateRandomTestCase(FeatureTuple tuple)
             {
-                TestCaseInfo result = new TestCaseInfo(this.dimensions.Length);
+                TestCaseInfo result = new TestCaseInfo(this.dimensions!.Length);
 
                 for (int d = 0; d < this.dimensions.Length; d++)
                 {
@@ -480,7 +480,7 @@ namespace Xunit
             {
                 List<int> result = new List<int>();
 
-                bool[] immutableDimensions = new bool[this.dimensions.Length];
+                bool[] immutableDimensions = new bool[this.dimensions!.Length];
 
                 for (int i = 0; i < tuple.Length; i++)
                 {
@@ -511,7 +511,7 @@ namespace Xunit
 
             private int MaximizeCoverageForDimension(TestCaseInfo testCase, int dimension, int bestCoverage)
             {
-                List<int> bestFeatures = new List<int>(this.dimensions[dimension]);
+                List<int> bestFeatures = new List<int>(this.dimensions![dimension]);
 
                 for (int f = 0; f < this.dimensions[dimension]; f++)
                 {
@@ -540,7 +540,7 @@ namespace Xunit
             {
                 int result = 0;
 
-                List<FeatureTuple> tuples = this.uncoveredTuples[dimension][feature];
+                List<FeatureTuple> tuples = this.uncoveredTuples![dimension][feature];
 
                 for (int i = 0; i < tuples.Count; i++)
                 {
@@ -555,7 +555,7 @@ namespace Xunit
 
             private void RemoveTuplesCoveredByTest(TestCaseInfo testCase)
             {
-                for (int d = 0; d < this.uncoveredTuples.Length; d++)
+                for (int d = 0; d < this.uncoveredTuples!.Length; d++)
                 {
                     for (int f = 0; f < this.uncoveredTuples[d].Length; f++)
                     {

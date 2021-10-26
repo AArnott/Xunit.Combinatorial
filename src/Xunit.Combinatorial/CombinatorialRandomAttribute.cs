@@ -17,7 +17,7 @@ namespace Xunit
         /// </summary>
         public const int NoSeed = 0;
 
-        private object[] values;
+        private object[]? values;
 
         /// <summary>
         /// Gets or sets the number of values to generate. Must be positive.

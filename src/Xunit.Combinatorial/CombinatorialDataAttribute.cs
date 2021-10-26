@@ -27,23 +27,23 @@ namespace Xunit
         }
 
         /// <inheritdoc />
-        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        public override IEnumerable<object?[]> GetData(MethodInfo testMethod)
         {
             Requires.NotNull(testMethod, nameof(testMethod));
 
-            var parameters = testMethod.GetParameters();
+            ParameterInfo[]? parameters = testMethod.GetParameters();
             if (parameters.Length == 0)
             {
                 return Enumerable.Empty<object[]>();
             }
 
-            var values = new List<object>[parameters.Length];
+            var values = new List<object?>[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
             {
                 values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
             }
 
-            var currentValues = new object[parameters.Length];
+            object[]? currentValues = new object[parameters.Length];
             return this.FillCombinations(parameters, values, currentValues, 0);
         }
 
@@ -56,7 +56,7 @@ namespace Xunit
         /// <param name="currentValues">An array that is being recursively initialized with a set of arguments to pass to the test method.</param>
         /// <param name="index">The index into <paramref name="currentValues"/> that this particular invocation should rotate through <paramref name="candidateValues"/> for.</param>
         /// <returns>A sequence of all combinations of arguments from <paramref name="candidateValues"/>, starting at <paramref name="index"/>.</returns>
-        private IEnumerable<object[]> FillCombinations(ParameterInfo[] parameters, List<object>[] candidateValues, object[] currentValues, int index)
+        private IEnumerable<object?[]> FillCombinations(ParameterInfo[] parameters, List<object?>[] candidateValues, object?[] currentValues, int index)
         {
             Requires.NotNull(parameters, nameof(parameters));
             Requires.NotNull(candidateValues, nameof(candidateValues));
@@ -65,13 +65,13 @@ namespace Xunit
             Requires.Argument(parameters.Length == currentValues.Length, nameof(currentValues), $"Expected to have same array length as {nameof(parameters)}");
             Requires.Range(index >= 0 && index < parameters.Length, nameof(index));
 
-            foreach (object value in candidateValues[index])
+            foreach (object? value in candidateValues[index])
             {
                 currentValues[index] = value;
 
                 if (index + 1 < parameters.Length)
                 {
-                    foreach (object[] result in this.FillCombinations(parameters, candidateValues, currentValues, index + 1))
+                    foreach (object?[] result in this.FillCombinations(parameters, candidateValues, currentValues, index + 1))
                     {
                         yield return result;
                     }
