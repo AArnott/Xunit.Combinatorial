@@ -6,7 +6,11 @@
     <Title>Combinatorial testing with Xunit</Title>
     <Description>Adds pairwise and combinatorial testing to Xunit. When combined with Xunit's [Theory] attribute, generates test cases that run a test under many conditions that you control via test method parameters.</Description>
     <PackageTags>xunit combinatorial pairwise testing</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(RepoRootPath)README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
