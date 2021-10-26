@@ -7,14 +7,6 @@ steps:
   displayName: dotnet pack
 
 - task: DotNetCoreCLI@2
-  displayName: dotnet test -f net45
-  inputs:
-    command: test
-    arguments: --no-build -c $(BuildConfiguration) -f net45 --filter "TestCategory!=FailsInCloudTest" -v n /p:CollectCoverage=true --settings "$(Build.Repository.LocalPath)/azure-pipelines/$(Agent.OS).runsettings" /bl:"$(Build.ArtifactStagingDirectory)/build_logs/test_net45.binlog"
-    testRunTitle: net45-$(Agent.JobName)
-  condition: succeededOrFailed()
-
-- task: DotNetCoreCLI@2
   displayName: dotnet test -f net461
   inputs:
     command: test
