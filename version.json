@@ -3,7 +3,7 @@
   "version": "1.5-beta",
   "versionHeightOffset": 6,
   "publicReleaseRefSpec": [
-    "^refs/heads/main$", // we release out of main
-    "^refs/tags/v\\d+\\.\\d+" // we also release tags starting with vN.N
+    "^refs/heads/main$",
+    "^refs/heads/v\\d+\\.\\d+"
   ]
 }
