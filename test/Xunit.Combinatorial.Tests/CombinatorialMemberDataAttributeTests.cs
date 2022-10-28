@@ -1,4 +1,4 @@
-// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
 using System;
 using System.Collections;
@@ -46,7 +46,7 @@ public class CombinatorialMemberDataAttributeTests
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
 
         ArgumentException? exception = Assert.Throws<ArgumentException>(() => attribute.GetValues(parameter));
-        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntArray)} on {nameof(CombinatorialMemberDataAttributeTests)} returned IEnumerable<Int32[]>, which is not supported.", exception.Message);
+        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntArray)} on {nameof(CombinatorialMemberDataAttributeTests)} returned an IEnumerable<Int32[]>, which is not supported.", exception.Message);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class CombinatorialMemberDataAttributeTests
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
 
         ArgumentException? exception = Assert.Throws<ArgumentException>(() => attribute.GetValues(parameter));
-        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntEnumerable)} on {nameof(CombinatorialMemberDataAttributeTests)} returned IEnumerable<IEnumerable<Int32>>, which is not supported.", exception.Message);
+        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntEnumerable)} on {nameof(CombinatorialMemberDataAttributeTests)} returned an IEnumerable<IEnumerable<Int32>>, which is not supported.", exception.Message);
     }
 
     [Fact]

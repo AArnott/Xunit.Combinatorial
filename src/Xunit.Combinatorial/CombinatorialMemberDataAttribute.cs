@@ -215,13 +215,13 @@ namespace Xunit
             if (enumeratedType.IsArray)
             {
                 throw new ArgumentException(
-                    $"Member {this.MemberName} on {declaringType.FullName} returned IEnumerable<{enumeratedType.Name}>, which is not supported.");
+                    $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<{enumeratedType.Name}>, which is not supported.");
             }
 
             if (enumeratedType.IsGenericType && enumeratedType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             {
                 throw new ArgumentException(
-                    $"Member {this.MemberName} on {declaringType.FullName} returned IEnumerable<IEnumerable<{enumeratedType.GetGenericArguments()[0].Name}>>, which is not supported.");
+                    $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<IEnumerable<{enumeratedType.GetGenericArguments()[0].Name}>>, which is not supported.");
             }
 
             if (!enumeratedType.IsAssignableFrom(parameterInfo.ParameterType.GetTypeInfo()))
