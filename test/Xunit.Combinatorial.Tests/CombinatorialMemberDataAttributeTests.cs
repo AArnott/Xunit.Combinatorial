@@ -1,4 +1,4 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
 
 using System;
 using System.Collections;
@@ -111,8 +111,6 @@ public class CombinatorialMemberDataAttributeTests
     private static ListOfInt<string> GetValuesAsConcreteClassImplementingEnumerableOfInt() => new ListOfInt<string> { 1, 2, 3, 4 };
 
     private static ListOfInt GetValuesAsConcreteNonGenericClassImplementingEnumerableOfInt() => new ListOfInt { 1, 2, 3, 4 };
-
-    private static DoesNotImplementIEnumerable GetValuesAsDoesNotImplementIEnumerable() => new();
 
     private static ImplementsOnlyNonGenericIEnumerable GetValuesAsTypeThatImplementsNonGenericIEnumerable() => new();
 
