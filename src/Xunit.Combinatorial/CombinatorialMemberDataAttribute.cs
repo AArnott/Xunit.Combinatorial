@@ -206,22 +206,22 @@ namespace Xunit
         /// <exception cref="ArgumentException">Throw when <paramref name="enumerableType"/> does not conform to requirements or does not produce values assignable to <paramref name="parameterInfo"/>.</exception>
         private void EnsureValidMemberDataType(Type enumerableType, Type declaringType, ParameterInfo parameterInfo)
         {
-            TypeInfo enumerableTypeInfo = typeof(IEnumerable).GetTypeInfo();
-            if (!enumerableTypeInfo.IsAssignableFrom(enumerableType.GetTypeInfo()))
-            {
-                throw new ArgumentException($"Member {this.MemberName} on {declaringType.FullName} must return a type that implements {typeof(IEnumerable)}.");
-            }
-
             TypeInfo? enumeratedType = GetEnumeratedType(enumerableType);
             if (enumeratedType is null)
             {
                 throw new ArgumentException($"Member {this.MemberName} on {declaringType.FullName} must return a type that implements IEnumerable<T>.");
             }
 
-            if (enumerableTypeInfo.IsAssignableFrom(enumeratedType))
+            if (enumeratedType.IsArray)
             {
                 throw new ArgumentException(
-                    $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<object[]>, which is not supported.");
+                    $"Member {this.MemberName} on {declaringType.FullName} returned IEnumerable<{enumeratedType.Name}>, which is not supported.");
+            }
+
+            if (enumeratedType.IsGenericType && enumeratedType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                throw new ArgumentException(
+                    $"Member {this.MemberName} on {declaringType.FullName} returned IEnumerable<IEnumerable<{enumeratedType.GetGenericArguments()[0].Name}>>, which is not supported.");
             }
 
             if (!enumeratedType.IsAssignableFrom(parameterInfo.ParameterType.GetTypeInfo()))

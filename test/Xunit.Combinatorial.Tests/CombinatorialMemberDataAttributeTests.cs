@@ -10,6 +10,7 @@ public class CombinatorialMemberDataAttributeTests
 {
     private static readonly MethodInfo StubIntMethodInfo = typeof(CombinatorialMemberDataAttributeTests).GetMethod(nameof(StubIntMethod), BindingFlags.Instance | BindingFlags.NonPublic)!;
     private static readonly MethodInfo StubGuidMethodInfo = typeof(CombinatorialMemberDataAttributeTests).GetMethod(nameof(StubGuidMethod), BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly MethodInfo StubStringMethodInfo = typeof(CombinatorialMemberDataAttributeTests).GetMethod(nameof(StubStringMethod), BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     [Fact]
     public void EnumerableOfIntReturnsValues()
@@ -45,17 +46,17 @@ public class CombinatorialMemberDataAttributeTests
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
 
         ArgumentException? exception = Assert.Throws<ArgumentException>(() => attribute.GetValues(parameter));
-        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntArray)} on {nameof(CombinatorialMemberDataAttributeTests)} returned an IEnumerable<object[]>, which is not supported.", exception.Message);
+        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntArray)} on {nameof(CombinatorialMemberDataAttributeTests)} returned IEnumerable<Int32[]>, which is not supported.", exception.Message);
     }
 
     [Fact]
-    public void NonEnumerableThrows()
+    public void EnumerableOfEnumerableThrows()
     {
-        var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsDoesNotImplementIEnumerable));
+        var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsEnumerableOfIntEnumerable));
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
 
         ArgumentException? exception = Assert.Throws<ArgumentException>(() => attribute.GetValues(parameter));
-        Assert.Equal($"Member {nameof(GetValuesAsDoesNotImplementIEnumerable)} on {typeof(CombinatorialMemberDataAttributeTests)} must return a type that implements System.Collections.IEnumerable.", exception.Message);
+        Assert.Equal($"Member {nameof(GetValuesAsEnumerableOfIntEnumerable)} on {nameof(CombinatorialMemberDataAttributeTests)} returned IEnumerable<IEnumerable<Int32>>, which is not supported.", exception.Message);
     }
 
     [Fact]
@@ -77,6 +78,16 @@ public class CombinatorialMemberDataAttributeTests
         object?[]? values = attribute.GetValues(parameter);
 
         Assert.Contains(values, obj => obj is Guid guid && guid != Guid.Empty);
+    }
+
+    [Fact]
+    public void EnumerableOfStringReturnsValue()
+    {
+        var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsEnumerableOfString));
+        ParameterInfo parameter = StubStringMethodInfo.GetParameters()[0];
+        object?[]? values = attribute.GetValues(parameter);
+
+        Assert.Contains(values, obj => obj is string str && !string.IsNullOrEmpty(str));
     }
 
     [Fact]
@@ -114,6 +125,15 @@ public class CombinatorialMemberDataAttributeTests
         yield return new[] { 5 };
     }
 
+    private static IEnumerable<IEnumerable<int>> GetValuesAsEnumerableOfIntEnumerable()
+    {
+        yield return new[] { 1 };
+        yield return new[] { 2 };
+        yield return new[] { 3 };
+        yield return new[] { 4 };
+        yield return new[] { 5 };
+    }
+
     private static IEnumerable<Guid> GetValuesAsEnumerableOfGuid()
     {
         yield return Guid.NewGuid();
@@ -123,11 +143,24 @@ public class CombinatorialMemberDataAttributeTests
         yield return Guid.NewGuid();
     }
 
+    private static IEnumerable<string> GetValuesAsEnumerableOfString()
+    {
+        yield return Guid.NewGuid().ToString();
+        yield return Guid.NewGuid().ToString();
+        yield return Guid.NewGuid().ToString();
+        yield return Guid.NewGuid().ToString();
+        yield return Guid.NewGuid().ToString();
+    }
+
     private void StubIntMethod(int p1)
     {
     }
 
     private void StubGuidMethod(Guid p1)
+    {
+    }
+
+    private void StubStringMethod(string p1)
     {
     }
 
