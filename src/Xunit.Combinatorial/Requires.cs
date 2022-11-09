@@ -1,15 +1,14 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
+
+using System.Collections;
+using System.Diagnostics;
+using System.Globalization;
 
 #pragma warning disable SA1611 // Element parameters must be documented
 
 namespace Xunit
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-
     /// <summary>
     /// Common runtime checks that throw ArgumentExceptions upon failure.
     /// </summary>
@@ -22,7 +21,7 @@ namespace Xunit
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
         /// <returns>The value of the parameter.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         [DebuggerStepThrough]
         public static T NotNull<T>(T value, string parameterName)
             where T : class // ensures value-types aren't passed to a null checking method
@@ -59,7 +58,7 @@ namespace Xunit
         /// </summary>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         /// <remarks>
         /// This method allows async methods to use Requires.NotNull without having to assign the result
         /// to local variables to avoid C# warnings.
@@ -79,7 +78,7 @@ namespace Xunit
         /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         /// <remarks>
         /// This method allows async methods to use Requires.NotNull without having to assign the result
         /// to local variables to avoid C# warnings.
@@ -101,7 +100,7 @@ namespace Xunit
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
         /// <returns>The value of the parameter.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         /// <remarks>
         /// This method exists for callers who themselves only know the type as a generic parameter which
         /// may or may not be a class, but certainly cannot be null.
@@ -122,7 +121,7 @@ namespace Xunit
         /// </summary>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
         [DebuggerStepThrough]
         public static void NotNullOrEmpty(string value, string parameterName)
         {
@@ -146,7 +145,7 @@ namespace Xunit
         /// </summary>
         /// <param name="value">The value of the argument.</param>
         /// <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
         [DebuggerStepThrough]
         public static void NotNullOrWhiteSpace(string value, string parameterName)
         {

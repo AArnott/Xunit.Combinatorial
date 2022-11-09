@@ -1,16 +1,20 @@
+parameters:
+- name: RunTests
+  type: boolean
+  default: true
+
 jobs:
 - job: Linux
   pool:
     vmImage: Ubuntu 20.04
   steps:
   - checkout: self
+    fetchDepth: 0 # avoid shallow clone so nbgv can do its work.
     clean: true
   - template: install-dependencies.yml
-
-  - powershell: '& (./azure-pipelines/Get-nbgv.ps1) cloud'
-    displayName: Set build number
-
   - template: dotnet.yml
+    parameters:
+      RunTests: ${{ parameters.RunTests }}
 
-  - template: publish-codecoverage.yml
+  - template: publish-symbols.yml
   - template: publish-deployables.yml

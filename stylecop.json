@@ -3,11 +3,16 @@
   "settings": {
     "documentationRules": {
       "companyName": "Andrew Arnott",
-      "copyrightText": "Copyright (c) {companyName}. All rights reserved. Licensed under the {licenseName}.",
+      "copyrightText": "Copyright (c) {companyName}. All rights reserved.\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",
       "variables": {
-        "licenseName": "Ms-PL"
+        "licenseName": "Ms-PL",
+        "licenseFile": "LICENSE"
       },
+      "fileNamingConvention": "metadata",
       "xmlHeader": false
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
     }
   }
 }
