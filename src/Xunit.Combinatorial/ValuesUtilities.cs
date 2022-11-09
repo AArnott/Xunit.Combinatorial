@@ -1,12 +1,11 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
+
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Xunit
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
-
     /// <summary>
     /// Utility methods for generating values for test parameters.
     /// </summary>

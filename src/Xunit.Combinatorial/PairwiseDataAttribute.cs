@@ -1,12 +1,11 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
+
+using System.Reflection;
+using Xunit.Sdk;
 
 namespace Xunit
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Xunit.Sdk;
-
     /// <summary>
     /// Provides a test method decorated with a <see cref="TheoryAttribute"/>
     /// with arguments to run various combination of values for the
