@@ -1,4 +1,5 @@
-- powershell: azure-pipelines/Merge-CodeCoverage.ps1 -Path $PSScriptRoot\..\bin -OutputFile coveragereport/merged.cobertura.xml -Format Cobertura -Verbose
+steps:
+- powershell: azure-pipelines/Merge-CodeCoverage.ps1 -Path '$(Build.ArtifactStagingDirectory)\coverageResults-Linux' -OutputFile coveragereport/merged.cobertura.xml -Format Cobertura -Verbose
   displayName: ⚙ Merge coverage
 - task: PublishCodeCoverageResults@1
   displayName: 📢 Publish code coverage results to Azure DevOps
