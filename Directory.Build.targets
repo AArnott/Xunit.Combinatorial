@@ -1,4 +1,8 @@
 <Project>
+  <ItemGroup>
+    <Using Remove="System.Net.Http" />
+  </ItemGroup>
+
   <PropertyGroup>
     <!-- Workaround https://github.com/dotnet/wpf/issues/1718 -->
     <EmbedUntrackedSources Condition=" '$(UseWPF)' == 'true' ">false</EmbedUntrackedSources>
