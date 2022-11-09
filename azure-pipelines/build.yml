@@ -17,6 +17,4 @@ jobs:
       RunTests: ${{ parameters.RunTests }}
 
   - template: publish-symbols.yml
-  - ${{ if parameters.RunTests }}:
-    - template: publish-codecoverage.yml
   - template: publish-deployables.yml
