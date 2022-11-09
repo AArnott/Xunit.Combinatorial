@@ -1,14 +1,11 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved. Licensed under the Ms-PL.
+﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
+
+using System.Globalization;
+using System.Reflection;
 
 namespace Xunit
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-
     /// <summary>
     /// Common utility methods used by the various error detection and reporting classes.
     /// </summary>

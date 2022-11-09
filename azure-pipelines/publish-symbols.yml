@@ -1,0 +1,17 @@
+steps:
+
+- task: PublishSymbols@2
+  inputs:
+    SymbolsFolder: $(Build.ArtifactStagingDirectory)/symbols
+    SearchPattern: '**/*.pdb'
+    IndexSources: false
+    SymbolServerType: TeamServices
+  displayName: 📢 Publish symbols
+
+- task: PublishSymbols@2
+  inputs:
+    SymbolsFolder: $(Build.ArtifactStagingDirectory)/test_symbols
+    SearchPattern: '**/*.pdb'
+    IndexSources: false
+    SymbolServerType: TeamServices
+  displayName: 📢 Publish test symbols
