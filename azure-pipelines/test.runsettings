@@ -6,6 +6,7 @@
           <CoverageLogLevel>All</CoverageLogLevel>
           <InstrumentationLogLevel>All</InstrumentationLogLevel>
           <ManagedVanguardLogLevel>Verbose</ManagedVanguardLogLevel>
+          <CoverageFileLogPath>/home/vsts/work/1/a/testResults-Linux/</CoverageFileLogPath>
           <CodeCoverage>
             <ModulePaths>
               <Include>

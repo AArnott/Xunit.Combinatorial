@@ -44,6 +44,8 @@ if ($x86) {
   }
 }
 
+mkdir '/home/vsts/work/1/a/testResults-Linux' | Out-Null
+
 & $dotnet test $RepoRoot `
     --no-build `
     -c $Configuration `
