@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net461;net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Xunit.Combinatorial\Xunit.Combinatorial.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeCoverage" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Validation" />
     <PackageReference Include="xunit.runner.visualstudio" />
