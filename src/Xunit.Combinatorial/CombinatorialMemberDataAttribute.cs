@@ -46,6 +46,8 @@ namespace Xunit
         /// <returns>An array of values.</returns>
         public object?[] GetValues(ParameterInfo parameterInfo)
         {
+            Requires.NotNull(parameterInfo, nameof(parameterInfo));
+
             MemberInfo? testMethod = parameterInfo.Member;
 
             Type? type = this.MemberType ?? testMethod?.DeclaringType;
