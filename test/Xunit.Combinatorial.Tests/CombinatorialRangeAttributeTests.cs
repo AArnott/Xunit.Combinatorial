@@ -42,8 +42,39 @@ public class CombinatorialRangeAttributeTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRangeAttribute(from, to, step));
     }
 
+    [Theory]
+    [InlineData(0u, 5u)]
+    public void CountOfUnsignedIntegers_HappyPath_SetsAttributeWithRange(uint from, uint count)
+    {
+        object[] values = UnsignedSequence(from, from + count - 1u, 1u).Cast<object>().ToArray();
+        var attribute = new CombinatorialRangeAttribute(from, count);
+        Assert.Equal(values, attribute.Values);
+    }
+
+    [Theory]
+    [InlineData(0u, 0u)]
+    public void CountOfUnsignedIntegers_ZeroCount_ArgOutOfRange(uint from, uint count)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new CombinatorialRangeAttribute(from, count));
+    }
+
+    [Theory]
+    [InlineData(0u, 7u, 2u)]
+    [InlineData(0u, 8u, 2u)]
+    [InlineData(7u, 0u, 2u)]
+    public void UnsignedIntegerStep_HappyPath_SetsAttributeWithRange(uint from, uint to, uint step)
+    {
+        object[] expectedValues = UnsignedSequence(from, to, step).Cast<object>().ToArray();
+
+        var attribute = new CombinatorialRangeAttribute(from, to, step);
+        Assert.Equal(expectedValues, attribute.Values);
+    }
+
     internal static IEnumerable<int> Sequence(int from, int to, int step)
         => step >= 0 ? SequenceIterator(from, to, step) : SequenceReverseIterator(from, to, step);
+
+    internal static IEnumerable<uint> UnsignedSequence(uint from, uint to, uint step)
+        => from < to ? UnsignedSequenceIterator(from, to, step) : UnsignedSequenceReverseIterator(from, to, step);
 
     private static IEnumerable<int> SequenceIterator(int from, int to, int step)
     {
@@ -67,6 +98,32 @@ public class CombinatorialRangeAttributeTests
             unchecked
             {
                 value += step;
+            }
+        }
+    }
+
+    private static IEnumerable<uint> UnsignedSequenceIterator(uint from, uint to, uint step)
+    {
+        uint value = from;
+        while (value <= to)
+        {
+            yield return value;
+            unchecked
+            {
+                value += step;
+            }
+        }
+    }
+
+    private static IEnumerable<uint> UnsignedSequenceReverseIterator(uint from, uint to, uint step)
+    {
+        uint value = from;
+        while (value >= to && value <= from)
+        {
+            yield return value;
+            unchecked
+            {
+                value -= step;
             }
         }
     }
