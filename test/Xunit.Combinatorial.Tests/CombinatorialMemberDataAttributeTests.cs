@@ -17,7 +17,7 @@ public class CombinatorialMemberDataAttributeTests
         var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsEnumerableOfInt));
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
         object?[]? values = attribute.GetValues(parameter);
-        Assert.Equal(new object[] { 1, 2, 3, 4 }, values);
+        Assert.Equal([1, 2, 3, 4], values);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class CombinatorialMemberDataAttributeTests
         var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsConcreteClassImplementingEnumerableOfInt));
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
         object?[]? values = attribute.GetValues(parameter);
-        Assert.Equal(new object[] { 1, 2, 3, 4 }, values);
+        Assert.Equal([1, 2, 3, 4], values);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class CombinatorialMemberDataAttributeTests
         var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsConcreteNonGenericClassImplementingEnumerableOfInt));
         ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
         object?[]? values = attribute.GetValues(parameter);
-        Assert.Equal(new object[] { 1, 2, 3, 4 }, values);
+        Assert.Equal([1, 2, 3, 4], values);
     }
 
     [Fact]
