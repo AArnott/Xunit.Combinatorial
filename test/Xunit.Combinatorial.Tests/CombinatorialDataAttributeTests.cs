@@ -208,10 +208,11 @@ public class CombinatorialDataAttributeTests
                     {
                         foreach (object? jValue in possibleValues[j])
                         {
-                            Assert.NotEmpty(actualPairwise.Where(
+                            Assert.Contains(
+                                actualPairwise,
                                 testCase =>
                                     EqualityComparer<object?>.Default.Equals(testCase[i], iValue) &&
-                                    EqualityComparer<object?>.Default.Equals(testCase[j], jValue)));
+                                    EqualityComparer<object?>.Default.Equals(testCase[j], jValue));
                         }
                     }
                 }
