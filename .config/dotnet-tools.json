@@ -3,25 +3,19 @@
   "isRoot": true,
   "tools": {
     "powershell": {
-      "version": "7.3.4",
+      "version": "7.4.5",
       "commands": [
         "pwsh"
       ]
     },
-    "dotnet-format": {
-      "version": "5.1.250801",
-      "commands": [
-        "dotnet-format"
-      ]
-    },
     "dotnet-coverage": {
-      "version": "17.7.2",
+      "version": "17.12.5",
       "commands": [
         "dotnet-coverage"
       ]
     },
     "nbgv": {
-      "version": "3.6.133",
+      "version": "3.6.143",
       "commands": [
         "nbgv"
       ]
