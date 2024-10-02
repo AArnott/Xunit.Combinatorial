@@ -99,6 +99,15 @@ public class CombinatorialMemberDataAttributeTests
         Assert.Equal("Parameter type System.Int32 is not compatible with returned member type System.Guid.", exception.Message);
     }
 
+    [Fact]
+    public void MemberDataReturnsTheoryDataReturnsValues()
+    {
+        var attribute = new CombinatorialMemberDataAttribute(nameof(GetValuesAsTheoryData));
+        ParameterInfo parameter = StubIntMethodInfo.GetParameters()[0];
+        object?[]? values = attribute.GetValues(parameter);
+        Assert.Equal(new object[] { 1, 2, 3, 4 }, values);
+    }
+
     private static IEnumerable<int> GetValuesAsEnumerableOfInt()
     {
         yield return 1;
@@ -112,6 +121,8 @@ public class CombinatorialMemberDataAttributeTests
     private static ListOfInt GetValuesAsConcreteNonGenericClassImplementingEnumerableOfInt() => new ListOfInt { 1, 2, 3, 4 };
 
     private static ImplementsOnlyNonGenericIEnumerable GetValuesAsTypeThatImplementsNonGenericIEnumerable() => new();
+
+    private static TheoryData<int> GetValuesAsTheoryData() => new() { 1, 2, 3, 4 };
 
     private static IEnumerable<int[]> GetValuesAsEnumerableOfIntArray()
     {

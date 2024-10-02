@@ -1,4 +1,4 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
 using Xunit;
@@ -10,20 +10,20 @@ public class CombinatorialValuesAttributeTests
     {
         object[] values = new object[1];
         var attribute = new CombinatorialValuesAttribute(values);
-        Assert.Same(values, attribute.Values);
+        Assert.Same(values, attribute.GetValues(null!));
     }
 
     [Fact]
     public void NullArg()
     {
         var attribute = new CombinatorialValuesAttribute(null);
-        Assert.Equal([null], attribute.Values);
+        Assert.Equal([null], attribute.GetValues(null!));
     }
 
     [Fact]
     public void NullArgInArray()
     {
         var attribute = new CombinatorialValuesAttribute([null]);
-        Assert.Equal([null], attribute.Values);
+        Assert.Equal([null], attribute.GetValues(null!));
     }
 }
