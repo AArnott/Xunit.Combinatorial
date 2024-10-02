@@ -12,6 +12,10 @@ public class CombinatorialMemberDataSampleUses
     public static readonly IEnumerable<Guid> GuidFieldValues = Enumerable.Range(0, 5).Select(_ => Guid.NewGuid());
 #pragma warning restore SA1202 // Elements should be ordered by access
 
+    public static readonly TheoryData<MyTestCase> MyTestCases = new(
+        new MyTestCase(1, "Foo"),
+        new MyTestCase(2, "Bar"));
+
     public static IEnumerable<int> IntPropertyValues => GetIntMethodValues();
 
     public static IEnumerable<Guid> GuidPropertyValues => GetGuidMethodValues();
@@ -84,4 +88,18 @@ public class CombinatorialMemberDataSampleUses
     {
         Assert.True(true);
     }
+
+    [Theory, CombinatorialData]
+    public void TheoryDataOfT([CombinatorialMemberData(nameof(MyTestCases))] MyTestCase testCase, bool flag)
+    {
+        /*
+            This will give you:
+            testCase(1, "Foo"), true
+            testCase(1, "Foo"), false
+            testCase(2, "Bar"), true
+            testCase(2, "Bar"), false
+        */
+    }
+
+    public record MyTestCase(int Number, string Text);
 }
