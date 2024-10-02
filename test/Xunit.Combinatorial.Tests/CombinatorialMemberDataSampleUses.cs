@@ -113,9 +113,21 @@ public class CombinatorialMemberDataSampleUses
     }
 #endif
 
+    [Theory, CombinatorialData]
+    public void TheoryDataOfT([CombinatorialMemberData(nameof(MyTestCases))] MyTestCase testCase, bool flag)
+    {
+        /*
+            This will give you:
+            testCase(1, "Foo"), true
+            testCase(1, "Foo"), false
+            testCase(2, "Bar"), true
+            testCase(2, "Bar"), false
+        */
+    }
+
     public class MyValueSourceItem
     {
-        public MyValueSourceItem( int number, string text)
+        public MyValueSourceItem(int number, string text)
         {
             this.Number = number;
             this.Text = text;
@@ -137,18 +149,6 @@ public class CombinatorialMemberDataSampleUses
                 new MyValueSourceItem(3, "Baz"),
             };
         }
-    }
-
-    [Theory, CombinatorialData]
-    public void TheoryDataOfT([CombinatorialMemberData(nameof(MyTestCases))] MyTestCase testCase, bool flag)
-    {
-        /*
-            This will give you:
-            testCase(1, "Foo"), true
-            testCase(1, "Foo"), false
-            testCase(2, "Bar"), true
-            testCase(2, "Bar"), false
-        */
     }
 
     public record MyTestCase(int Number, string Text);

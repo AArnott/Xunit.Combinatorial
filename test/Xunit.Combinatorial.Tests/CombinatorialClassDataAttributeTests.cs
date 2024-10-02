@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
+
+using System.Collections;
 using Xunit;
 
 public class CombinatorialClassDataAttributeTests
 {
-    private static readonly object?[] expectedItems =
+    private static readonly object?[] ExpectedItems =
     {
         new ValueSourceItem(1, "Foo"), new ValueSourceItem(2, "Bar"), new ValueSourceItem(3, "Baz"),
     };
@@ -42,14 +45,14 @@ public class CombinatorialClassDataAttributeTests
     public void Ctor_TheoryData_SetsProperty()
     {
         var attribute = new CombinatorialClassDataAttribute(typeof(MyTheoryDataValuesSource));
-        Assert.Equal(expectedItems, attribute.GetValues(null!));
+        Assert.Equal(ExpectedItems, attribute.GetValues(null!));
     }
 
     [Fact]
     public void Ctor_IEnumerable_SetsProperty()
     {
         var attribute = new CombinatorialClassDataAttribute(typeof(MyEnumerableDataValuesSource));
-        Assert.Equal(expectedItems, attribute.GetValues(null!));
+        Assert.Equal(ExpectedItems, attribute.GetValues(null!));
     }
 
 #if NETSTANDARD2_0_OR_GREATER
@@ -72,7 +75,7 @@ public class CombinatorialClassDataAttributeTests
     {
         public MyTheoryDataValuesSource()
         {
-            foreach (ValueSourceItem? item in expectedItems.Cast<ValueSourceItem>())
+            foreach (ValueSourceItem? item in ExpectedItems.Cast<ValueSourceItem>())
             {
                 this.Add(item);
             }
@@ -94,7 +97,7 @@ public class CombinatorialClassDataAttributeTests
     {
         public IEnumerator<object?[]> GetEnumerator()
         {
-            return expectedItems
+            return ExpectedItems
                 .Cast<ValueSourceItem?>()
                 .Select(item => new object?[] { item })
                 .GetEnumerator();
