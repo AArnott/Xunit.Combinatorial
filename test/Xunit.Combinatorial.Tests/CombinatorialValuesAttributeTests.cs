@@ -17,13 +17,13 @@ public class CombinatorialValuesAttributeTests
     public void NullArg()
     {
         var attribute = new CombinatorialValuesAttribute(null);
-        Assert.Equal(new object?[] { null }, attribute.Values);
+        Assert.Equal([null], attribute.Values);
     }
 
     [Fact]
     public void NullArgInArray()
     {
-        var attribute = new CombinatorialValuesAttribute(new object?[] { null });
-        Assert.Equal(new object?[] { null }, attribute.Values);
+        var attribute = new CombinatorialValuesAttribute([null]);
+        Assert.Equal([null], attribute.Values);
     }
 }

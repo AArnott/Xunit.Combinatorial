@@ -98,7 +98,7 @@ public class SampleUses
     private class CustomValuesAttribute : CombinatorialValuesAttribute
     {
         public CustomValuesAttribute()
-            : base(new object[] { 5, 10, 15 })
+            : base([5, 10, 15])
         {
         }
     }

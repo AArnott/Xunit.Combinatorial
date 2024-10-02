@@ -12,105 +12,103 @@ public class CombinatorialDataAttributeTests
     [Fact]
     public void GetData_NoArguments()
     {
-        AssertData(new object[][]
-        {
-        });
+        AssertData([]);
     }
 
     [Fact]
     public void GetData_Bool()
     {
-        AssertData(new object[][]
-        {
-                new object[] { true },
-                new object[] { false },
-        });
+        AssertData(
+        [
+            [true],
+            [false],
+        ]);
     }
 
     [Fact]
     public void GetData_BoolBool()
     {
-        AssertData(new object[][]
-        {
-                new object[] { true, true },
-                new object[] { true, false },
-                new object[] { false, true },
-                new object[] { false, false },
-        });
+        AssertData(
+        [
+            [true, true],
+            [true, false],
+            [false, true],
+            [false, false],
+        ]);
     }
 
     [Fact]
     public void GetData_Int()
     {
-        AssertData(new object[][]
-        {
-                new object[] { 0 },
-                new object[] { 1 },
-        });
+        AssertData(
+        [
+            [0],
+            [1],
+        ]);
     }
 
     [Fact]
     public void GetData_NullableInt()
     {
-        AssertData(new object?[][]
-        {
-                new object?[] { null },
-                new object?[] { 0 },
-                new object?[] { 1 },
-        });
+        AssertData(
+        [
+            [null],
+            [0],
+            [1],
+        ]);
     }
 
     [Fact]
     public void GetData_Int_35()
     {
-        AssertData(new object[][]
-        {
-                new object[] { 3 },
-                new object[] { 5 },
-        });
+        AssertData(
+        [
+            [3],
+            [5],
+        ]);
     }
 
     [Fact]
     public void GetData_string_int_bool_Values()
     {
-        AssertData(new object[][]
-        {
-                new object[] { "a", 2, true },
-                new object[] { "a", 2, false },
-                new object[] { "a", 4, true },
-                new object[] { "a", 4, false },
-                new object[] { "a", 6, true },
-                new object[] { "a", 6, false },
-                new object[] { "b", 2, true },
-                new object[] { "b", 2, false },
-                new object[] { "b", 4, true },
-                new object[] { "b", 4, false },
-                new object[] { "b", 6, true },
-                new object[] { "b", 6, false },
-        });
+        AssertData(
+        [
+            ["a", 2, true],
+            ["a", 2, false],
+            ["a", 4, true],
+            ["a", 4, false],
+            ["a", 6, true],
+            ["a", 6, false],
+            ["b", 2, true],
+            ["b", 2, false],
+            ["b", 4, true],
+            ["b", 4, false],
+            ["b", 6, true],
+            ["b", 6, false],
+        ]);
     }
 
     [Fact]
     public void GetData_DateTimeKind()
     {
-        AssertData(new object[][]
-        {
-                new object[] { DateTimeKind.Unspecified },
-                new object[] { DateTimeKind.Utc },
-                new object[] { DateTimeKind.Local },
-        });
+        AssertData(
+        [
+            [DateTimeKind.Unspecified],
+            [DateTimeKind.Utc],
+            [DateTimeKind.Local],
+        ]);
     }
 
     [Fact]
     public void GetData_NullableDateTimeKind()
     {
-        AssertData(new object?[][]
-        {
-                new object?[] { null },
-                new object?[] { DateTimeKind.Unspecified },
-                new object?[] { DateTimeKind.Utc },
-                new object?[] { DateTimeKind.Local },
-        });
+        AssertData(
+        [
+            [null],
+            [DateTimeKind.Unspecified],
+            [DateTimeKind.Utc],
+            [DateTimeKind.Local],
+        ]);
     }
 
     [Fact]
@@ -134,12 +132,11 @@ public class CombinatorialDataAttributeTests
         MethodInfo testhelperMethodInfo = this.GetType().GetMethod(nameof(this.SomeTestWithCustomValues), BindingFlags.Instance | BindingFlags.NonPublic)!;
         IEnumerable<object?[]> actual = att.GetData(testhelperMethodInfo);
         Assert.Equal(
-            new[]
-            {
-                new object[] { 5 },
-                new object[] { 10 },
-                new object[] { 15 },
-            },
+            [
+                [5],
+                [10],
+                [15],
+            ],
             actual);
     }
 
@@ -260,7 +257,7 @@ public class CombinatorialDataAttributeTests
     private class CustomValuesAttribute : CombinatorialValuesAttribute
     {
         public CustomValuesAttribute()
-            : base(new object[] { 5, 10, 15 })
+            : base([5, 10, 15])
         {
         }
     }
