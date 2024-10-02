@@ -43,24 +43,24 @@ public class CombinatorialRandomDataAttributeTests
     [InlineData(int.MinValue)]
     public void ConstructorOutOfRangeCount(int count)
     {
-        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = count }.Values);
+        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = count }.GetValues(null!));
     }
 
     [Fact]
     public void CountHigherThanRangeSize()
     {
-        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = 6, Minimum = 1, Maximum = 5 }.Values);
-        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = 4, Minimum = -3, Maximum = -1 }.Values);
-        _ = new CombinatorialRandomDataAttribute { Count = 3, Minimum = 1, Maximum = 3 }.Values;
-        _ = new CombinatorialRandomDataAttribute { Count = 3, Minimum = -3, Maximum = -1 }.Values;
+        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = 6, Minimum = 1, Maximum = 5 }.GetValues(null!));
+        Assert.Throws<InvalidOperationException>(() => new CombinatorialRandomDataAttribute { Count = 4, Minimum = -3, Maximum = -1 }.GetValues(null!));
+        _ = new CombinatorialRandomDataAttribute { Count = 3, Minimum = 1, Maximum = 3 }.GetValues(null!);
+        _ = new CombinatorialRandomDataAttribute { Count = 3, Minimum = -3, Maximum = -1 }.GetValues(null!);
     }
 
     internal static void Check(CombinatorialRandomDataAttribute attribute)
     {
-        Assert.NotNull(attribute.Values);
-        Assert.Equal(attribute.Count, attribute.Values.Length);
+        Assert.NotNull(attribute.GetValues(null!));
+        Assert.Equal(attribute.Count, attribute.GetValues(null!).Length);
 
-        Assert.All(attribute.Values, value =>
+        Assert.All(attribute.GetValues(null!), value =>
         {
             Assert.IsType<int>(value);
             int intValue = (int)value;
@@ -69,7 +69,7 @@ public class CombinatorialRandomDataAttributeTests
 
         if (attribute.Seed != CombinatorialRandomDataAttribute.NoSeed)
         {
-            Assert.Equal(RandomIterator(new Random(attribute.Seed), attribute.Minimum, attribute.Maximum).Distinct().Take(attribute.Count).ToArray(), attribute.Values.Cast<int>());
+            Assert.Equal(RandomIterator(new Random(attribute.Seed), attribute.Minimum, attribute.Maximum).Distinct().Take(attribute.Count).ToArray(), attribute.GetValues(null!).Cast<int>());
         }
     }
 
