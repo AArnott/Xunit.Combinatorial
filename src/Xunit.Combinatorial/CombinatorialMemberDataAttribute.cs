@@ -54,11 +54,7 @@ public class CombinatorialMemberDataAttribute : Attribute
 
         if (type is null)
         {
-#if NETSTANDARD
             return Array.Empty<object?>();
-#else
-            return new object[0];
-#endif
         }
 
         Func<object>? accessor = this.GetPropertyAccessor(type, parameterInfo) ?? this.GetMethodAccessor(type, parameterInfo) ?? this.GetFieldAccessor(type, parameterInfo);

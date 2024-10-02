@@ -52,7 +52,6 @@ internal static class Requires
         return value;
     }
 
-#if !NET35
     /// <summary>
     /// Throws an exception if the specified parameter's value is null.
     /// </summary>
@@ -91,7 +90,6 @@ internal static class Requires
             throw new ArgumentNullException(parameterName);
         }
     }
-#endif
 
     /// <summary>
     /// Throws an exception if the specified parameter's value is null.
@@ -139,7 +137,6 @@ internal static class Requires
         }
     }
 
-#if !NET35
     /// <summary>
     /// Throws an exception if the specified parameter's value is null, empty, or whitespace.
     /// </summary>
@@ -167,7 +164,6 @@ internal static class Requires
             throw new ArgumentException(Format(Strings.Argument_Whitespace, parameterName));
         }
     }
-#endif
 
     /// <summary>
     /// Throws an exception if the specified parameter's value is null,
