@@ -358,3 +358,6 @@ MigrationBackup/
 
 # Analysis results
 *.sarif
+
+# JetBrains Rider
+.idea

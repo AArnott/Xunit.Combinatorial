@@ -168,6 +168,10 @@ public class CombinatorialDataAttributeTests
     {
     }
 
+    private static void Suppose_type([CombinatorialValues(typeof(CombinatorialDataAttributeTests))] Type p1, [CombinatorialValues(2, 4, 6)] int p2, bool p3)
+    {
+    }
+
     private static void Suppose_DateTimeKind(DateTimeKind p1)
     {
     }
