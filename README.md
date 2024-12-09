@@ -8,7 +8,7 @@ but significantly reduces the test case explosion you might have when
 you have more than two parameters.
 
 [![NuGet package](https://img.shields.io/nuget/v/xunit.combinatorial.svg)][NuPkg]
-[![Build Status](https://dev.azure.com/andrewarnott/OSS/_apis/build/status/AArnott.Xunit.Combinatorial?branchName=main)](https://dev.azure.com/andrewarnott/OSS/_build/latest?definitionId=58&branchName=main)
+[![🏭 Build](https://github.com/AArnott/Xunit.Combinatorial/actions/workflows/build.yml/badge.svg)](https://github.com/AArnott/Xunit.Combinatorial/actions/workflows/build.yml)
 
 ## Installation
 
