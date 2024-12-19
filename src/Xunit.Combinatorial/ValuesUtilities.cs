@@ -1,4 +1,4 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics.CodeAnalysis;
@@ -19,36 +19,11 @@ internal static class ValuesUtilities
     internal static IEnumerable<object?> GetValuesFor(ParameterInfo parameter)
     {
         Requires.NotNull(parameter, nameof(parameter));
-        {
-            CombinatorialValuesAttribute? attribute = parameter.GetCustomAttribute<CombinatorialValuesAttribute>();
-            if (attribute is not null)
-            {
-                return attribute.Values;
-            }
-        }
 
+        ICombinatorialValuesProvider? valuesSource = parameter.GetCustomAttributes().OfType<ICombinatorialValuesProvider>().SingleOrDefault();
+        if (valuesSource is not null)
         {
-            CombinatorialRangeAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRangeAttribute>();
-            if (attribute is not null)
-            {
-                return attribute.Values;
-            }
-        }
-
-        {
-            CombinatorialRandomDataAttribute? attribute = parameter.GetCustomAttribute<CombinatorialRandomDataAttribute>();
-            if (attribute is not null)
-            {
-                return attribute.Values;
-            }
-        }
-
-        {
-            CombinatorialMemberDataAttribute? attribute = parameter.GetCustomAttribute<CombinatorialMemberDataAttribute>();
-            if (attribute is not null)
-            {
-                return attribute.GetValues(parameter);
-            }
+            return valuesSource.GetValues(parameter);
         }
 
         return GetValuesFor(parameter.ParameterType);
