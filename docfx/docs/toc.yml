@@ -1,5 +1,4 @@
 items:
-- name: Features
-  href: features.md
-- name: Getting Started
-  href: getting-started.md
+- href: getting-started.md
+- href: combinatorial-vs-pairwise.md
+- href: value-sources.md

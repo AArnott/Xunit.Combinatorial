@@ -4,6 +4,13 @@ _layout: landing
 
 # Overview
 
-This is your docfx landing page.
+Check out our [getting started](docs/getting-started.md) docs.
 
-Click "Docs" across the top to get started.
+## Features
+
+- Combinatorial for exhaustive testing.
+- Pairwise for reasonable coverage without exponentially growing test cases.
+- Simplify test theories with automatically generated inputs.
+  - All values in a range
+  - Random values
+  - Values generated from members
