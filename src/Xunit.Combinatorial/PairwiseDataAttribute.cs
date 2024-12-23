@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using Xunit.Sdk;
+using Xunit.v3;
 
 namespace Xunit;
 
@@ -14,24 +15,29 @@ namespace Xunit;
 public class PairwiseDataAttribute : DataAttribute
 {
     /// <inheritdoc />
-    public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+    public override bool SupportsDiscoveryEnumeration() => true;
+
+    /// <inheritdoc />
+    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, DisposalTracker disposalTracker)
     {
         Requires.NotNull(testMethod, nameof(testMethod));
 
         ParameterInfo[]? parameters = testMethod.GetParameters();
         if (parameters.Length == 0)
         {
-            return Enumerable.Empty<object[]>();
+            return new([]);
         }
 
-        var values = new List<object?>[parameters.Length];
+        object?[][] values = new object?[parameters.Length][];
         for (int i = 0; i < parameters.Length; i++)
         {
-            values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
+            values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToArray();
         }
 
-        List<int[]>? testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray());
-        return from testCase in testCaseInfo
-               select testCase.Select((j, i) => values[i][j]).ToArray();
+        int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)]);
+        IEnumerable<TheoryDataRow> intermediate =
+            from testCase in testCaseInfo
+            select new TheoryDataRow(testCase.Select((j, i) => values[i][j]).ToArray());
+        return new ValueTask<IReadOnlyCollection<ITheoryDataRow>>([.. intermediate]);
     }
 }

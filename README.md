@@ -14,6 +14,9 @@ you have more than two parameters.
 
 This project is available as a [NuGet package][NuPkg].
 
+The v1.x versions of this package support xunit 2.
+The v2.x versions of this package support xunit 3.
+
 ## Examples
 
 ### Auto-generated values
