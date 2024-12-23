@@ -24,6 +24,6 @@ To arrange for your test method to be invoked twice, once for each of two modes,
 
 The @Xunit.CombinatorialDataAttribute or @Xunit.CombinatorialDataAttribute will supply Xunit with both `true` and `false` arguments to run the test method with, resulting in two invocations of your test method with individual results reported for each invocation.
 
-[Learn more about the difference between @Xunit.CombinatorialDataAttribute and @Xunit.CombinatorialDataAttribute](combinatorial-vs-pairwise.md).
+[Learn more about the difference](combinatorial-vs-pairwise.md) between @Xunit.CombinatorialDataAttribute and @Xunit.PairwiseDataAttribute.
 
 [Learn more about supported parameter types and where values come from](value-sources.md).
