@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Xunit;
 
 /// <summary>
-/// Defines a class that provides values for a parameter on a test method.
+/// An interface that provides values for a parameter on a test method.
 /// </summary>
 public interface ICombinatorialValuesProvider
 {
