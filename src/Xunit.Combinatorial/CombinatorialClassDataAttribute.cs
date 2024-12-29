@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Xunit;
 
 /// <summary>
-///     Specifies a class that provides the values for a combinatorial test.
+/// Specifies a class that provides the values for a combinatorial test.
 /// </summary>
 public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesProvider
 {
