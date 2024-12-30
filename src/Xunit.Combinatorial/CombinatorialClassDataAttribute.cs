@@ -36,7 +36,7 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
         if (!typeof(IEnumerable<object[]>).IsAssignableFrom(valuesSourceType))
         {
             throw new InvalidOperationException(
-                $"The values source must be assignable to {typeof(IEnumerable<object?[]>)}).");
+                $"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable<object?[]>)}).");
         }
 
         IEnumerable<object[]>? values;

@@ -4,7 +4,7 @@
 using System.Collections;
 using Xunit;
 
-public class CombinatorialClassDataAttributeTests
+public class CombinatorialClassDataAttributeTests(ITestOutputHelper logger)
 {
     private static readonly object?[] ExpectedItems =
     {
@@ -24,6 +24,7 @@ public class CombinatorialClassDataAttributeTests
     {
         Action ctor = () => new CombinatorialClassDataAttribute(typeof(MyTheoryDataValuesSourceWithParameters));
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(ctor);
+        logger.WriteLine(exception.Message);
         Assert.Equal(
             $"Failed to create an instance of {typeof(MyTheoryDataValuesSourceWithParameters)}. " +
             "Please make sure the type has a public constructor and the arguments match.",
