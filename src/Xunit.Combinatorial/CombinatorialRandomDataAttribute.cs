@@ -1,7 +1,8 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
 using System.Globalization;
+using System.Reflection;
 
 namespace Xunit;
 
@@ -9,7 +10,7 @@ namespace Xunit;
 /// Specifies which range of values for this parameter should be used for running the test method.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class CombinatorialRandomDataAttribute : Attribute
+public class CombinatorialRandomDataAttribute : Attribute, ICombinatorialValuesProvider
 {
     /// <summary>
     /// Special seed value to create System.Random class without seed.
@@ -42,11 +43,11 @@ public class CombinatorialRandomDataAttribute : Attribute
     /// <value>The default value of <see cref="NoSeed"/> allows for a new seed to be used each time.</value>
     public int Seed { get; set; } = NoSeed;
 
-    /// <summary>
-    /// Gets the values that should be passed to this parameter on the test method.
-    /// </summary>
-    /// <value>An array of values.</value>
-    public object[] Values => this.values ??= this.GenerateValues();
+    /// <inheritdoc />
+    public object[] GetValues(ParameterInfo parameter)
+    {
+        return this.values ??= this.GenerateValues();
+    }
 
     private object[] GenerateValues()
     {

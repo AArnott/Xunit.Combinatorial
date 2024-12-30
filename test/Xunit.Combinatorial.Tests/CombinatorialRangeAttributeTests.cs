@@ -11,7 +11,7 @@ public class CombinatorialRangeAttributeTests
     {
         object[] values = Enumerable.Range(from, count).Cast<object>().ToArray();
         var attribute = new CombinatorialRangeAttribute(from, count);
-        Assert.Equal(values, attribute.Values);
+        Assert.Equal(values, attribute.GetValues(null!));
     }
 
     [Theory]
@@ -31,7 +31,7 @@ public class CombinatorialRangeAttributeTests
         object[] expectedValues = Sequence(from, to, step).Cast<object>().ToArray();
 
         var attribute = new CombinatorialRangeAttribute(from, to, step);
-        Assert.Equal(expectedValues, attribute.Values);
+        Assert.Equal(expectedValues, attribute.GetValues(null!));
     }
 
     [Theory]
@@ -48,7 +48,7 @@ public class CombinatorialRangeAttributeTests
     {
         object[] values = UnsignedSequence(from, from + count - 1u, 1u).Cast<object>().ToArray();
         var attribute = new CombinatorialRangeAttribute(from, count);
-        Assert.Equal(values, attribute.Values);
+        Assert.Equal(values, attribute.GetValues(null!));
     }
 
     [Theory]
@@ -67,7 +67,7 @@ public class CombinatorialRangeAttributeTests
         object[] expectedValues = UnsignedSequence(from, to, step).Cast<object>().ToArray();
 
         var attribute = new CombinatorialRangeAttribute(from, to, step);
-        Assert.Equal(expectedValues, attribute.Values);
+        Assert.Equal(expectedValues, attribute.GetValues(null!));
     }
 
     internal static IEnumerable<int> Sequence(int from, int to, int step)

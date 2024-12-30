@@ -10,13 +10,14 @@ namespace Xunit;
 /// Specifies which member should provide data for this parameter used for running the test method.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-public class CombinatorialMemberDataAttribute : Attribute
+public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesProvider
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CombinatorialMemberDataAttribute"/> class.
     /// </summary>
     /// <param name="memberName">The name of the public static member on the test class that will provide the test data.</param>
     /// <param name="arguments">The arguments for the member (only supported for methods; ignored for everything else).</param>
+    /// <remarks>Optional parameters on methods are not supported.</remarks>
     public CombinatorialMemberDataAttribute(string memberName, params object?[]? arguments)
     {
         this.MemberName = memberName ?? throw new ArgumentNullException(nameof(memberName));
@@ -64,8 +65,14 @@ public class CombinatorialMemberDataAttribute : Attribute
             throw new ArgumentException($"Could not find public static member (property, field, or method) named '{this.MemberName}' on {type.FullName}{parameterText}.");
         }
 
-        var obj = (IEnumerable)accessor();
-        return obj.Cast<object>().ToArray();
+        var values = (IEnumerable)accessor();
+
+        if (values is IEnumerable<object[]> theoryData)
+        {
+            return theoryData.SelectMany(rows => rows).ToArray();
+        }
+
+        return values.Cast<object>().ToArray();
     }
 
     /// <summary>
@@ -75,19 +82,10 @@ public class CombinatorialMemberDataAttribute : Attribute
     /// <returns>The generic type argument for (one of) the <see cref="IEnumerable{T}"/> interface)s) implemented by the <paramref name="enumerableType"/>.</returns>
     private static TypeInfo? GetEnumeratedType(Type enumerableType)
     {
-        if (enumerableType.IsGenericType)
+        if (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
         {
-            if (enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-            {
-                Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
-                return enumerableGenericTypeArgs[0].GetTypeInfo();
-            }
-
-            if (enumerableType.GetGenericTypeDefinition() == typeof(TheoryData<>))
-            {
-                Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
-                return enumerableGenericTypeArgs[0].GetTypeInfo();
-            }
+            Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
+            return enumerableGenericTypeArgs[0].GetTypeInfo();
         }
 
         foreach (Type implementedInterface in enumerableType.GetTypeInfo().ImplementedInterfaces)
@@ -157,6 +155,11 @@ public class CombinatorialMemberDataAttribute : Attribute
             return false;
         }
 
+        if (parameters.Length != arguments.Length)
+        {
+            return false;
+        }
+
         for (int i = 0; i < parameters.Length; i++)
         {
             if (arguments[i] is object arg)
@@ -211,7 +214,13 @@ public class CombinatorialMemberDataAttribute : Attribute
     /// <exception cref="ArgumentException">Throw when <paramref name="enumerableType"/> does not conform to requirements or does not produce values assignable to <paramref name="parameterInfo"/>.</exception>
     private void EnsureValidMemberDataType(Type enumerableType, Type declaringType, ParameterInfo parameterInfo)
     {
+        if (typeof(IEnumerable<object[]>).IsAssignableFrom(enumerableType))
+        {
+            return;
+        }
+
         TypeInfo? enumeratedType = GetEnumeratedType(enumerableType);
+
         if (enumeratedType is null)
         {
             throw new ArgumentException($"Member {this.MemberName} on {declaringType.FullName} must return a type that implements IEnumerable<T>.");
