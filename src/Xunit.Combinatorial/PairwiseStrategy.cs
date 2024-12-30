@@ -63,10 +63,10 @@ internal static class PairwiseStrategy
     /// <returns>
     /// A set of test cases.
     /// </returns>
-    public static List<int[]> GetTestCases(int[] dimensions)
+    public static int[][] GetTestCases(int[] dimensions)
     {
         return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions)
-                select testCase.Features).ToList();
+                select testCase.Features).ToArray();
     }
 
     private static bool IsTupleCovered(this TestCaseInfo testCaseInfo, FeatureTuple tuple)

@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using Xunit.Sdk;
+using Xunit.v3;
 
 namespace Xunit;
 
@@ -22,14 +23,17 @@ public class CombinatorialDataAttribute : DataAttribute
     }
 
     /// <inheritdoc />
-    public override IEnumerable<object?[]> GetData(MethodInfo testMethod)
+    public override bool SupportsDiscoveryEnumeration() => true;
+
+    /// <inheritdoc />
+    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, DisposalTracker disposalTracker)
     {
         Requires.NotNull(testMethod, nameof(testMethod));
 
         ParameterInfo[]? parameters = testMethod.GetParameters();
         if (parameters.Length == 0)
         {
-            return Enumerable.Empty<object[]>();
+            return new([]);
         }
 
         var values = new List<object?>[parameters.Length];
@@ -39,7 +43,8 @@ public class CombinatorialDataAttribute : DataAttribute
         }
 
         object[]? currentValues = new object[parameters.Length];
-        return this.FillCombinations(parameters, values, currentValues, 0);
+        return new(
+            [.. this.FillCombinations(parameters, values, currentValues, 0).Select(v => new TheoryDataRow(v))]);
     }
 
     /// <summary>

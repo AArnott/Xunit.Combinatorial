@@ -6,29 +6,30 @@ using System.Runtime.CompilerServices;
 using Validation;
 using Xunit;
 using Xunit.Sdk;
+using Xunit.v3;
 
 public class CombinatorialDataAttributeTests
 {
     [Fact]
-    public void GetData_NoArguments()
+    public async Task GetData_NoArguments()
     {
-        AssertData([]);
+        await AssertData([]);
     }
 
     [Fact]
-    public void GetData_Bool()
+    public async Task GetData_Bool()
     {
-        AssertData(
-        [
-            [true],
+        await AssertData(
+         [
+             [true],
             [false],
         ]);
     }
 
     [Fact]
-    public void GetData_BoolBool()
+    public async Task GetData_BoolBool()
     {
-        AssertData(
+        await AssertData(
         [
             [true, true],
             [true, false],
@@ -38,9 +39,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_Int()
+    public async Task GetData_Int()
     {
-        AssertData(
+        await AssertData(
         [
             [0],
             [1],
@@ -48,9 +49,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_NullableInt()
+    public async Task GetData_NullableInt()
     {
-        AssertData(
+        await AssertData(
         [
             [null],
             [0],
@@ -59,9 +60,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_Int_35()
+    public async Task GetData_Int_35()
     {
-        AssertData(
+        await AssertData(
         [
             [3],
             [5],
@@ -69,9 +70,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_string_int_bool_Values()
+    public async Task GetData_string_int_bool_Values()
     {
-        AssertData(
+        await AssertData(
         [
             ["a", 2, true],
             ["a", 2, false],
@@ -89,9 +90,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_DateTimeKind()
+    public async Task GetData_DateTimeKind()
     {
-        AssertData(
+        await AssertData(
         [
             [DateTimeKind.Unspecified],
             [DateTimeKind.Utc],
@@ -100,9 +101,9 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_NullableDateTimeKind()
+    public async Task GetData_NullableDateTimeKind()
     {
-        AssertData(
+        await AssertData(
         [
             [null],
             [DateTimeKind.Unspecified],
@@ -126,18 +127,18 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
-    public void GetData_CustomDataFromDerivedAttriute()
+    public async Task GetData_CustomDataFromDerivedAttriute()
     {
         var att = new CombinatorialDataAttribute();
         MethodInfo testhelperMethodInfo = this.GetType().GetMethod(nameof(this.SomeTestWithCustomValues), BindingFlags.Instance | BindingFlags.NonPublic)!;
-        IEnumerable<object?[]> actual = att.GetData(testhelperMethodInfo);
+        IReadOnlyCollection<ITheoryDataRow> actual = await att.GetData(testhelperMethodInfo, new DisposalTracker());
         Assert.Equal(
             [
                 [5],
                 [10],
                 [15],
             ],
-            actual);
+            actual.Select(r => r.GetData()));
     }
 
     private static void Suppose_NoArguments()
@@ -188,13 +189,13 @@ public class CombinatorialDataAttributeTests
     {
     }
 
-    private static void AssertData(IEnumerable<object?[]> expectedCombinatorial, [CallerMemberName] string? testMethodName = null)
+    private static async Task AssertData(IReadOnlyCollection<object?[]> expectedCombinatorial, [CallerMemberName] string? testMethodName = null)
     {
-        IEnumerable<object[]> actualCombinatorial = GetData(new CombinatorialDataAttribute(), testMethodName).ToArray();
-        IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), testMethodName).ToArray();
+        IReadOnlyCollection<ITheoryDataRow> actualCombinatorial = await GetData(new CombinatorialDataAttribute(), testMethodName);
+        IReadOnlyCollection<ITheoryDataRow> actualPairwise = await GetData(new PairwiseDataAttribute(), testMethodName);
 
         // Verify that the combinatorial result is as expected.
-        Assert.Equal(expectedCombinatorial, actualCombinatorial);
+        Assert.Equal(expectedCombinatorial, actualCombinatorial.Select(row => row.GetData()).ToArray());
 
         if (expectedCombinatorial.Any())
         {
@@ -212,8 +213,8 @@ public class CombinatorialDataAttributeTests
                             Assert.Contains(
                                 actualPairwise,
                                 testCase =>
-                                    EqualityComparer<object?>.Default.Equals(testCase[i], iValue) &&
-                                    EqualityComparer<object?>.Default.Equals(testCase[j], jValue));
+                                    EqualityComparer<object?>.Default.Equals(testCase.GetData()[i], iValue) &&
+                                    EqualityComparer<object?>.Default.Equals(testCase.GetData()[j], jValue));
                         }
                     }
                 }
@@ -242,7 +243,7 @@ public class CombinatorialDataAttributeTests
         return possibleValues;
     }
 
-    private static IEnumerable<object[]> GetData(DataAttribute dataAttribute, [CallerMemberName] string? testMethodName = null)
+    private static ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(DataAttribute dataAttribute, [CallerMemberName] string? testMethodName = null)
     {
         Requires.NotNull(dataAttribute, nameof(dataAttribute));
         Requires.NotNullOrEmpty(testMethodName!, nameof(testMethodName));
@@ -250,7 +251,7 @@ public class CombinatorialDataAttributeTests
         string supposeMethodName = testMethodName.Replace("GetData_", "Suppose_");
         MethodInfo? methodInfo = typeof(CombinatorialDataAttributeTests).GetTypeInfo()
             .DeclaredMethods.First(m => m.Name == supposeMethodName);
-        return dataAttribute.GetData(methodInfo);
+        return dataAttribute.GetData(methodInfo, new DisposalTracker());
     }
 
     private void SomeTestWithCustomValues([CustomValues] int a)
