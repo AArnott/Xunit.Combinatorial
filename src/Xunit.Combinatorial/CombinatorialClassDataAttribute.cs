@@ -57,7 +57,7 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
 
         if (TheoryDataHelper.TryGetTheoryDataValues(values, out object?[]? data))
         {
-            return data;
+            return data!;
         }
 
         return values.Cast<object[]>().SelectMany(rows => rows).ToArray();
@@ -76,6 +76,5 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
         }
 
         throw new InvalidOperationException($"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.");
-
     }
 }

@@ -74,7 +74,7 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
 
         if (TheoryDataHelper.TryGetTheoryDataValues(values, out object?[]? theoryDataValues))
         {
-            return theoryDataValues;
+            return theoryDataValues!;
         }
 
         return values.Cast<object>().ToArray();
