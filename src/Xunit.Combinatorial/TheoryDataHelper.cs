@@ -2,6 +2,7 @@
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Xunit;
 
@@ -16,7 +17,7 @@ internal static class TheoryDataHelper
     /// <param name="source">The potential TheoryData source instance.</param>
     /// <param name="theoryDataValues">The data as an object array.</param>
     /// <returns><see langword="true"/> if the instance was TheoryData, otherwise <see langword="false"/>.</returns>
-    public static bool TryGetTheoryDataValues(IEnumerable source, out object?[]? theoryDataValues)
+    internal static bool TryGetTheoryDataValues(IEnumerable source, [NotNullWhen(true)] out object?[]? theoryDataValues)
     {
         if (IsTheoryDataType(source.GetType()))
         {
@@ -33,7 +34,7 @@ internal static class TheoryDataHelper
     /// </summary>
     /// <param name="sourceType">The type to check.</param>
     /// <returns><see langword="true"/> if the type is an implementation of IEnumerable of <see cref="ITheoryDataRow"/>.</returns>
-    public static bool IsTheoryDataType(Type sourceType)
+    internal static bool IsTheoryDataType(Type sourceType)
     {
         return sourceType.GetInterfaces()
             .Any(interfaceType => interfaceType.IsGenericType &&
@@ -46,7 +47,7 @@ internal static class TheoryDataHelper
     /// </summary>
     /// <param name="sourceType">The type to check.</param>
     /// <returns><see langword="true"/> if the type is a <see cref="ITheoryDataRow"/>, otherwise <see langword="false"/>.</returns>
-    public static bool IsTheoryDataRowType(Type? sourceType)
+    internal static bool IsTheoryDataRowType(Type? sourceType)
     {
         return sourceType is not null && typeof(ITheoryDataRow).IsAssignableFrom(sourceType);
     }

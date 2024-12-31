@@ -57,7 +57,7 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
 
         if (TheoryDataHelper.TryGetTheoryDataValues(values, out object?[]? data))
         {
-            return data!;
+            return data;
         }
 
         return values.Cast<object[]>().SelectMany(rows => rows).ToArray();
