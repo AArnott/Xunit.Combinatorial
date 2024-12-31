@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
+using System.Collections;
 using System.Globalization;
 using System.Reflection;
 
@@ -33,17 +34,13 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
     {
         Requires.NotNull(valuesSourceType, nameof(valuesSourceType));
 
-        if (!typeof(IEnumerable<object[]>).IsAssignableFrom(valuesSourceType))
-        {
-            throw new InvalidOperationException(
-                $"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable<object?[]>)}).");
-        }
+        EnsureValidValuesSourceType(valuesSourceType);
 
-        IEnumerable<object[]>? values;
+        IEnumerable? values;
 
         try
         {
-            values = (IEnumerable<object[]>)Activator.CreateInstance(
+            values = (IEnumerable)Activator.CreateInstance(
                 valuesSourceType,
                 BindingFlags.CreateInstance | BindingFlags.OptionalParamBinding,
                 null,
@@ -58,6 +55,27 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
                 ex);
         }
 
-        return values.SelectMany(rows => rows).ToArray();
+        if (TheoryDataHelper.TryGetTheoryDataValues(values, out object?[]? data))
+        {
+            return data;
+        }
+
+        return values.Cast<object[]>().SelectMany(rows => rows).ToArray();
+    }
+
+    private static void EnsureValidValuesSourceType(Type valuesSourceType)
+    {
+        if (typeof(IEnumerable<object[]>).IsAssignableFrom(valuesSourceType))
+        {
+            return;
+        }
+
+        if (TheoryDataHelper.IsTheoryData(valuesSourceType))
+        {
+            return;
+        }
+
+        throw new InvalidOperationException($"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.");
+
     }
 }

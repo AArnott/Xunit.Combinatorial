@@ -67,9 +67,14 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
 
         var values = (IEnumerable)accessor();
 
-        if (values is IEnumerable<object[]> theoryData)
+        if (values is IEnumerable<object[]> untypedValues)
         {
-            return theoryData.SelectMany(rows => rows).ToArray();
+            return untypedValues.SelectMany(rows => rows).ToArray();
+        }
+
+        if (TheoryDataHelper.TryGetTheoryDataValues(values, out object?[]? theoryDataValues))
+        {
+            return theoryDataValues;
         }
 
         return values.Cast<object>().ToArray();
@@ -236,6 +241,11 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
         {
             throw new ArgumentException(
                 $"Member {this.MemberName} on {declaringType.FullName} returned an IEnumerable<IEnumerable<{enumeratedType.GetGenericArguments()[0].Name}>>, which is not supported.");
+        }
+
+        if (TheoryDataHelper.IsTheoryDataRowType(enumeratedType))
+        {
+            return;
         }
 
         if (!enumeratedType.IsAssignableFrom(parameterInfo.ParameterType.GetTypeInfo()))
