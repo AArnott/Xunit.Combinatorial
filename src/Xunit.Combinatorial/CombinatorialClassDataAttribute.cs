@@ -75,6 +75,6 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
             return;
         }
 
-        throw new InvalidOperationException($"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.");
+        throw new InvalidOperationException($"The values source {valuesSourceType} must be assignable to {typeof(IEnumerable<object[]>)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.");
     }
 }

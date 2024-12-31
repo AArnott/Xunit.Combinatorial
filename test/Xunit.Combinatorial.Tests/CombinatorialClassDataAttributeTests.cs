@@ -16,7 +16,7 @@ public class CombinatorialClassDataAttributeTests(ITestOutputHelper logger)
     {
         Action ctor = () => new CombinatorialClassDataAttribute(typeof(object));
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(ctor);
-        Assert.Equal($"The values source {typeof(object)} must be assignable to {typeof(IEnumerable)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.", exception.Message);
+        Assert.Equal($"The values source {typeof(object)} must be assignable to {typeof(IEnumerable<object[]>)}), {typeof(TheoryData<>)} or {typeof(TheoryDataBase<,>)}.", exception.Message);
     }
 
     [Fact]
