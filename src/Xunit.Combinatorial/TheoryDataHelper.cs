@@ -18,7 +18,7 @@ internal static class TheoryDataHelper
     /// <returns><see langword="true"/> if the instance was TheoryData, otherwise <see langword="false"/>.</returns>
     public static bool TryGetTheoryDataValues(IEnumerable source, out object?[]? theoryDataValues)
     {
-        if (IsTheoryData(source.GetType()))
+        if (IsTheoryDataType(source.GetType()))
         {
             theoryDataValues = source.Cast<ITheoryDataRow>().SelectMany(row => row.GetData()).ToArray();
             return true;
@@ -33,7 +33,7 @@ internal static class TheoryDataHelper
     /// </summary>
     /// <param name="sourceType">The type to check.</param>
     /// <returns><see langword="true"/> if the type is an implementation of IEnumerable of <see cref="ITheoryDataRow"/>.</returns>
-    public static bool IsTheoryData(Type sourceType)
+    public static bool IsTheoryDataType(Type sourceType)
     {
         return sourceType.GetInterfaces()
             .Any(interfaceType => interfaceType.IsGenericType &&

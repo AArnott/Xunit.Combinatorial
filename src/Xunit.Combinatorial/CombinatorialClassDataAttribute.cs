@@ -70,7 +70,7 @@ public class CombinatorialClassDataAttribute : Attribute, ICombinatorialValuesPr
             return;
         }
 
-        if (TheoryDataHelper.IsTheoryData(valuesSourceType))
+        if (TheoryDataHelper.IsTheoryDataType(valuesSourceType))
         {
             return;
         }
