@@ -1,4 +1,4 @@
-﻿// Copyright (c) Andrew Arnott. All rights reserved.
+// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the Ms-PL license. See LICENSE file in the project root for full license information.
 
 using Xunit;
@@ -10,6 +10,7 @@ public class CombinatorialMemberDataSampleUses
 #pragma warning disable SA1202 // Elements should be ordered by access
     public static readonly IEnumerable<int> IntFieldValues = Enumerable.Range(0, 5).Select(_ => Random.Next());
     public static readonly IEnumerable<Guid> GuidFieldValues = Enumerable.Range(0, 5).Select(_ => Guid.NewGuid());
+    public static readonly TheoryData<int> IntFieldTheoryData = new() { 1, 2, 3, 4, 5 };
 #pragma warning restore SA1202 // Elements should be ordered by access
 
     public static readonly TheoryData<MyTestCase> MyTestCases = new(
@@ -90,6 +91,29 @@ public class CombinatorialMemberDataSampleUses
     }
 
     [Theory, CombinatorialData]
+    public void CombinatorialMemberDataFromTheoryDataField(
+        [CombinatorialMemberData(nameof(IntFieldTheoryData))] int p1)
+    {
+        Assert.True(true);
+    }
+
+    [Theory, CombinatorialData]
+    public void CombinatorialMemberDataFromTheoryClass(
+        [CombinatorialMemberData(nameof(MyValueSource.GetValues), MemberType = typeof(MyValueSource))] MyValueSourceItem p1)
+    {
+        Assert.True(true);
+    }
+
+#if NETSTANDARD2_0_OR_GREATER
+    [Theory, CombinatorialData]
+    public void GenericCombinatorialMemberDataFromTheoryClass(
+        [CombinatorialMemberData<MyValueSource>(nameof(MyValueSource.GetValues))] MyValueSourceItem p1)
+    {
+        Assert.True(true);
+    }
+#endif
+
+    [Theory, CombinatorialData]
     public void TheoryDataOfT([CombinatorialMemberData(nameof(MyTestCases))] MyTestCase testCase, bool flag)
     {
         /*
@@ -99,6 +123,32 @@ public class CombinatorialMemberDataSampleUses
             testCase(2, "Bar"), true
             testCase(2, "Bar"), false
         */
+    }
+
+    public class MyValueSourceItem
+    {
+        public MyValueSourceItem(int number, string text)
+        {
+            this.Number = number;
+            this.Text = text;
+        }
+
+        public string Text { get; }
+
+        public int Number { get; }
+    }
+
+    private class MyValueSource
+    {
+        public static TheoryData<MyValueSourceItem> GetValues()
+        {
+            return new TheoryData<MyValueSourceItem>
+            {
+                new MyValueSourceItem(1, "Foo"),
+                new MyValueSourceItem(2, "Bar"),
+                new MyValueSourceItem(3, "Baz"),
+            };
+        }
     }
 
     public record MyTestCase(int Number, string Text);
