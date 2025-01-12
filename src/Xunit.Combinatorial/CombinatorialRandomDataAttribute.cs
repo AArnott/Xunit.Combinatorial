@@ -85,7 +85,7 @@ public class CombinatorialRandomDataAttribute : Attribute, ICombinatorialValuesP
                 collisionCount++;
             }
 
-            if (collisionCount > collisionChecker.Count * 5)
+            if (collisionCount > collisionChecker.Count * 5 && collisionCount > 1000)
             {
                 // We have collided in random values far more than we have successfully generated values.
                 // Rather than spin in this loop, throw.
