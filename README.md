@@ -46,4 +46,10 @@ test method with individual results reported for each invocation.
 
 [Learn much more on our docs site](https://aarnott.github.io/Xunit.Combinatorial/).
 
+## Sponsorships
+
+[<img src="https://api.gitsponsors.com/api/badge/img?id=39315136" height="20">](https://api.gitsponsors.com/api/badge/link?p=nQjHytizvrezRojvV3fOirqAIJM1LYRsFSv208TTn19R5MAVU0p6fpbgW+hOMXyLl+06sL2V01oX4R2bQ+xir+mXorf4xVZORfyr3vfloWZladXrowLaLYXNkHt0yqluvqLeY5Myfe40/lQwskGLJw==)
+[GitHub Sponsors](https://github.com/sponsors/AArnott)
+[Zcash](zcash:u1vv2ws6xhs72faugmlrasyeq298l05rrj6wfw8hr3r29y3czev5qt4ugp7kylz6suu04363ze92dfg8ftxf3237js0x9p5r82fgy47xkjnw75tqaevhfh0rnua72hurt22v3w3f7h8yt6mxaa0wpeeh9jcm359ww3rl6fj5ylqqv54uuwrs8q4gys9r3cxdm3yslsh3rt6p7wznzhky7)
+
 [NuPkg]: https://www.nuget.org/packages/Xunit.Combinatorial
