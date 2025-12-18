@@ -82,10 +82,19 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
     /// <returns>The generic type argument for (one of) the <see cref="IEnumerable{T}"/> interface)s) implemented by the <paramref name="enumerableType"/>.</returns>
     private static TypeInfo? GetEnumeratedType(Type enumerableType)
     {
-        if (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        if (enumerableType.IsGenericType)
         {
-            Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
-            return enumerableGenericTypeArgs[0].GetTypeInfo();
+            if (enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
+                return enumerableGenericTypeArgs[0].GetTypeInfo();
+            }
+
+            if (enumerableType.GetGenericTypeDefinition() == typeof(TheoryData<>))
+            {
+                Type[] enumerableGenericTypeArgs = enumerableType.GetTypeInfo().GetGenericArguments();
+                return enumerableGenericTypeArgs[0].GetTypeInfo();
+            }
         }
 
         foreach (Type implementedInterface in enumerableType.GetTypeInfo().ImplementedInterfaces)
