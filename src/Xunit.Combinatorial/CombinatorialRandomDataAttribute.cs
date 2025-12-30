@@ -43,6 +43,12 @@ public class CombinatorialRandomDataAttribute : Attribute, ICombinatorialValuesP
     /// <value>The default value of <see cref="NoSeed"/> allows for a new seed to be used each time.</value>
     public int Seed { get; set; } = NoSeed;
 
+    /// <summary>
+    /// Gets the values that should be passed to this parameter on the test method.
+    /// </summary>
+    /// <value>An array of values.</value>
+    public object[] Values => this.values ??= this.GenerateValues();
+
     /// <inheritdoc />
     public object[] GetValues(ParameterInfo parameter)
     {

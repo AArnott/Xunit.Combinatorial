@@ -11,8 +11,6 @@ namespace Xunit;
 [AttributeUsage(AttributeTargets.Parameter)]
 public class CombinatorialRangeAttribute : Attribute, ICombinatorialValuesProvider
 {
-    private readonly object[] values;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CombinatorialRangeAttribute"/> class.
     /// </summary>
@@ -34,7 +32,7 @@ public class CombinatorialRangeAttribute : Attribute, ICombinatorialValuesProvid
             values[i] = from + i;
         }
 
-        this.values = values;
+        this.Values = values;
     }
 
     /// <summary>
@@ -79,7 +77,7 @@ public class CombinatorialRangeAttribute : Attribute, ICombinatorialValuesProvid
             values[i] = from + (i * step);
         }
 
-        this.values = values;
+        this.Values = values;
     }
 
     /// <summary>
@@ -103,7 +101,7 @@ public class CombinatorialRangeAttribute : Attribute, ICombinatorialValuesProvid
             values[i] = from + i;
         }
 
-        this.values = values;
+        this.Values = values;
     }
 
     /// <summary>
@@ -144,12 +142,15 @@ public class CombinatorialRangeAttribute : Attribute, ICombinatorialValuesProvid
             }
         }
 
-        this.values = values.Cast<object>().ToArray();
+        this.Values = values.Cast<object>().ToArray();
     }
 
+    /// <summary>
+    /// Gets the values that should be passed to this parameter on the test method.
+    /// </summary>
+    /// <value>An array of values.</value>
+    public object[] Values { get; }
+
     /// <inheritdoc />
-    public object[] GetValues(ParameterInfo parameter)
-    {
-        return this.values;
-    }
+    public object[] GetValues(ParameterInfo parameter) => this.Values;
 }
