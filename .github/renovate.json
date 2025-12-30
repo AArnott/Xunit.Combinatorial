@@ -1,7 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": ["config:recommended"],
-	"semanticCommits": "disabled",
+	"extends": ["config:best-practices","helpers:pinGitHubActionDigestsToSemver"],
 	"labels": ["dependencies"],
 	"packageRules": [
 		{
@@ -13,9 +12,17 @@
 			"groupName": "xunit"
 		},
 		{
+			"matchPackageNames": ["Microsoft.Testing.Extensions.*"],
+			"groupName": "Microsoft Testing Platform"
+		},
+		{
 			"matchDatasources": ["dotnet-version", "docker"],
 			"matchDepNames": ["dotnet-sdk", "mcr.microsoft.com/dotnet/sdk"],
 			"groupName": "Dockerfile and global.json updates"
+		},
+		{
+			"matchPackageNames": ["*"],
+			"allowedVersions": "!/-g[a-f0-9]+$/"
 		}
 	]
 }
