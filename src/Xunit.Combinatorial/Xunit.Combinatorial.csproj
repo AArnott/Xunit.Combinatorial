@@ -16,7 +16,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="xunit.v3.extensibility.core" VersionOverride="1.0.0" />
+    <PackageReference Include="xunit.v3.extensibility.core" VersionOverride="1.1.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings.resx">
