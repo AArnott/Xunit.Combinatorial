@@ -4,6 +4,12 @@
 	"labels": ["dependencies"],
 	"packageRules": [
 		{
+			"matchManagers": ["nuget"],
+			"matchFileNames": ["src/Xunit.Combinatorial/Xunit.Combinatorial.csproj"],
+			"matchPackageNames": ["xunit.v3.extensibility.core"],
+			"enabled": false
+		},
+		{
 			"matchPackageNames": ["nbgv", "nerdbank.gitversioning"],
 			"groupName": "nbgv and nerdbank.gitversioning updates"
 		},
