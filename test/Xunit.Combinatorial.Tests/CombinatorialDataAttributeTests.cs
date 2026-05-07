@@ -38,6 +38,61 @@ public class CombinatorialDataAttributeTests
     }
 
     [Fact]
+    public void GetData_BoolBool_ExcludeTrueFalse()
+    {
+        AssertData(
+        [
+            [true, true],
+            [false, true],
+            [false, false],
+        ]);
+    }
+
+    [Fact]
+    public void GetData_Pairwise_ExcludeTrueFalse()
+    {
+        IEnumerable<object[]> actualPairwise = GetData(new PairwiseDataAttribute(), nameof(this.GetData_BoolBool_ExcludeTrueFalse));
+        object?[] excludedTestCase = [true, false];
+
+        Assert.DoesNotContain(actualPairwise, row => excludedTestCase.SequenceEqual(row));
+    }
+
+    [Fact]
+    public void GetData_BoolBool_ExcludeFirstParameterTrue()
+    {
+        AssertData(
+        [
+            [false, true],
+            [false, false],
+        ]);
+    }
+
+    [Fact]
+    public void GetData_BoolBool_ExcludeAnyFalse()
+    {
+        AssertData(
+        [
+            [true, true],
+            [false, true],
+        ]);
+    }
+
+    [Fact]
+    public void GetData_BoolBoolBool_ExcludeTrueTrueTrue()
+    {
+        AssertData(
+        [
+            [true, true, false],
+            [true, false, true],
+            [true, false, false],
+            [false, true, true],
+            [false, true, false],
+            [false, false, true],
+            [false, false, false],
+        ]);
+    }
+
+    [Fact]
     public void GetData_Int()
     {
         AssertData(
@@ -152,6 +207,26 @@ public class CombinatorialDataAttributeTests
     {
     }
 
+    [ExcludeTestCase(true, false)]
+    private static void Suppose_BoolBool_ExcludeTrueFalse(bool p1, bool p2)
+    {
+    }
+
+    [ExcludeFirstParameterTrue]
+    private static void Suppose_BoolBool_ExcludeFirstParameterTrue(bool p1, bool p2)
+    {
+    }
+
+    [ExcludeTestCase(typeof(AnyDataValue), false)]
+    private static void Suppose_BoolBool_ExcludeAnyFalse(bool p1, bool p2)
+    {
+    }
+
+    [ExcludeTestCase(true, true, true)]
+    private static void Suppose_BoolBoolBool_ExcludeTrueTrueTrue(bool p1, bool p2, bool p3)
+    {
+    }
+
     private static void Suppose_Int(int p1)
     {
     }
@@ -195,51 +270,45 @@ public class CombinatorialDataAttributeTests
 
         // Verify that the combinatorial result is as expected.
         Assert.Equal(expectedCombinatorial, actualCombinatorial);
+        Assert.All(
+            actualPairwise,
+            row => Assert.Contains(
+                expectedCombinatorial,
+                expected => expected.SequenceEqual(row)));
 
         if (expectedCombinatorial.Any())
         {
             // Verify that the pairwise result covers every pair.
-            HashSet<object?>[] possibleValues = ExtractPossibleValues(expectedCombinatorial);
-
-            for (int i = 0; i < possibleValues.Length - 1; i++)
+            int parameterCount = expectedCombinatorial.First().Length;
+            for (int i = 0; i < parameterCount - 1; i++)
             {
-                for (int j = i + 1; j < possibleValues.Length; j++)
+                for (int j = i + 1; j < parameterCount; j++)
                 {
-                    foreach (object? iValue in possibleValues[i])
+                    foreach ((object? first, object? second) in ExtractPossiblePairs(expectedCombinatorial, i, j))
                     {
-                        foreach (object? jValue in possibleValues[j])
-                        {
-                            Assert.Contains(
-                                actualPairwise,
-                                testCase =>
-                                    EqualityComparer<object?>.Default.Equals(testCase[i], iValue) &&
-                                    EqualityComparer<object?>.Default.Equals(testCase[j], jValue));
-                        }
+                        Assert.Contains(
+                            actualPairwise,
+                            testCase =>
+                                EqualityComparer<object?>.Default.Equals(testCase[i], first) &&
+                                EqualityComparer<object?>.Default.Equals(testCase[j], second));
                     }
                 }
             }
         }
     }
 
-    private static HashSet<object?>[] ExtractPossibleValues(IEnumerable<object?[]> combinatorialTestCases)
+    private static HashSet<(object? First, object? Second)> ExtractPossiblePairs(IEnumerable<object?[]> combinatorialTestCases, int firstParameterIndex, int secondParameterIndex)
     {
         Requires.NotNull(combinatorialTestCases, nameof(combinatorialTestCases));
 
-        HashSet<object?>[] possibleValues = new HashSet<object?>[combinatorialTestCases.First().Length];
-        for (int i = 0; i < possibleValues.Length; i++)
-        {
-            possibleValues[i] = new HashSet<object?>();
-        }
+        HashSet<(object? First, object? Second)> possiblePairs = [];
 
         foreach (object?[] combination in combinatorialTestCases)
         {
-            for (int i = 0; i < combination.Length; i++)
-            {
-                possibleValues[i].Add(combination[i]);
-            }
+            possiblePairs.Add((combination[firstParameterIndex], combination[secondParameterIndex]));
         }
 
-        return possibleValues;
+        return possiblePairs;
     }
 
     private static IEnumerable<object[]> GetData(DataAttribute dataAttribute, [CallerMemberName] string? testMethodName = null)
@@ -255,6 +324,15 @@ public class CombinatorialDataAttributeTests
 
     private void SomeTestWithCustomValues([CustomValues] int a)
     {
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    private class ExcludeFirstParameterTrueAttribute : ExcludeTestCaseAttribute
+    {
+        public ExcludeFirstParameterTrueAttribute()
+            : base(true, typeof(AnyDataValue))
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Parameter)]

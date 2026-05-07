@@ -30,7 +30,9 @@ public class PairwiseDataAttribute : DataAttribute
             values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
         }
 
-        List<int[]>? testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray());
+        ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
+        Predicate<int[]>? isTestCaseAllowed = ExcludeTestCaseAttribute.CreateIndexMatcher(values, exclusions);
+        List<int[]> testCaseInfo = PairwiseStrategy.GetTestCases(values.Select(v => v.Count).ToArray(), isTestCaseAllowed);
         return from testCase in testCaseInfo
                select testCase.Select((j, i) => values[i][j]).ToArray();
     }
