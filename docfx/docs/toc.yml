@@ -1,4 +1,5 @@
 items:
 - href: getting-started.md
 - href: combinatorial-vs-pairwise.md
+- href: exclude-test-cases.md
 - href: value-sources.md
