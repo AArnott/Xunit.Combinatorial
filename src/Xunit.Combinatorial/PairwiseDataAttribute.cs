@@ -34,7 +34,15 @@ public class PairwiseDataAttribute : DataAttribute
             values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToArray();
         }
 
-        int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)]);
+        ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
+        Predicate<int[]>? isTestCaseAllowed = exclusions.Length == 0
+            ? null
+            : testCase =>
+            {
+                object?[] arguments = testCase.Select((j, i) => values[i][j]).ToArray();
+                return !exclusions.Any(e => e.Matches(arguments));
+            };
+        int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)], isTestCaseAllowed);
         IEnumerable<TheoryDataRow> intermediate =
             from testCase in testCaseInfo
             select new TheoryDataRow(testCase.Select((j, i) => values[i][j]).ToArray());
