@@ -65,7 +65,23 @@ internal static class PairwiseStrategy
     /// </returns>
     public static int[][] GetTestCases(int[] dimensions)
     {
-        return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions)
+        return GetTestCases(dimensions, null);
+    }
+
+    /// <summary>
+    /// Creates a set of test cases for specified dimensions.
+    /// </summary>
+    /// <param name="dimensions">
+    /// An array which contains information about dimensions. Each element of
+    /// this array represents a number of features in the specific dimension.
+    /// </param>
+    /// <param name="isTestCaseAllowed">A predicate that returns <see langword="true"/> when a generated test case is allowed.</param>
+    /// <returns>
+    /// A set of test cases.
+    /// </returns>
+    public static int[][] GetTestCases(int[] dimensions, Predicate<int[]>? isTestCaseAllowed)
+    {
+        return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions, isTestCaseAllowed)
                 select testCase.Features).ToArray();
     }
 
@@ -323,19 +339,26 @@ internal static class PairwiseStrategy
         private List<FeatureTuple>[][]? uncoveredTuples;
 
         /// <summary>
+        /// A predicate that determines whether a generated test case satisfies caller-supplied constraints.
+        /// </summary>
+        private Predicate<int[]>? isTestCaseAllowed;
+
+        /// <summary>
         /// Creates a set of test cases for specified dimensions.
         /// </summary>
         /// <param name="dimensions">
         /// An array which contains information about dimensions. Each element of
         /// this array represents a number of features in the specific dimension.
         /// </param>
+        /// <param name="isTestCaseAllowed">A predicate that returns <see langword="true"/> when a generated test case is allowed.</param>
         /// <returns>
         /// A set of test cases.
         /// </returns>
-        public List<TestCaseInfo> GetTestCases(int[] dimensions)
+        public List<TestCaseInfo> GetTestCases(int[] dimensions, Predicate<int[]>? isTestCaseAllowed)
         {
             this.prng = new FleaRand(15485863);
             this.dimensions = dimensions;
+            this.isTestCaseAllowed = isTestCaseAllowed;
 
             this.CreateAllTuples();
 
@@ -351,6 +374,13 @@ internal static class PairwiseStrategy
                 }
 
                 TestCaseInfo? testCase = this.CreateTestCase(tuple);
+
+                if (testCase is null)
+                {
+                    // No allowed row can cover this tuple, so remove it to avoid repeatedly trying to satisfy an impossible constraint.
+                    this.RemoveTuple(tuple);
+                    continue;
+                }
 
                 this.RemoveTuplesCoveredByTest(testCase);
 
@@ -420,14 +450,18 @@ internal static class PairwiseStrategy
             return null;
         }
 
-        private TestCaseInfo CreateTestCase(FeatureTuple tuple)
+        private TestCaseInfo? CreateTestCase(FeatureTuple tuple)
         {
             TestCaseInfo? bestTestCase = null;
             int bestCoverage = -1;
 
             for (int i = 0; i < 7; i++)
             {
-                TestCaseInfo testCase = this.CreateRandomTestCase(tuple);
+                TestCaseInfo? testCase = this.CreateRandomTestCase(tuple);
+                if (testCase is null)
+                {
+                    continue;
+                }
 
                 int coverage = this.MaximizeCoverage(testCase, tuple);
 
@@ -438,10 +472,10 @@ internal static class PairwiseStrategy
                 }
             }
 
-            return bestTestCase!;
+            return bestTestCase;
         }
 
-        private TestCaseInfo CreateRandomTestCase(FeatureTuple tuple)
+        private TestCaseInfo? CreateRandomTestCase(FeatureTuple tuple)
         {
             TestCaseInfo result = new TestCaseInfo(this.dimensions!.Length);
 
@@ -455,7 +489,7 @@ internal static class PairwiseStrategy
                 result.Features[tuple[i].Dimension] = tuple[i].Feature;
             }
 
-            return result;
+            return this.IsTestCaseAllowed(result) ? result : this.FindAllowedTestCase(tuple);
         }
 
         private int MaximizeCoverage(TestCaseInfo testCase, FeatureTuple tuple)
@@ -534,6 +568,11 @@ internal static class PairwiseStrategy
             {
                 testCase.Features[dimension] = f;
 
+                if (!this.IsTestCaseAllowed(testCase))
+                {
+                    continue;
+                }
+
                 int coverage = this.CountTuplesCoveredByTest(testCase, dimension, f);
 
                 if (coverage >= bestCoverage)
@@ -551,6 +590,66 @@ internal static class PairwiseStrategy
             testCase.Features[dimension] = bestFeatures[this.GetNextRandomNumber() % bestFeatures.Count];
 
             return bestCoverage;
+        }
+
+        /// <summary>
+        /// Exhaustively searches the feature space to find any allowed test case that covers a tuple when a random test case is vetoed.
+        /// </summary>
+        /// <param name="tuple">The tuple that must be covered by the returned test case.</param>
+        /// <returns>An allowed test case, or <see langword="null"/> when none can cover <paramref name="tuple"/>.</returns>
+        private TestCaseInfo? FindAllowedTestCase(FeatureTuple tuple)
+        {
+            TestCaseInfo result = new TestCaseInfo(this.dimensions!.Length);
+            bool[] initializedDimensions = new bool[this.dimensions.Length];
+
+            for (int i = 0; i < tuple.Length; i++)
+            {
+                result.Features[tuple[i].Dimension] = tuple[i].Feature;
+                initializedDimensions[tuple[i].Dimension] = true;
+            }
+
+            return this.FindAllowedTestCase(result, initializedDimensions, 0) ? result : null;
+        }
+
+        /// <summary>
+        /// Recursively assigns features to uninitialized dimensions until it finds an allowed test case.
+        /// </summary>
+        /// <param name="testCase">The test case being initialized.</param>
+        /// <param name="initializedDimensions">A value indicating whether each dimension has already been assigned.</param>
+        /// <param name="dimension">The dimension to initialize.</param>
+        /// <returns>A value indicating whether <paramref name="testCase"/> was assigned allowed features.</returns>
+        private bool FindAllowedTestCase(TestCaseInfo testCase, bool[] initializedDimensions, int dimension)
+        {
+            if (dimension == this.dimensions!.Length)
+            {
+                return this.IsTestCaseAllowed(testCase);
+            }
+
+            if (initializedDimensions[dimension])
+            {
+                return this.FindAllowedTestCase(testCase, initializedDimensions, dimension + 1);
+            }
+
+            for (int f = 0; f < this.dimensions[dimension]; f++)
+            {
+                testCase.Features[dimension] = f;
+                if (this.FindAllowedTestCase(testCase, initializedDimensions, dimension + 1))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks whether a test case satisfies the caller-supplied constraints.
+        /// </summary>
+        /// <param name="testCase">The test case to validate.</param>
+        /// <returns><see langword="true"/> if the test case is allowed; otherwise, <see langword="false"/>.</returns>
+        private bool IsTestCaseAllowed(TestCaseInfo testCase)
+        {
+            return this.isTestCaseAllowed?.Invoke(testCase.Features) ?? true;
         }
 
         private int CountTuplesCoveredByTest(TestCaseInfo testCase, int dimension, int feature)
@@ -586,6 +685,18 @@ internal static class PairwiseStrategy
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Removes a tuple that cannot be covered by any allowed test case.
+        /// </summary>
+        /// <param name="tuple">The tuple to remove.</param>
+        private void RemoveTuple(FeatureTuple tuple)
+        {
+            for (int i = 0; i < tuple.Length; i++)
+            {
+                this.uncoveredTuples![tuple[i].Dimension][tuple[i].Feature].Remove(tuple);
             }
         }
     }
