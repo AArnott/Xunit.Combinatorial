@@ -218,7 +218,7 @@ public class CombinatorialDataAttributeTests
     {
     }
 
-    [ExcludeTestCase(typeof(ExcludeTestCaseAttribute.Any), false)]
+    [ExcludeTestCase(typeof(AnyDataValue), false)]
     private static void Suppose_BoolBool_ExcludeAnyFalse(bool p1, bool p2)
     {
     }
@@ -331,7 +331,7 @@ public class CombinatorialDataAttributeTests
     private class ExcludeFirstParameterTrueAttribute : ExcludeTestCaseAttribute
     {
         public ExcludeFirstParameterTrueAttribute()
-            : base(true, typeof(ExcludeTestCaseAttribute.Any))
+            : base(true, typeof(AnyDataValue))
         {
         }
     }
