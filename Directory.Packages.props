@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <MicrosoftTestingPlatformVersion>2.2.1</MicrosoftTestingPlatformVersion>
+    <MicrosoftTestingPlatformVersion>2.2.2</MicrosoftTestingPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Validation" Version="2.6.68" />
