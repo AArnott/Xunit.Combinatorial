@@ -38,21 +38,18 @@ internal static class ValuesUtilities
     {
         Requires.NotNull(dataType, nameof(dataType));
 
-        if (dataType == typeof(bool))
-        {
-            yield return true;
-            yield return false;
-        }
-        else if (dataType == typeof(int))
-        {
-            yield return 0;
-            yield return 1;
-        }
-        else if (dataType.GetTypeInfo().IsEnum)
+        if (dataType.GetTypeInfo().IsEnum)
         {
             foreach (string name in Enum.GetNames(dataType))
             {
                 yield return Enum.Parse(dataType, name);
+            }
+        }
+        else if (dataType.IsPrimitive)
+        {
+            foreach (var i in new[] { 0, 1 })
+            {
+                yield return Convert.ChangeType(i, dataType);
             }
         }
         else if (IsNullable(dataType, out Type? innerDataType))
