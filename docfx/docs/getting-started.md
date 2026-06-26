@@ -22,7 +22,7 @@ To arrange for your test method to be invoked twice, once for each of two modes,
 
 [!code-csharp[](../../samples/GettingStarted.cs#CombinatorialBool)]
 
-The @Xunit.CombinatorialDataAttribute or @Xunit.CombinatorialDataAttribute will supply Xunit with both `true` and `false` arguments to run the test method with, resulting in two invocations of your test method with individual results reported for each invocation.
+The @Xunit.CombinatorialDataAttribute or @Xunit.PairwiseDataAttribute will supply Xunit with both `true` and `false` arguments to run the test method with, resulting in two invocations of your test method with individual results reported for each invocation.
 
 [Learn more about the difference](combinatorial-vs-pairwise.md) between @Xunit.CombinatorialDataAttribute and @Xunit.PairwiseDataAttribute.
 
