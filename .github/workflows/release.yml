@@ -22,6 +22,7 @@ jobs:
       contents: write # Upload artifacts to Release
       id-token: write # Required for Azure and NuGet OIDC authentication
     steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: 🔎 Search for build of ${{ github.ref }}
       shell: pwsh
       id: findrunid
