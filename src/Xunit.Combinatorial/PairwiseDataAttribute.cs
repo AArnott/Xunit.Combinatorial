@@ -39,7 +39,8 @@ public class PairwiseDataAttribute : DataAttribute
         int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)], isTestCaseAllowed);
         IEnumerable<TheoryDataRow> intermediate =
             from testCase in testCaseInfo
-            select new TheoryDataRow(testCase.Select((j, i) => values[i][j]).ToArray());
+            select new TheoryDataRow(testCase.Select((valueIndex, parameterIndex) =>
+                ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray());
         return new ValueTask<IReadOnlyCollection<ITheoryDataRow>>([.. intermediate]);
     }
 }

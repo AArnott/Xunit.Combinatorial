@@ -36,16 +36,20 @@ public class CombinatorialDataAttribute : DataAttribute
             return new([]);
         }
 
-        var values = new List<object?>[parameters.Length];
+        var values = new object?[parameters.Length][];
         for (int i = 0; i < parameters.Length; i++)
         {
-            values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToList();
+            values[i] = ValuesUtilities.GetValuesFor(parameters[i]).ToArray();
         }
 
         ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
-        object[]? currentValues = new object[parameters.Length];
+        int[] currentValueIndices = new int[parameters.Length];
         return new(
-            [.. this.FillCombinations(parameters, values, currentValues, exclusions, 0).Select(v => new TheoryDataRow(v))]);
+            [..
+                this.FillCombinations(parameters, values, currentValueIndices, exclusions, 0)
+                    .Select(indices => new TheoryDataRow(indices.Select((valueIndex, parameterIndex) =>
+                        ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray()))
+            ]);
     }
 
     /// <summary>
@@ -54,40 +58,37 @@ public class CombinatorialDataAttribute : DataAttribute
     /// </summary>
     /// <param name="parameters">The parameters taken by the test method.</param>
     /// <param name="candidateValues">An array of each argument's list of possible values.</param>
-    /// <param name="currentValues">An array that is being recursively initialized with a set of arguments to pass to the test method.</param>
+    /// <param name="currentValueIndices">An array that is being recursively initialized with the candidate value index for each argument.</param>
     /// <param name="exclusions">Test cases that should not be generated.</param>
-    /// <param name="index">The index into <paramref name="currentValues"/> that this particular invocation should rotate through <paramref name="candidateValues"/> for.</param>
-    /// <returns>A sequence of all combinations of arguments from <paramref name="candidateValues"/>, starting at <paramref name="index"/>.</returns>
-    private IEnumerable<object?[]> FillCombinations(ParameterInfo[] parameters, List<object?>[] candidateValues, object?[] currentValues, ExcludeTestCaseAttribute[] exclusions, int index)
+    /// <param name="index">The index into <paramref name="currentValueIndices"/> that this particular invocation should rotate through <paramref name="candidateValues"/> for.</param>
+    /// <returns>A sequence of all combinations of candidate value indices, starting at <paramref name="index"/>.</returns>
+    private IEnumerable<int[]> FillCombinations(ParameterInfo[] parameters, object?[][] candidateValues, int[] currentValueIndices, ExcludeTestCaseAttribute[] exclusions, int index)
     {
         Requires.NotNull(parameters, nameof(parameters));
         Requires.NotNull(candidateValues, nameof(candidateValues));
-        Requires.NotNull(currentValues, nameof(currentValues));
+        Requires.NotNull(currentValueIndices, nameof(currentValueIndices));
         Requires.NotNull(exclusions, nameof(exclusions));
         Requires.Argument(parameters.Length == candidateValues.Length, nameof(candidateValues), $"Expected to have same array length as {nameof(parameters)}");
-        Requires.Argument(parameters.Length == currentValues.Length, nameof(currentValues), $"Expected to have same array length as {nameof(parameters)}");
+        Requires.Argument(parameters.Length == currentValueIndices.Length, nameof(currentValueIndices), $"Expected to have same array length as {nameof(parameters)}");
         Requires.Range(index >= 0 && index < parameters.Length, nameof(index));
 
-        foreach (object? value in candidateValues[index])
+        for (int valueIndex = 0; valueIndex < candidateValues[index].Length; valueIndex++)
         {
-            currentValues[index] = value;
+            currentValueIndices[index] = valueIndex;
 
             if (index + 1 < parameters.Length)
             {
-                foreach (object?[] result in this.FillCombinations(parameters, candidateValues, currentValues, exclusions, index + 1))
+                foreach (int[] result in this.FillCombinations(parameters, candidateValues, currentValueIndices, exclusions, index + 1))
                 {
                     yield return result;
                 }
             }
             else
             {
-                // We're the tail end, so just produce the value.
-                // Copy the array before returning since we're about to mutate currentValues
-                object[] finalSet = new object[currentValues.Length];
-                Array.Copy(currentValues, finalSet, currentValues.Length);
-                if (!exclusions.Any(e => e.Matches(finalSet)))
+                object?[] finalSet = currentValueIndices.Select((candidateIndex, parameterIndex) => candidateValues[parameterIndex][candidateIndex]).ToArray();
+                if (!exclusions.Any(exclusion => exclusion.Matches(finalSet)))
                 {
-                    yield return finalSet;
+                    yield return [.. currentValueIndices];
                 }
             }
         }
