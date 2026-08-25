@@ -59,3 +59,7 @@ The @Xunit.CombinatorialRandomDataAttribute can be applied to theory parameters 
 The min, max, and number of values can all be set via named parameters.
 
 [!code-csharp[](../../samples/ValueSources.cs#CombinatorialRandomData)]
+
+## Custom member data generation
+
+For correlated hand-authored rows, generated columns, permutations, constraints, or seeded pairwise generation, see [Generating custom theory data](custom-generation.md).

@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Validation" Version="2.6.68" />
+    <PackageVersion Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
   <ItemGroup Label="Library.Template">
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" />
