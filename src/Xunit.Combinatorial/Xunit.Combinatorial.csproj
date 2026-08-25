@@ -16,6 +16,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.Memory" />
     <PackageReference Include="xunit.v3.extensibility.core" VersionOverride="1.0.0" />
   </ItemGroup>
   <ItemGroup>

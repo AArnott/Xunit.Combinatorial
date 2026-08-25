@@ -35,8 +35,8 @@ public class PairwiseDataAttribute : DataAttribute
         }
 
         ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
-        Predicate<int[]>? isTestCaseAllowed = ExcludeTestCaseAttribute.CreateIndexMatcher(values, exclusions);
-        int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)], isTestCaseAllowed);
+        CombinatorialIndexPredicate? isTestCaseAllowed = ExcludeTestCaseAttribute.CreateIndexMatcher(values, exclusions);
+        int[][] testCaseInfo = CombinatorialTestCaseGenerator.GeneratePairwiseCombinations([.. values.Select(v => v.Length)], isTestCaseAllowed);
         IEnumerable<TheoryDataRow> intermediate =
             from testCase in testCaseInfo
             select new TheoryDataRow(testCase.Select((valueIndex, parameterIndex) =>

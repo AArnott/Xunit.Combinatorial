@@ -60,28 +60,14 @@ internal static class PairwiseStrategy
     /// An array which contains information about dimensions. Each element of
     /// this array represents a number of features in the specific dimension.
     /// </param>
-    /// <returns>
-    /// A set of test cases.
-    /// </returns>
-    public static int[][] GetTestCases(int[] dimensions)
-    {
-        return GetTestCases(dimensions, null);
-    }
-
-    /// <summary>
-    /// Creates a set of test cases for specified dimensions.
-    /// </summary>
-    /// <param name="dimensions">
-    /// An array which contains information about dimensions. Each element of
-    /// this array represents a number of features in the specific dimension.
-    /// </param>
     /// <param name="isTestCaseAllowed">A predicate that returns <see langword="true"/> when a generated test case is allowed.</param>
+    /// <param name="seed">The seed for the pseudo-random number generator.</param>
     /// <returns>
     /// A set of test cases.
     /// </returns>
-    public static int[][] GetTestCases(int[] dimensions, Predicate<int[]>? isTestCaseAllowed)
+    public static int[][] GetTestCases(int[] dimensions, CombinatorialIndexPredicate? isTestCaseAllowed, int seed)
     {
-        return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions, isTestCaseAllowed)
+        return (from testCase in new PairwiseTestCaseGenerator().GetTestCases(dimensions, isTestCaseAllowed, seed)
                 select testCase.Features).ToArray();
     }
 
@@ -341,7 +327,7 @@ internal static class PairwiseStrategy
         /// <summary>
         /// A predicate that determines whether a generated test case satisfies caller-supplied constraints.
         /// </summary>
-        private Predicate<int[]>? isTestCaseAllowed;
+        private CombinatorialIndexPredicate? isTestCaseAllowed;
 
         /// <summary>
         /// Creates a set of test cases for specified dimensions.
@@ -351,12 +337,13 @@ internal static class PairwiseStrategy
         /// this array represents a number of features in the specific dimension.
         /// </param>
         /// <param name="isTestCaseAllowed">A predicate that returns <see langword="true"/> when a generated test case is allowed.</param>
+        /// <param name="seed">The seed for the pseudo-random number generator.</param>
         /// <returns>
         /// A set of test cases.
         /// </returns>
-        public List<TestCaseInfo> GetTestCases(int[] dimensions, Predicate<int[]>? isTestCaseAllowed)
+        public List<TestCaseInfo> GetTestCases(int[] dimensions, CombinatorialIndexPredicate? isTestCaseAllowed, int seed)
         {
-            this.prng = new FleaRand(15485863);
+            this.prng = new FleaRand(unchecked((uint)seed));
             this.dimensions = dimensions;
             this.isTestCaseAllowed = isTestCaseAllowed;
 

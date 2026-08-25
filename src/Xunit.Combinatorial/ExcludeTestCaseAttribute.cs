@@ -53,7 +53,7 @@ public class ExcludeTestCaseAttribute : Attribute
     /// <param name="candidateValues">The possible values for each parameter position.</param>
     /// <param name="exclusions">The exclusions to evaluate against indexed test cases.</param>
     /// <returns>A predicate that returns <see langword="true"/> when a test case is allowed.</returns>
-    internal static Predicate<int[]>? CreateIndexMatcher(object?[][] candidateValues, ExcludeTestCaseAttribute[] exclusions)
+    internal static CombinatorialIndexPredicate? CreateIndexMatcher(object?[][] candidateValues, ExcludeTestCaseAttribute[] exclusions)
     {
         Requires.NotNull(candidateValues, nameof(candidateValues));
         Requires.NotNull(exclusions, nameof(exclusions));
@@ -80,8 +80,6 @@ public class ExcludeTestCaseAttribute : Attribute
 
         return testCase =>
         {
-            Requires.NotNull(testCase, nameof(testCase));
-
             foreach (IndexedExclusion exclusion in indexedExclusions)
             {
                 if (exclusion.Matches(testCase))
@@ -163,9 +161,8 @@ public class ExcludeTestCaseAttribute : Attribute
             return new IndexedExclusion(matchingValueIndices);
         }
 
-        internal bool Matches(int[] testCase)
+        internal bool Matches(ReadOnlySpan<int> testCase)
         {
-            Requires.NotNull(testCase, nameof(testCase));
             Requires.Argument(this.matchingValueIndices.Length == testCase.Length, nameof(testCase), $"Expected to have same array length as {nameof(this.matchingValueIndices)}");
 
             for (int parameterIndex = 0; parameterIndex < testCase.Length; parameterIndex++)

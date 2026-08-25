@@ -3,3 +3,4 @@ items:
 - href: combinatorial-vs-pairwise.md
 - href: exclude-test-cases.md
 - href: value-sources.md
+- href: custom-generation.md
