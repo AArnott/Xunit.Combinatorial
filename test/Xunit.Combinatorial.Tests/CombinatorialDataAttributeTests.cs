@@ -196,6 +196,28 @@ public class CombinatorialDataAttributeTests
             actual.Select(r => r.GetData()));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task GetData_MemberDataValuesAreUniquePerTestCase(bool pairwise)
+    {
+        DataAttribute attribute = pairwise ? new PairwiseDataAttribute() : new CombinatorialDataAttribute();
+
+        IReadOnlyCollection<ITheoryDataRow> rows = await GetData(attribute);
+        MutableValue[] values = rows.Select(row => Assert.IsType<MutableValue>(row.GetData()[0])).ToArray();
+
+        Assert.Equal(4, values.Length);
+        Assert.Equal(2, values.Count(value => value.Value == 1));
+        Assert.Equal(2, values.Count(value => value.Value == 2));
+        for (int i = 0; i < values.Length; i++)
+        {
+            for (int j = i + 1; j < values.Length; j++)
+            {
+                Assert.NotSame(values[i], values[j]);
+            }
+        }
+    }
+
     private static void Suppose_NoArguments()
     {
     }
@@ -262,6 +284,18 @@ public class CombinatorialDataAttributeTests
 
     private static void Suppose_UnsupportedNullableType(Guid? p1)
     {
+    }
+
+    private static void Suppose_MemberDataValuesAreUniquePerTestCase(
+        [CombinatorialMemberData(nameof(GetMutableValues))] MutableValue value,
+        bool flag)
+    {
+    }
+
+    private static IEnumerable<MutableValue> GetMutableValues()
+    {
+        yield return new MutableValue(1);
+        yield return new MutableValue(2);
     }
 
     private static async Task AssertData(IReadOnlyCollection<object?[]> expectedCombinatorial, [CallerMemberName] string? testMethodName = null)
@@ -343,5 +377,22 @@ public class CombinatorialDataAttributeTests
             : base([5, 10, 15])
         {
         }
+    }
+
+    private class MutableValue
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MutableValue"/> class.
+        /// </summary>
+        /// <param name="value">The value that identifies the candidate position.</param>
+        internal MutableValue(int value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
+        /// Gets the value that identifies the candidate position.
+        /// </summary>
+        internal int Value { get; }
     }
 }

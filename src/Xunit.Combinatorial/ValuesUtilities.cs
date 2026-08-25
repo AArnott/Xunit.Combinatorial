@@ -30,6 +30,34 @@ internal static class ValuesUtilities
     }
 
     /// <summary>
+    /// Gets one candidate value for a generated test case, recreating member data so mutable values are not shared between test cases.
+    /// </summary>
+    /// <param name="parameter">The parameter to get a value for.</param>
+    /// <param name="candidateValues">The candidate values used to determine the test case combinations.</param>
+    /// <param name="candidateIndex">The index of the candidate value selected for the test case.</param>
+    /// <returns>The value to use for the generated test case.</returns>
+    internal static object? GetValueForTestCase(ParameterInfo parameter, object?[] candidateValues, int candidateIndex)
+    {
+        Requires.NotNull(parameter, nameof(parameter));
+        Requires.NotNull(candidateValues, nameof(candidateValues));
+
+        CombinatorialMemberDataAttribute? memberData = parameter.GetCustomAttributes().OfType<CombinatorialMemberDataAttribute>().SingleOrDefault();
+        if (memberData is null)
+        {
+            return candidateValues[candidateIndex];
+        }
+
+        object?[] freshValues = memberData.GetValues(parameter);
+        if (freshValues.Length != candidateValues.Length)
+        {
+            throw new InvalidOperationException(
+                $"Member data for parameter '{parameter.Name}' returned {candidateValues.Length} values when determining combinations, but {freshValues.Length} values when creating a test case.");
+        }
+
+        return freshValues[candidateIndex];
+    }
+
+    /// <summary>
     /// Gets a sequence of values that should be tested for the specified type.
     /// </summary>
     /// <param name="dataType">The type to get possible values for.</param>
