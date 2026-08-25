@@ -65,7 +65,7 @@ internal static class ValuesUtilities
         }
         else
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException($"Unable to automatically generate values for parameter of type {dataType}. See https://aarnott.github.io/Xunit.Combinatorial/docs/value-sources.html for more information.");
         }
     }
 
