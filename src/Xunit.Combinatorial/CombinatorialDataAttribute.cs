@@ -44,11 +44,11 @@ public class CombinatorialDataAttribute : DataAttribute
 
         ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
         int[] currentValueIndices = new int[parameters.Length];
+        TestCaseValueFactory valueFactory = new(parameters, values);
         return new(
             [..
                 this.FillCombinations(parameters, values, currentValueIndices, exclusions, 0)
-                    .Select(indices => new TheoryDataRow(indices.Select((valueIndex, parameterIndex) =>
-                        ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray()))
+                    .Select(indices => new TheoryDataRow(valueFactory.CreateTestCaseArguments(indices)))
             ]);
     }
 

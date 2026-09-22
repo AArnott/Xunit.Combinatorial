@@ -37,10 +37,10 @@ public class PairwiseDataAttribute : DataAttribute
         ExcludeTestCaseAttribute[] exclusions = ExcludeTestCaseAttribute.GetExclusions(testMethod);
         Predicate<int[]>? isTestCaseAllowed = ExcludeTestCaseAttribute.CreateIndexMatcher(values, exclusions);
         int[][] testCaseInfo = PairwiseStrategy.GetTestCases([.. values.Select(v => v.Length)], isTestCaseAllowed);
+        TestCaseValueFactory valueFactory = new(parameters, values);
         IEnumerable<TheoryDataRow> intermediate =
             from testCase in testCaseInfo
-            select new TheoryDataRow(testCase.Select((valueIndex, parameterIndex) =>
-                ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray());
+            select new TheoryDataRow(valueFactory.CreateTestCaseArguments(testCase));
         return new ValueTask<IReadOnlyCollection<ITheoryDataRow>>([.. intermediate]);
     }
 }
