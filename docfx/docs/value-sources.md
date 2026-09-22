@@ -53,6 +53,12 @@ A value-generating field also works:
 
 [!code-csharp[](../../samples/ValueSources.cs#GeneratedByField)]
 
+The member is evaluated more than once so that each test case gets its own instance of each value,
+which matters when the values are mutable.
+Each evaluation supplies a fresh value for every test case that needs one at a distinct position,
+so the number of evaluations is roughly the number of test cases divided by the number of values the member produces.
+The member must produce the same number of values each time it is evaluated.
+
 ## Randomly generated values
 
 The @Xunit.CombinatorialRandomDataAttribute can be applied to theory parameters to generate random integer values.

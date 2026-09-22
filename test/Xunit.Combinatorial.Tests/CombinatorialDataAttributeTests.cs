@@ -10,6 +10,8 @@ using Xunit.v3;
 
 public class CombinatorialDataAttributeTests
 {
+    private static int countedMemberDataEvaluations;
+
     [Fact]
     public async Task GetData_NoArguments()
     {
@@ -218,6 +220,32 @@ public class CombinatorialDataAttributeTests
         }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task GetData_MemberDataIsEvaluatedOncePerFullSetOfFreshValues(bool pairwise)
+    {
+        DataAttribute attribute = pairwise ? new PairwiseDataAttribute() : new CombinatorialDataAttribute();
+        countedMemberDataEvaluations = 0;
+
+        IReadOnlyCollection<ITheoryDataRow> rows = await GetData(attribute);
+        MutableValue[] values = rows.Select(row => Assert.IsType<MutableValue>(row.GetData()[0])).ToArray();
+
+        // Each evaluation of the data source yields one fresh value for each of its 3 candidate values,
+        // so the source should be evaluated no more than once per 3 test cases (rounded up).
+        int maxExpectedEvaluations = (int)Math.Ceiling(values.Length / 3.0);
+        Assert.InRange(countedMemberDataEvaluations, 1, maxExpectedEvaluations);
+
+        // Every test case must still get its own instance.
+        for (int i = 0; i < values.Length; i++)
+        {
+            for (int j = i + 1; j < values.Length; j++)
+            {
+                Assert.NotSame(values[i], values[j]);
+            }
+        }
+    }
+
     private static void Suppose_NoArguments()
     {
     }
@@ -296,6 +324,19 @@ public class CombinatorialDataAttributeTests
     {
         yield return new MutableValue(1);
         yield return new MutableValue(2);
+    }
+
+    private static void Suppose_MemberDataIsEvaluatedOncePerFullSetOfFreshValues(
+        [CombinatorialMemberData(nameof(GetCountedMutableValues))] MutableValue value,
+        bool flag1,
+        bool flag2)
+    {
+    }
+
+    private static IEnumerable<MutableValue> GetCountedMutableValues()
+    {
+        countedMemberDataEvaluations++;
+        return [new MutableValue(1), new MutableValue(2), new MutableValue(3)];
     }
 
     private static async Task AssertData(IReadOnlyCollection<object?[]> expectedCombinatorial, [CallerMemberName] string? testMethodName = null)
