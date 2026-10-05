@@ -45,6 +45,16 @@ You can use `dotnet test` to build and/or test the repo.
 
 There may be tests that are known to be unstable or have special requirements. These can be avoided by running tests using the [dotnet-test-cloud.ps1](tools/dotnet-test-cloud.ps1) script *after* running `dotnet build`.
 
+Tests intentionally use xUnit rather than the template's TUnit runner because they exercise xUnit's `[Theory]` and this library's data attributes end to end.
+The traversal projects discover projects under `src` and `test`; `tools/dirs.proj` also includes the `samples` project.
+Keep test projects in the solution as well: managed test runs still use the solution.
+
+NativeAOT validation is disabled with `<PublishNativeAOTTests>false</PublishNativeAOTTests>` in `test/Directory.Build.props`.
+A trial NativeAOT publish reported trim warnings in reflection-based member and class data discovery (`IL2067`/`IL2070`) and in the `xunit.v3.core` dependency (`IL2080`).
+The shipping library targets .NET Framework and .NET Standard, so it does not set `IsAotCompatible`, and the template's `AotCompatibilityTest` project is omitted.
+Managed tests and coverage remain enabled; `-IncludeNativeAOT` discovers no native test executables while this opt-out is in place.
+Root `Directory.Build.props` supplies project-reference defaults for both traversal and SDK projects that remove the `_IsPublishing` global property for managed dependencies, avoiding duplicate project instances that write to the same outputs during parallel publishing.
+
 ## Releases
 
 Use `nbgv tag` to create a tag for a particular commit that you mean to release.
