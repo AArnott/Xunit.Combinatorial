@@ -447,7 +447,9 @@ internal static class PairwiseStrategy
                 TestCaseInfo? testCase = this.CreateRandomTestCase(tuple);
                 if (testCase is null)
                 {
-                    continue;
+                    // FindAllowedTestCase already searched every completion of this tuple.
+                    // Further random attempts cannot succeed, so stop immediately.
+                    return null;
                 }
 
                 int coverage = this.MaximizeCoverage(testCase, tuple);
