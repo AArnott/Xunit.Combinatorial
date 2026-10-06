@@ -82,6 +82,22 @@ public class CombinatorialTestCaseGeneratorTests
     }
 
     [Fact]
+    public void GeneratePairwiseCombinations_UnreachablePairWithManyDimensionsStillCoversReachablePairs()
+    {
+        // Five dimensions of size 4. Forbidding every row with (d0=0, d1=0) makes that
+        // pair impossible; both mirrored tuple orientations must be dropped without
+        // re-running the exhaustive search, and reachable pairs must still be covered.
+        int[] dimensions = [4, 4, 4, 4, 4];
+        CombinatorialIndexPredicate isAllowed = indices => indices[0] != 0 || indices[1] != 0;
+
+        int[][] results = CombinatorialTestCaseGenerator.GeneratePairwiseCombinations(dimensions, isAllowed);
+
+        Assert.NotEmpty(results);
+        Assert.All(results, indices => Assert.False(indices[0] == 0 && indices[1] == 0));
+        AssertPairwiseCoverage(results, dimensions, isAllowed);
+    }
+
+    [Fact]
     public void GeneratePairwiseCombinations_ConstraintPreservesPossiblePairCoverage()
     {
         int[][] results = CombinatorialTestCaseGenerator.GeneratePairwiseCombinations(
