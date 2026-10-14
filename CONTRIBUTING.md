@@ -52,7 +52,7 @@ Keep test projects in the solution as well: managed test runs still use the solu
 NativeAOT validation is disabled with `<PublishNativeAOTTests>false</PublishNativeAOTTests>` in `test/Directory.Build.props`.
 A trial NativeAOT publish reported trim warnings in reflection-based member and class data discovery (`IL2067`/`IL2070`) and in the `xunit.v3.core` dependency (`IL2080`).
 The shipping library targets .NET Framework and .NET Standard, so it does not set `IsAotCompatible`, and the template's `AotCompatibilityTest` project is omitted.
-Managed tests and coverage remain enabled; `-IncludeNativeAOT` discovers no native test executables while this opt-out is in place.
+Managed tests and coverage remain enabled; CI does not pass `-IncludeNativeAOT`.
 Root `Directory.Build.props` supplies project-reference defaults for both traversal and SDK projects that remove the `_IsPublishing` global property for managed dependencies, avoiding duplicate project instances that write to the same outputs during parallel publishing.
 
 ## Releases
@@ -82,6 +82,9 @@ When your repo builds with Azure Pipelines, use the `azure-pipelines/release.yml
 Trigger the pipeline by adding the `auto-release` tag on a run of your main `azure-pipelines.yml` pipeline.
 
 ## Tutorial and API documentation
+
+Markup links are checked in CI with [mlc](https://github.com/becheran/mlc).
+Run `mlc` from the repository root to use the same settings, configured in `.mlc.toml`.
 
 API and hand-written docs are found under the `docfx/` directory and are built by [docfx](https://dotnet.github.io/docfx/).
 
