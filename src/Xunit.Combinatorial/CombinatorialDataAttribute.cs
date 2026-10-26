@@ -49,7 +49,7 @@ public class CombinatorialDataAttribute : DataAttribute
             [..
                 testCases
                     .Select(indices => new TheoryDataRow(indices.Select((valueIndex, parameterIndex) =>
-                        ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray()))
+                        ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray())),
             ]);
     }
 }

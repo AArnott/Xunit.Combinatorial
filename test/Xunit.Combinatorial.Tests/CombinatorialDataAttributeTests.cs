@@ -20,8 +20,8 @@ public class CombinatorialDataAttributeTests
     public async Task GetData_Bool()
     {
         await AssertData(
-         [
-             [true],
+        [
+            [true],
             [false],
         ]);
     }

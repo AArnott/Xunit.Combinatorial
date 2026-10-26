@@ -43,13 +43,13 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
     /// <summary>
     /// Gets the values that should be passed to this parameter on the test method.
     /// </summary>
-    /// <param name="parameterInfo">The parameter for which the data should be provided.</param>
+    /// <param name="parameter">The parameter for which the data should be provided.</param>
     /// <returns>An array of values.</returns>
-    public object?[] GetValues(ParameterInfo parameterInfo)
+    public object?[] GetValues(ParameterInfo parameter)
     {
-        Requires.NotNull(parameterInfo, nameof(parameterInfo));
+        Requires.NotNull(parameter, nameof(parameter));
 
-        MemberInfo? testMethod = parameterInfo.Member;
+        MemberInfo? testMethod = parameter.Member;
 
         Type? type = this.MemberType ?? testMethod?.DeclaringType;
 
@@ -58,7 +58,7 @@ public class CombinatorialMemberDataAttribute : Attribute, ICombinatorialValuesP
             return Array.Empty<object?>();
         }
 
-        Func<object>? accessor = this.GetPropertyAccessor(type, parameterInfo) ?? this.GetMethodAccessor(type, parameterInfo) ?? this.GetFieldAccessor(type, parameterInfo);
+        Func<object>? accessor = this.GetPropertyAccessor(type, parameter) ?? this.GetMethodAccessor(type, parameter) ?? this.GetFieldAccessor(type, parameter);
         if (accessor is null)
         {
             string? parameterText = this.Arguments?.Length > 0 ? $" with parameter types: {string.Join(", ", this.Arguments.Select(p => p?.GetType().FullName ?? "(null)"))}" : string.Empty;
