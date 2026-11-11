@@ -46,7 +46,8 @@ public class CombinatorialDataAttribute : DataAttribute
         CombinatorialIndexPredicate? isTestCaseAllowed = ExcludeTestCaseAttribute.CreateIndexMatcher(values, exclusions);
         int[][] testCases = CombinatorialTestCaseGenerator.GenerateCombinations([.. values.Select(v => v.Length)], isTestCaseAllowed);
         return new(
-            [..
+            [
+                ..
                 testCases
                     .Select(indices => new TheoryDataRow(indices.Select((valueIndex, parameterIndex) =>
                         ValuesUtilities.GetValueForTestCase(parameters[parameterIndex], values[parameterIndex], valueIndex)).ToArray())),
