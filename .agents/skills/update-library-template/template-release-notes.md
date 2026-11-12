@@ -90,3 +90,8 @@ If the repo owner is unsure about NativeAOT support, you might offer to test the
 
 In the event the user elects for NativeAOT targeting, make efforts to get tests to work under NativeAOT as well so the shipping code can confidently advertise its NativeAOT compatibility.
 If aspects of the library or tests make successful builds, publish or test runs problematic, discuss this with the repo owner before making significant changes or giving up on NativeAOT support.
+
+## Targeting .NET 10
+
+.NET 8 and 9 are no longer supported by Microsoft.
+All projects in the repo that target these runtimes should be updated to target .NET 10.
